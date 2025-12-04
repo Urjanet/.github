@@ -10,5 +10,5 @@ permissions:
 jobs:
   scan:
     name: gitleaks
-    uses: Urjanet/gitleaks-workflow/.github/workflows/gitleaks.yaml@f1e2e6f3b3190499b6ad214d3cc55fca908239ec
+    uses: Urjanet/gitleaks-workflow/.github/workflows/gitleaks.yaml@main
     secrets: inherit
