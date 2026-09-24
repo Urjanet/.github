@@ -1,6 +1,6 @@
 # Olympus Weekly Reports — Collated by Heading
 
-Contents from *Copy of Olympus - Weekly Reports* are split into the five standing headings. Matching subheadings from every week are grouped together. Each bullet is tagged with the week it came from. Duplicate copy-paste blocks are removed.
+Contents from *Copy of Olympus - Weekly Reports* are split into the five standing headings. Matching subheadings from every week are grouped together. Content remains under its standing heading until the next standing heading begins; for example, `Observations | Compliance` inside `Key Contribution (Lead's)` remains part of Key Contribution. Each bullet is tagged with the week it came from. Duplicate copy-paste blocks are removed.
 
 Weeks parsed: **53**
 
@@ -358,7 +358,6 @@ Weeks parsed: **53**
 
 ### PAD implementations
 
-- **Olympus - February Week II (Feb 05 - Feb 11):** Analysed 20+ templates transition trend for PAD possible case, created and fixed one template.
 - **Olympus - January Week IV (Jan 22 - Jan 28):** Saipriyadarsini has analysed PAD possible cases and identified two possible PAD transitions were with assigned to dev due to subtotal charges missing case, template level update has been requested to perform PAD actions.
 
 ### PDF Highlighter
@@ -368,7 +367,6 @@ Weeks parsed: **53**
 - **Olympus - February Week IV (Feb 19 - Feb 25):** Karthik planned for PDF highlighter enhancement and will be working on the same.
 - **Olympus - February Week III (Feb 12 - Feb 18):** Karthik completed the integration part in bifrost for PDF highlight. The setup fix is in-progress. Observed a scenario of highlighter where the pdf highlighter is not working for re-orientation implemented templates and newspaper layout templates impact analysis is in-progress.
 - **Olympus - February Week II (Feb 05 - Feb 11):** Karthik completed the integration part in bifrost for PDF highlight. Karthik is reaching to the member who has this step-up for further steps.
-- **Olympus - February Week II (Feb 05 - Feb 11):** Karthik completed the integration part in bifrost for PDF highlight. Due to limitation we are not able to proceed next, need discussion on these.
 - **Olympus - January Week IV (Jan 22 - Jan 28):** Karthik completed the integration part in bifrost for PDF highlight. Due to limitation we are not able to proceed next, need discussion on these.
 - **Olympus - November Week III (Nov 13 - Nov 19):** Karthik has taken this task, and has completed is initial analysis for this same.
 - **Olympus - November Week II (Nov 13 - Nov 20):** Karthik has taken this task, and has completed is initial analysis for this same.
@@ -397,7 +395,6 @@ Weeks parsed: **53**
 - **Olympus - February Week IV (Feb 19 - Feb 25):** Karthik planned to work on pib sync up token [Couldn't plan].
 - **Olympus - February Week III (Feb 12 - Feb 18):** Karthik discussed on how the source type are allocated via PIB sync-up and while trying the local simulation it is partially working and failed with pib token, on which he is currently working.
 - **Olympus - February Week II (Feb 05 - Feb 11):** Karthik updated PIB sync up working process in details(updates are here), he is currently checking the possibility of local simulation.
-- **Olympus - February Week II (Feb 05 - Feb 11):** Karthik shared the insights on PIB update process and update here, this is in-progress.
 - **Olympus - January Week IV (Jan 22 - Jan 28):** Karthik shared the insights on PIB update process and update here, this is in-progress.
 - **Olympus - November Week III (Nov 13 - Nov 19):** Karthik shared the insights on PIB update process and update here
 - **Olympus - November Week II (Nov 13 - Nov 20):** Karthik has analysed the functionality of Pib repo from Github and confirmed that the flags are enabled through templates repo code, the findings are updated here and he is further analysing the automation trigger point to understand the code-flow.
@@ -411,7 +408,6 @@ Weeks parsed: **53**
 
 - **Olympus - February Week III (Feb 12 - Feb 18):** Nidhyalakshmi is working on under dev ticket count update for each squads.
 - **Olympus - February Week II (Feb 05 - Feb 11):** Nidhyalakshmi completed sheet updates with new team structure, currently working on Viji's requirement.
-- **Olympus - February Week II (Feb 05 - Feb 11):** Nidhyalakshmi is working on PMU based SLA validation.
 - **Olympus - January Week IV (Jan 22 - Jan 28):** Nidhyalakshmi is working on PMU based SLA validation.
 
 ### Slack updates
@@ -499,11 +495,905 @@ Weeks parsed: **53**
 - **Olympus - March Week III (Mar 12 - Mar 18):** Nidhyalakshmi and Senthamizhan has submitted their resignation this week. Required KTs and ownership transfers have been completed. We are in need of one resource to fill-in.
 - **Olympus - March Week II (Mar 05 - Mar 11):** Nidhyalakshmi and Senthamizhan has submitted their resignation this week. Required KTs and ownership transfers have been initiated
 - **Olympus - March Week I (Feb 26 - Mar 04):** Sriya has available 3 days planned leave in the coming week.
-- **Olympus - March Week I (Feb 26 - Mar 04):** Sriya Nayak's Mac is currently unusable due to a hardware failure (permanent Caps Lock and non-functional Command key), preventing her from processing tickets. IT has diagnosed the issue and initiated a laptop swap via courier.
-- **Olympus - July Week IV (Jul 17 - Jul 23):** Sheyne is on summer break this week with this everyone has completed the Summer break.
 - **Olympus - July Week IV (Jul 17 - Jul 23):** Karthik C is on summer break this week; Sheyne's break is scheduled for next week, with this every has completed the Summer break.
 - **Olympus - July Week III (Jul 10 - Jul 16):** Stanley is on summer break this week; Karthik's break is scheduled for next week.
 - **Olympus - July Week I (Jun 26 - Jul 02):** Interns are eligible for summer break and have been granted the same along with the regular summer schedule. Saipriyadharsini and Chandrakanth will be on summer break from July 2 to July 9. During this period, Chandana and Yogesh from the Torque team will be backing up their tickets.
+
+## Observations | Compliance
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** No SLA Miss | No Build failure.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** SLA : Contractual Compliance based on MTD.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** 98.93% in Recurring issue.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** 100.00% in Customer Issues.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** 99.76% in Recurring issue.
+
+## AI Orchestrator - ErrorEvent Classification
+
+### Accuracy & Optimization
+
+- **Olympus - April Week III (Apr 16 - Apr 22):** Saipriyadarsini analysed the contradicting case and fine-tuned some cases.
+- **Olympus - April Week I (Apr 02 - Apr 15):** Saipriyadarsini and Anusha are currently initiating Open and Under-Dev tickets, the results will be validated on a daily basis. The comments are updated with Internal Developers mode as it was updated under developer restricted mode which will be visible to everyone.
+- **Olympus - March Week V (Mar 26 - Apr 01):** Sairpriyadarsini is validating the failed cases and fine-tuned. She is working with Deepika and Rashi on integration part.
+- **Olympus - March Week IV (Mar 19 - Mar 25):** Post RAG model upgrade, the accuracy seems to be better. Currently finetuning.
+- **Olympus - March Week III (Mar 12 - Mar 18):** Improved model accuracy through checksum fine-tuning, multi-line charge detection, and regex refinements across 40+ test tickets.
+
+### Logic & RCA Expansion
+
+- **Olympus - April Week I (Apr 02 - Apr 15):** Under reporter two case has been implemented yet PAD possibility needs to be evaluated before AI implementation [Sowmiya].
+- **Olympus - March Week V (Mar 26 - Apr 01):** Under OCR and Under reporter cases implemented [Sowmiya].
+- **Olympus - March Week IV (Mar 19 - Mar 25):** International bill are been restricted and Upgraded the logic to RAG model.
+- **Olympus - March Week III (Mar 12 - Mar 18):** Implemented logic for new error events (e.g., missing charge amounts) and added 4 new RCA categories, including extraction failures and undefined units.
+
+### Process Enhancements
+
+- **Olympus - March Week III (Mar 12 - Mar 18):** Integrated transition prompts for international bills, added tracking columns for cost and error events in Google Sheets, and identified further optimization needs for data consistency.
+
+- **Olympus - April Week III (Apr 16 - Apr 22):** Logic & RCA Expansion:Ticket has been raised to validate the multi-bound bill in uc - TMPLT-15074.
+- **Olympus - April Week III (Apr 16 - Apr 22):** Anusha and Saipriyadarsini are validating if the Tickets are updated with AI Agent Fields on daily basis.
+- **Olympus - April Week I (Apr 02 - Apr 15):** Currently the AI analysis comments are updated under Developer mode, however it was updated to Internal Developers mode.
+- **Olympus - March Week II (Mar 05 - Mar 11):** Saipriyadarsini started validate tickets from a filter and update in sheet for further updates.
+- **Olympus - March Week II (Mar 05 - Mar 11):** New Audits have been integrated.
+- **Olympus - March Week I (Feb 26 - Mar 04):** Saipriyadarsini worked on transition classification which includes : Checksum, mtr.validUsage, zeroNumberOfDays.
+- **Olympus - March Week I (Feb 26 - Mar 04):** The Mtr.validUsage seems to having a positive results.
+- **Olympus - March Week I (Feb 26 - Mar 04):** ZeroNumberOfDays needs fine-tuning.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Saipriyadarsini worked on transition classification and most of tickets seems to providing positive analysis.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** As a next step, she started to analysis mtr.validusage error with woot and bill validation.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Restricted the analysis only to Tail end connectors and 'Open' status tickets.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Fine-tuning continues for Checksum.
+- **Olympus - February Week III (Feb 12 - Feb 18):** Saipriyadarsini is working on analysis and testing for Transition-classification.
+- **Olympus - February Week III (Feb 12 - Feb 18):** Implemented a Transition-prompt for Transition Classification case.
+
+## SLA Updates
+
+### Conn Downloader Extended
+
+- **Olympus - March Week IV (Mar 19 - Mar 25):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
+- **Olympus - March Week III (Mar 12 - Mar 18):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
+- **Olympus - March Week II (Mar 05 - Mar 11):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
+- **Olympus - March Week I (Feb 26 - Mar 04):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
+
+### Slack updates
+
+- **Olympus - March Week IV (Mar 19 - Mar 25):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
+- **Olympus - March Week III (Mar 12 - Mar 18):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
+- **Olympus - March Week II (Mar 05 - Mar 11):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
+- **Olympus - March Week I (Feb 26 - Mar 04):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
+
+- **Olympus - March Week IV (Mar 19 - Mar 25):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
+- **Olympus - March Week III (Mar 12 - Mar 18):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
+- **Olympus - March Week II (Mar 05 - Mar 11):** Under dev count for each team has been completed as per the requirement.
+- **Olympus - March Week II (Mar 05 - Mar 11):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
+- **Olympus - March Week I (Feb 26 - Mar 04):** Nidhyalakshmi is working on under dev ticket count update for each squads.
+- **Olympus - March Week I (Feb 26 - Mar 04):** Reopen count to be added in SLA / monthly Reports.
+- **Olympus - March Week I (Feb 26 - Mar 04):** Viji requested to have the Categorisation in the Consolidated Miss tickets.
+- **Olympus - March Week I (Feb 26 - Mar 04):** Also, providing mitigation to avoid SLA miss.
+- **Olympus - March Week I (Feb 26 - Mar 04):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
+
+## AvidXChange Tariff fixes
+
+- **Olympus - March Week I (Feb 26 - Mar 04):** CityOfLongmont has possible tariff available, based on standard confirmation tariff will be extracted.
+- **Olympus - March Week I (Feb 26 - Mar 04):** For AmericanWater, a DC was raised for Rate confirmation, which has confirmed to extract the rate as Unkown Tariff for all the meters and format. This need further confirmation through Standards.
+
+## SLA Time Based
+
+### Conn Downloader Extended
+
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Sangeetha is working on fixing the critical cases bills download feature.
+
+### Slack updates
+
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [In-progress].
+
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Nidhyalakshmi is working on under dev ticket count update for each squads.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Reopen count to be added in SLA / monthly Reports.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Viji requested to have the Categorisation in the Consolidated Miss tickets.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Also, providing mitigation to avoid SLA miss.
+
+## Conn Downloader Extended
+
+- **Olympus - February Week III (Feb 12 - Feb 18):** Observed an issue with bills download when the Automon has CRITICAL and AUDIT error.
+- **Olympus - February Week III (Feb 12 - Feb 18):** Only ERROR with pdf is getting downloaded. Initiated a new requirement to handle all sources.
+- **Olympus - February Week III (Feb 12 - Feb 18):** A notification will be provided if the Automon has CRITICAL & AUDIT errors.
+- **Olympus - February Week III (Feb 12 - Feb 18):** Sangeetha is working on this.
+- **Olympus - February Week III (Feb 12 - Feb 18):** Slack updates: Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same.
+
+## Provider-Template Issues
+
+### BerkeleyCountyWaterAndSanitation
+
+- **Olympus - July Week V (Jul 24 - Jul 30):** Had meter details without service details, for which DC was raised. Based on this we had 15+ tickets, once the DC is resolved all the tickets were resolved. (Stanley)
+
+### CableOne
+
+- **Olympus - November Week II (Nov 13 - Nov 20):** A migration was raised for the account number change; however, both the template and ezValidation were already applicable, resulting in no disruption to delivery.
+
+### CGECHL
+
+- **Olympus - July Week III (Jul 10 - Jul 16):** A formatting issue occurred due to international bill format. Spanish interval dates are not getting formatted properly during statement storage. The issue has been escalated to the concerned team. (Sheyne)
+
+### CityOfBlouder
+
+- **Olympus - September Week IV (Sep 19 - Sep 24):** A zendesk requirement was raised to extract one particular information from the bill as message and the check the delivery if the required message can be delivered to the customer.
+
+### CityOfBufordGA
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** The disconnect bill with Disconnect date as 30-Feb-2026 causing failed to format issue, as per DC clarification disconnect date restricted in template level.
+
+### CityOfDurham
+
+- **Olympus - October Week III (Oct 17 - Oct 22):** For City Of Durham we encountered an ABANDONED scenario which was due to the ObjectOptimisticLockingFailureException and the same has been informed to the team for further investigations on similar instances in UC.
+
+### CityOfFairBurn
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Lavanya created a new decoder for CityOfFairBurn with required Fonts.
+
+### CityOfFishersIN
+
+- **Olympus - October Week IV (Oct 23 - Oct 29):** A ticket was raised to fixed the provider id issue in CityOfFishersIN which had Fishers Utilities, requested for Migration confirmation.
+
+### CityOfFortLoudounElectric
+
+- **Olympus - August Week III (Aug 14 - Aug 20):** Compilation error in utc and xreg due to presence of same page spec in two different path but this issue doesn't exist in Master. (Karthik)
+- **Olympus - August Week II (Aug 07 - Aug 13):** Compilation error in utc and xreg due to presence of same page spec in two different path but this issue doesn't exist in Master. (Karthik)
+
+### CityOfGalvestonTX
+
+- **Olympus - September Week III (Sep 11 - Sep 18):** A TC was raised in clarification on how and why multiple pdf has been updated under same single version log and this happens since there is changes to the intervals for all the pdfs. Considering this as same pdf.
+
+### CityOfGlendaleAZMyUtiity
+
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Received a zendesk requirement to update the extraction of STORM water from meter to account. This should have been triggered as an ALERT, but it was not. This issues has been reported to the AUDIT team for further assistance. Also, suggested to implement in internal audits.
+
+### CityOfNetherland
+
+- **Olympus - December Week II (Dec 05 - Dec 10):** A zendesk was raised due to source rendering issue which was due to the new url changes.
+
+### CityOfRockmart
+
+- **Olympus - December Week III (Dec 11 - Dec 24):** Bill had Water Previous Balance with Multiple Water meters. Initially the template handled Water Previous balance as Water meter level Previous balance, following the AA's request and DC reference the template was fixed with extracting PB as OB, which caused Checksum. But on further reference, this format of bills are been rejected with standards. So for this bill, we have raised DC for rejection confirmation.
+
+### ComcastPA
+
+- **Olympus - July Week III (Jul 10 - Jul 16):** We received a high-volume bill (~5,000 pages). The issue was resolved by processing and fixing only the affected account using the SplitScript. (Lavanya)
+
+### ConsumerEnergy
+
+- **Olympus - September Week III (Sep 11 - Sep 18):** Account number was incorrectly extracted with space, which was due to conversion issue. To handle this issue, implemented ezValidations.
+
+### ConsumersEnegy EDI
+
+- **Olympus - July Week I (Jun 26 - Jul 02):** ConsumerEnergy's EDI format has been requested to handle in the template level by Customer, though we are unsure about the origin of the bill as per the STANDARD. We have requested for STANDARDs confirmation to proceed. (Elavarasan)
+
+### FirstEnergy
+
+- **Olympus - October Week I (Oct 02 - Oct 08):** Encountered Java 17 compatibility issue causing issue with javaScriptOperator failing the data targets which was implemented with it. Along with Naren and Rohith we were able to inform the respective team and have it fixed. Post the changes the issue was fixed.
+- **Olympus - September Week III (Sep 11 - Sep 18):** A zendesk was raised to fix LifeCycle Id for the First Energy bills, but since the template uses default lifecycle id, the template changes will not change the data and declined this requirement.
+- **Olympus - September Week II (Sep 04 - Sep 10):** Totalised issue has been fixed in template level, possibilities are been analysed.
+- **Olympus - September Week I (Aug 28 - Sep 03):** The Reporter has requested for clarification on how the template has handled in few cases.
+- **Olympus - August Week IV (Aug 21 - Aug 27):** A zendesk request was raised to fix deregulation status as delivery and supply. Even when there is no additional provider available, which is not the updated with standards. Requested for standard confirmation confirmation for the same.
+- **Olympus - August Week III (Aug 14 - Aug 20):** Usage level revamp has been completed as per the STANDARDS requirement and has been resolved Updates. (Elavarasan)
+- **Olympus - August Week II (Aug 07 - Aug 13):** Usage level revamp has been completed as per the STANDARDS requirement. Had immediate connects with the stakeholders to resolve the issue and it has been resolved on Aug 12th Updates. (Elavarasan)
+- **Olympus - August Week I (Jul 31 - Aug 06):** The initial analysis has been done, the extraction is in progress with respect to the identified and confirmed cases - Updates. (Elavarasan)
+- **Olympus - July Week V (Jul 24 - Jul 30):** STANDARDs change analysis has been completed and parked under stakeholders, requires more samples and xreg checks. (Elavarasan)
+- **Olympus - July Week IV (Jul 17 - Jul 23):** In progress of analysing the STANDARDs and taking the relevant samples of the same. (Elavarasan)
+- **Olympus - July Week III (Jul 10 - Jul 16):** A STANDARD update has been raised and is currently in the analysis phase. (Elavarasan)
+
+### Golden Heart Utilities
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** A Migration was raised for provider ID update, with provider id and provider name as GHU , which is not fitting into our provider id extraction format. We have requested the reporter to get confirmation from all the stakeholders since the Provider Id extraction depends on many other factors.
+
+### Google based fixes
+
+- **Olympus - December Week II (Dec 05 - Dec 10):** For Google customer templates - GoogleBenMilamSolarCA and GoogleParisFarmSolarCA zendesk tickets created for interval extraction based on the quarterly indication from the bill. This was fixed in the template.
+
+### GoogleEnecoZakelijk
+
+- **Olympus - October Week II (Oct 09 - Oct 15):** An XLS file hsa been processed under different template caused the extraction failure, post the analysis it was guided to process under right template, helping the statement to promote to production.
+
+### GrandLakesMUDTX
+
+- **Olympus - July Week II (Jul 03 - Jul 09):** For Grand Lakes MUD, we have provider names listed as Grand Lakes MUD 1 and Grand Lakes MUD 4. A ticket was raised based on DC confirmation, and since there are no accounts enrolled under Grand Lakes MUD TX, we are proceeding without a migration. (Karthik)
+
+### GuadalupeBlancoRiverAuth
+
+- **Olympus - August Week III (Aug 14 - Aug 20):** For this provider a new bill format has been post were we had only Customer Id, while comparing to old bill it was with proper Account number. A dc has been raised to confirm the bill (Lavanya).
+
+### HolyCrossEnergy
+
+- **Olympus - December Week II (Dec 05 - Dec 10):** A zendesk was reported for cred failure case, while checking the issue we had almost 100 child jobs with 50% of general failure case. Upon analysing further it was found to be a valid error cases, for three child jobs there was valid error. This was identified with AuditReport availability.
+
+### LandLord Bills
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Multiple providers encountered Landlord bills format which is without Charges, based on DC the bills are rejected.
+
+### LandskronaEnergiSWE
+
+- **Olympus - November Week III (Nov 13 - Nov 19):** This is a Swedish bill, with recent format changes in usage, the bill was failing with failed to format error at actual usage level, while further analysis this format of usage was supported in Swedish_num_format, based on qualifier it has been updated in template level, supporting for both bills.
+
+### LeedsWaterWorksBoard
+
+- **Olympus - January Week II (Jan 08 - Jan 14):** Fire charge extracted at account level, based on migration, it was moved to meter level charge.
+
+### LuleaMiljoresurs
+
+- **Olympus - October Week IV (Oct 23 - Oct 29):** The templates is an international bill with date reversal case, due to the international bill, the manual correction has been rejected for handling the dates. Based on the analysis, the usage is given as negative based on this their is a possibility in handling in template level. This need confirmation from Arthi and Domain team for proceeding further.
+
+### Manheim
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Pravallika brought-in two new cases, requested for clarification on details on provided data.
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Had a complex issue, followed by code restructuring was initiated.
+- **Olympus - January Week III (Jan 15 - Jan 21):** A zendesk requirement was raised to extract a charge group which was extracted as a usage due to previous XLS condition. The fix includes suppression of usage and extraction of charge from the same line making the fix complex to handle also impacting the existing format. However after implementation of separate flow with qualifying cases, the fix was done. The issues are been documented in Manheim provider issue
+- **Olympus - January Week II (Jan 08 - Jan 14):** A TC was raised to understand the usage extraction and possibility in extracting the 0.00 usage as per Cox request, same has been clarified.
+- **Olympus - November Week IV (Nov 20 - Nov 26):** For Cox-Manheim we received a zendesk ticket for extracting the usage group which was missed due to column interchange and column name restructuring. At template level both are handled, while checking at why mtr.validUsage was triggered we observed that the error has been overridden through generic override which was implemented long back. The issue has been reported to the zendesk reporters and following that Audit removal ticket was raised and fixed.
+- **Olympus - October Week IV (Oct 23 - Oct 29):** The document on processing Manheim XLS has been shared with the reporters via the email sent for the same: Manheim - Confluence.
+- **Olympus - October Week III (Oct 17 - Oct 22):** For Cox, we received a bulk XLS files which were initially processed incorrectly by the reporter, which contributed to new ticket creation and delayed deliveries, this has been informed through an email to the respective teams. Confluence has been updated : Manheim - Confluence
+- **Olympus - September Week IV (Sep 19 - Sep 24):** XLS were processed with daq, causing unwanted checksum. Requested the reporter to rerun the job with -q making the issue fixed.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Manheim received a bill format with reorder columns. Requested to check why it has been updated and clarification on if it will be recurring format.
+
+### MarangiDisposal
+
+- **Olympus - August Week III (Aug 14 - Aug 20):** A FS ticket has been raised via File module, the bill belongs to Marangi Disposal based on the site details, however due to the acquisition of this provider, it has been processed under Interstate causing an extraction level issue. We have raised DC to confirm the migration and the correct template to be processed.. (Lavanya)
+
+### MidAmericanEnergy
+
+- **Olympus - December Week III (Dec 11 - Dec 24):** The site has two different statements, likely to be updated after the initial bill generation. Requested for DC to clarify on handling the updated bill.
+
+### Minnesota
+
+- **Olympus - September Week IV (Sep 19 - Sep 24):** A summary bills with multiple monthly statement has been encountered for the first time in this provider, it was new scenario and template has been implemented without impacting the existing formats.
+
+### MinnesotaPowerMN
+
+- **Olympus - August Week II (Aug 07 - Aug 13):** A ZD was raised to fix the service address formatting issue, while checking deeper it was due to the address format in the bill which was without space causing the formatting issue. (Karthik)
+
+### Multiple pages bills
+
+- **Olympus - September Week IV (Sep 19 - Sep 24):** For BCHydro and LansingBoardOfWaterAndLight, minor issues has been raised for multi-pages bill which was fixed by splitting the bills in certain level to make the issue more manageable.
+
+### MyAccountCommonNavigation
+
+- **Olympus - August Week II (Aug 07 - Aug 13):** The recent navigation fix impacted extraction, resulting in junk data. The issue has been analyzed, necessary actions were taken, and the Navigation team has been notified for immediate resolution (Chandru & Saipriyadarsini).
+
+### NineStarConnect
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** DC raised for Smarthub - Duplicate Invoice with Final Bill string.
+- **Olympus - December Week III (Dec 11 - Dec 24):** The Final bill was posted with bill duplication. DC confirmed to processed by splitting the bills yet it had difficulty in differentiating the actual duplicate bills.
+
+### NIPSCO
+
+- **Olympus - October Week III (Oct 17 - Oct 22):** As per the migration requirement, some of the usage groups are set to Non-Contributing status making the charges non-contributing as well. Due to this we had exceptions in production. Post this issues, the usage level charges were moved to meter level resolving this issue.
+- **Olympus - October Week I (Oct 02 - Oct 08):** Received a new bill format which has similar charges with adding a multiple pages. Impacting the extraction flow.
+
+### PacGandE
+
+- **Olympus - July Week II (Jul 03 - Jul 09):** Template fix implementation will be handled by Yagarajan (Nexus). To support code fix practices, a fixable template ticket will be assigned to him for hands-on learning and better understanding. Nidhya will assist in resolving any doubts as needed. (Nidhya)
+
+### PacificGasAndElectric
+
+- **Olympus - September Week III (Sep 11 - Sep 18):** Had multiple issues due to context changes. One of which is referring AP to MP
+
+### PacificGasAndElectric Glyph monitoring in Java 17
+
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Nidhyalakshmi completed the observation on glyph behavior in java 17 and it seems to working fine.
+
+### PGandE
+
+- **Olympus - July Week I (Jun 26 - Jul 02):** Effective from June 30, PacificGasAndElectric will be handled by Nexus team and will be taken complete ownership from Jul 15th. (Nidhya)
+
+### PGI
+
+- **Olympus - September Week V (Sep 25 - Oct 01):** A summary bills with multiple monthly statement has been encountered for the first time in this provider, it was new scenario and template has been implemented without impacting the existing formats.
+
+### PittsBurghWaterAndSewerAuthority
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Special OPS ticket was raised to extract "Backflow Fee" at account level and refer to "Fire" Meter. Amrutha analysed and requested for STANDARDs / DC as it is clueless.
+
+### SanDiegoGasAndElectric
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** For Yum Brands, SanDeigo jobs are running on Parakeet, where we faced an extraction failure case. While analysis, we found that the issues is with the bill taken from S3 bucket, which was reported and fixed via UTILDATA. (update ticket id)
+
+### SBSRicohLogisticsSystemCo
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** This is a Japanese bill, where the provider name has been changed. DC has been raised for further confirmation on Migration.
+
+### SCE
+
+- **Olympus - September Week V (Sep 25 - Oct 01):** A delivery impact was raised for SCE template provider via ask channel. It was due to usage missing case and usage not extracted due to page split case. The same has been fixed in template level.
+
+### Sinergas
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** This is an italian bill, which was created as a bill_change on 11-Feb, based on customers priority request via zendesk, the catalyst was updated. Based on analysis ticket has been identified as BCM.
+
+### SouthWaltonUtility
+
+- **Olympus - October Week II (Oct 09 - Oct 15):** A TC was raised to include a sub page in SourceRendering. Based on the analysis the page cannot be rendered due to the subpage and it has been considered out of scope.
+- **Olympus - September Week V (Sep 25 - Oct 01):** A TC was raised to check the feasibility of extracting the Usage page in source rendering pdf. But it was not possible due to pagination issues.
+
+### StateGridShanghaiElectric
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Received a Chinese Bill_Change_Format updated, raised DC clarifications for proceeding with BCM.
+
+### SuburbanPropane
+
+- **Olympus - August Week II (Aug 07 - Aug 13):** The DC has been reopened for better clarity on processing the Delivery Document bill format. As there is no recent standard updates. (Lead)
+- **Olympus - July Week V (Jul 24 - Jul 30):** Post the recent confirmation, DC has re-validated and confirmed to process the Delivery Document bill yet this requires STANDARD confirmation.(Nidhya)
+- **Olympus - July Week IV (Jul 17 - Jul 23):** Recent DC confirmed to reject the Receipt bill, and we have further requested to know any customer based specification is existing. (Nidhya)
+- **Olympus - July Week III (Jul 10 - Jul 16):** Due to a recent audit update, a new error (mtr.deliveriesOnlyMeasurement) was observed. This was fixed by updating the MT for all charges under the propane meter and handling both with/without usage MT extraction, as the error behavior varied accordingly. (Nidhya)
+
+### SymmetryEnergySolutions
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** STANDARD has confirmed to extract usage from the charge for No Meter number case in Symmetry.
+
+### TimeWarner_PacificGasAndElectric
+
+- **Olympus - November Week IV (Nov 20 - Nov 26):** For Specific Job - TimeWarner_PacificGasAndElectric_00 the job is aborted after processing for 1 day. While looking at the issue, the DAQ id created for each bills (670 Accounts) are triggered in a separate jobs Adhoc_Daq_FTP_Auto_1 / Adhoc_Daq_FTP_Auto_0. Processing slaves of 600+ is piling up and the main job is taking longer than expected. We have explained the extraction level analysis to the respective team over a meet to take further steps on product level / configure level. Meet concluded to have a product level meet for further steps.
+
+### TransAlta
+
+- **Olympus - September Week I (Aug 28 - Sep 03):** Received XLS format in TransAlta which was rejected due to insufficient data points.
+- **Olympus - August Week II (Aug 07 - Aug 13):** Override has not been reflecting after adding , modified override to get reflected(Karthik).
+
+### Undefined
+
+- **Olympus - October Week II (Oct 09 - Oct 15):** As an side-effects of java 17 integration, the datatargets with javascript operator were set to Undefined during XREG testing and which was impacting the charge_rate data target. This has been fixed in template level.
+
+### UrjaTestConsumersEnergy
+
+- **Olympus - July Week II (Jul 03 - Jul 09):** The template has been deprecated from Monocle. A request has been submitted to the Migration team to notify the customer regarding provider ID updates, which will be followed by access channel updates.
+- **Olympus - July Week I (Jun 26 - Jul 02):** Template depreciation has been raised and this has to be fasten up.
+
+- **Olympus - December Week III (Dec 11 - Dec 24):** PGE:For PGE we received a bill with EDI format, for which DC has clarified to proceed with NPC.
+- **Olympus - October Week I (Oct 02 - Oct 08):** [ERROR]: mtr.possibleIrrigation : For few FS tickets this errors was triggered when the bill has irrigation only service while having other services too. Based on the DC, the tickets are processed by adding overrides.
+- **Olympus - September Week II (Sep 04 - Sep 10):** C.
+- **Olympus - August Week III (Aug 14 - Aug 20):** CoronaEnergy:A credit bill has been posted for Corona Energy, which only has VAT bill, a DC has been raised to confirm the bill whether to process of reject. (Stanley)
+- **Olympus - August Week I (Jul 31 - Aug 06):** CityOfLongmont:.The pagespec of the template is existing in two different location with same name : CityOfLongmontPdfPagespceProvier , which was causing FileNotFound error in UTC as well as XREG, which was then fixed for testing and proceeded (Karthik)
+- **Olympus - July Week III (Jul 10 - Jul 16):** MunicipalOnline:Due to site updates 4 templates failed with extraction issue due to xpath failure, which has been fixed. (Teams)
+
+## Special catalyst details
+
+### contractUsageDetection
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** A FS ticket was raised in Audit_Workflow as per the recent AUDI fix, based on the discussion made during the AUDI ticket, the FS was reverted to AA for analysis from the AA team.
+
+### DC Documentation
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Amrutha is working on documenting the DC and Rejection cases for further reference from one place.
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Amrutha is working on documenting the DC and Rejection cases for further reference from one place.
+
+### Delivery Testing
+
+- **Olympus - September Week IV (Sep 19 - Sep 24):** 2
+- **Olympus - September Week III (Sep 11 - Sep 18):** 4 Fusion : 3
+- **Olympus - September Week II (Sep 04 - Sep 10):** 31 Fusion : 1
+- **Olympus - September Week I (Aug 28 - Sep 03):** 29 Fusion : 2
+- **Olympus - August Week IV (Aug 21 - Aug 27):** 14 Fusion : 2
+
+### Dummy Template List
+
+- **Olympus - December Week III (Dec 11 - Dec 24):** Nidhyalakshmi has completed the script to grep the Dummy templates.
+- **Olympus - December Week II (Dec 05 - Dec 10):** Nidhyalakshmi has completed the script to grep the Dummy templates.
+
+### Hackathon
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Lavanya participated in Hackathon and completed her module.
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Lavanya is working on a module in Hackathon.
+
+### Intern
+
+- **Olympus - December Week II (Dec 05 - Dec 10):** Trying out a different approach in assigning FD tickets to work for Senthamizhan. Self-review is mandated for BCM fixes, referring to old BCM the fixes should be carried forward before taking it to the next level review.
+- **Olympus - November Week I (Oct 31 - Nov 5):** Mukes Kanna has started to work on multiple catalysts and his performance seems to be good, the mentor is providing L1 and BCM along with simple Fusion and TMPLT tickets. Based on the performance the complexity level will be increased.
+
+### Migration Merge
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** The tickets planned for merge has been successfully moved except for 2 tickets with Dec 05 as due, which was moved on the following day Dec 06.
+
+### Number of Future Due handled this week
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** 72.
+- **Olympus - January Week III (Jan 15 - Jan 21):** 57.
+- **Olympus - January Week II (Jan 08 - Jan 14):** 116.
+- **Olympus - December Week III (Dec 11 - Dec 24):** 20.
+- **Olympus - December Week II (Dec 05 - Dec 10):** 20.
+- **Olympus - December Week I (Nov 27 - Dec 04):** 69.
+- **Olympus - November Week III (Nov 13 - Nov 19):** 61.
+- **Olympus - November Week II (Nov 13 - Nov 20):** 55.
+- **Olympus - November Week I (Oct 31 - Nov 5):** 64.
+- **Olympus - October Week IV (Oct 23 - Oct 29):** 53.
+- **Olympus - October Week III (Oct 17 - Oct 22):** 71.
+- **Olympus - October Week II (Oct 09 - Oct 15):** 73.
+- **Olympus - October Week I (Oct 02 - Oct 08):** 50.
+- **Olympus - September Week V (Sep 25 - Oct 01):** 66.
+- **Olympus - September Week IV (Sep 19 - Sep 24):** 66.
+- **Olympus - September Week III (Sep 11 - Sep 18):** 80.
+- **Olympus - September Week II (Sep 04 - Sep 10):** 90.
+- **Olympus - September Week I (Aug 28 - Sep 03):** 62.
+
+### Odin Downloader Extended
+
+- **Olympus - January Week III (Jan 15 - Jan 21):** Odin Downloader review has been completed will be merged once beta-testing is completed.
+- **Olympus - January Week II (Jan 08 - Jan 14):** Sriya completed the Odin downloader and integrated to Conn Downloader, currently under review.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adoption of code to chrome extension based downloader and integrate to Conn Downloader.
+- **Olympus - December Week II (Dec 05 - Dec 10):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adoption of code to chrome extension based downloader and integrate to Conn Downloader.
+
+### PAD implementation
+
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Saipriyadarsini working on PAD for ticket reduction case for CityOfXenia, as of now JCON raised to configure the job with OCR parameter, and PAD will be implemented for OCR transition case.
+
+### PDF Highlighter
+
+- **Olympus - January Week III (Jan 15 - Jan 21):** Karthik completed the integration part in bifrost for PDF highlight.
+- **Olympus - January Week II (Jan 08 - Jan 14):** Karthik completed the integration part in bifrost for PDF highlight.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Karthik has been working on bifrost analysis and has backtraced the UDS logic to implement similarly in UC.
+- **Olympus - December Week II (Dec 05 - Dec 10):** Karthik has been working on bifrost analysis and has backtraced the UDS logic to implement similarly in UC.
+- **Olympus - November Week I (Oct 31 - Nov 5):** Created a Design document for PDF Highlighter tool and discussed with leads and the implementation will begin with the local integrations.
+
+### PDS
+
+- **Olympus - December Week III (Dec 11 - Dec 24):** 4 Fusion : 19
+- **Olympus - December Week III (Dec 11 - Dec 24):** 3 Fusion : 10
+- **Olympus - December Week I (Nov 27 - Dec 04):** 2
+- **Olympus - November Week IV (Nov 20 - Nov 26):** 3
+- **Olympus - November Week III (Nov 13 - Nov 19):** 5
+- **Olympus - November Week II (Nov 13 - Nov 20):** 5
+- **Olympus - November Week I (Oct 31 - Nov 5):** 3
+
+### PGE java 17 update
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Nidhya is working on testing the PGE glyph mapping on Java 17 for performance analysis.
+
+### PIB Clean-up Activity
+
+- **Olympus - January Week III (Jan 15 - Jan 21):** Karthik shared the insights on PIB update process and update here, Requested cursor access for the same.
+- **Olympus - January Week II (Jan 08 - Jan 14):** Karthik shared the insights on PIB update process and update here, Requested cursor access for the same.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Karthik shared the insights on PIB update process and update here
+- **Olympus - December Week II (Dec 05 - Dec 10):** Karthik shared the insights on PIB update process and update here
+- **Olympus - November Week I (Oct 31 - Nov 5):** Karthik has analysed a list of template that are not updated with Template Source type. Based on discussion, first level of analysis is initiated - updated here.
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Karthik has analysed a list of template that are not updated with Template Source type. This could be possible candidate to begin the cleanup activity. Discussion are pending.
+
+### Plug Special Ops
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Whole 9 tickets were created for FirstEnergy in request to update the rate_or_tariff.
+
+### Process miss
+
+- **Olympus - September Week V (Sep 25 - Oct 01):** A ticket was raised under FEATURE IMPLEMENTATION catalyst for SCE usage missing case, it was reported to Aruna Devi and the catalyst updated properly.
+
+### Project Atom
+
+- **Olympus - September Week II (Sep 04 - Sep 10):** 2
+
+### Reflection issue
+
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Code reflection issue was reported in AB. Due this is few tickets were reopened.
+
+### Role Swap
+
+- **Olympus - October Week III (Oct 17 - Oct 22):** Team level role swaps are completed.
+
+### SLA Time Based
+
+- **Olympus - January Week III (Jan 15 - Jan 21):** Nidhyalakshmi is working on PMU based SLA validation.
+- **Olympus - January Week II (Jan 08 - Jan 14):** Nidhyalakshmi is working on PMU based SLA validation.
+
+### Standard for LandLord
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Amrutha arrested the landlord bill issues which was raised in multiple providers through standard. It was confirmed to reject the bill.
+
+### Templatesdk
+
+- **Olympus - December Week II (Dec 05 - Dec 10):** Unintentationally stacktrace code has been committed into the feature branch which was reverted once it was reported and this will be updated in the WWF session to take as a precautionary measure.
+
+### Tools From Team
+
+- **Olympus - January Week III (Jan 15 - Jan 21):** (OnGoing - Not planned due to FDs plans for Events (Dec 18 and Dec 19)).
+- **Olympus - January Week II (Jan 08 - Jan 14):** (OnGoing - Not planned due to FDs plans for Events (Dec 18 and Dec 19)).
+- **Olympus - December Week III (Dec 11 - Dec 24):** (OnGoing - Not planned due to FDs plans for Events (Dec 18 and Dec 19)).
+- **Olympus - December Week II (Dec 05 - Dec 10):** (OnGoing)
+
+### TRAC
+
+- **Olympus - January Week III (Jan 15 - Jan 21):** Lavanya completed the new requirement for TRAC tool.
+
+### XREG build reflection issue
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** While testing CityOfFairburn decoder in XREG, the decoder was not reflected. Lavanya reporter this issue to XREG Poc - Padma.
+
+### Ymir log and Reopen tracker
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Saipriyadarsini updated python project to app script which helps in trigger and tracking the data.
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Fusion 7
+- **Olympus - January Week III (Jan 15 - Jan 21):** Zendesk late assignment as been reported to the Zendesk POCs.
+- **Olympus - January Week III (Jan 15 - Jan 21):** Amrutha worked on Manheim Zd fix and it was continued by Lavanya and Karthik in the following day, we were able to complete the issue and provided updated log for required files.
+- **Olympus - January Week II (Jan 08 - Jan 14):** Team completely worked on Tickets and completed FDs supporting the event days.
+- **Olympus - January Week II (Jan 08 - Jan 14):** Team completed COBE And POSH.
+- **Olympus - January Week II (Jan 08 - Jan 14):** Team reported invalid diff in XREG, which was taken to next level on fix by Tool team
+- **Olympus - December Week III (Dec 11 - Dec 24):** Team completely worked on Tickets and completed FDs supporting the event days.
+- **Olympus - December Week III (Dec 11 - Dec 24):** The migration tickets were addressed on the planned dates.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Sangeetha, Sriya Nayak and Nidhyalakshmi were available on 18 Dec and 19 Dec supported the entire team on both the days.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Sangeetha took care of Merges and ticket allocation on Dec 19.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Ownership of RCNN and Astounded moved to Saphal and one template swapped with Stanley under same band and accounts.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Saipriyadarsini requested for a Mentor based PG program in BITS through WILP, for which the required documents have been forwarded to Rakesh and HR.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Lavanya had Mac issue, followed by she had issues with installation and other stuffs.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Rohith provided KT on Migration Update process which to be take care in the next week.
+- **Olympus - December Week III (Dec 11 - Dec 24):** Lead / Sub-lead level BCM validation has been implemented based on the Troque team's
+- **Olympus - December Week II (Dec 05 - Dec 10):** Team migrated the templates2 repo to templates3 and fixed the corresponding issues were fixed helped the deliverables to run smoothly.
+- **Olympus - December Week II (Dec 05 - Dec 10):** No tickets were missed to addressed during the Bitbucket and repo migration phase.
+- **Olympus - December Week II (Dec 05 - Dec 10):** Rohith discussed on providing ownership of RCNN to one person as it is shared between to team, it is process.
+- **Olympus - December Week II (Dec 05 - Dec 10):** Team updated the hike provider data for the november month.
+- **Olympus - December Week II (Dec 05 - Dec 10):** Team has installed cron tab for templates git clean up.
+- **Olympus - December Week I (Nov 27 - Dec 04):** Team meticulous worked during the Bitbucket outage day with maring no SLA miss.
+- **Olympus - December Week I (Nov 27 - Dec 04):** Following day also covered with all possible ticket with no SLA miss.
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Team has completed 91 provider analysis for Kwik Trip.
+- **Olympus - November Week III (Nov 13 - Nov 19):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
+- **Olympus - November Week III (Nov 13 - Nov 19):** Team has completed 38 provider analysis for Kwik Trip.
+- **Olympus - November Week III (Nov 13 - Nov 19):** Chandrakanth analysed OCR Template Feasibility list shared by Vengadesh and raised TMPLT ticket for possible cases.
+- **Olympus - November Week II (Nov 13 - Nov 20):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
+- **Olympus - November Week I (Oct 31 - Nov 5):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Team has installed cron-tab for git GC clean-up.
+- **Olympus - October Week IV (Oct 23 - Oct 29):** Team extended to support Fusion tickets and BCM tickets from Torque team.
+- **Olympus - October Week III (Oct 17 - Oct 22):** Mukes kanna is fixing simple fixes as of now and doing good at the same.
+- **Olympus - October Week III (Oct 17 - Oct 22):** Saipriyadarshini has completed the PAD implementation for analysing console from jenkins, currently under review.
+- **Olympus - October Week III (Oct 17 - Oct 22):** Team extending the work on Product Enhancements tickets.
+- **Olympus - October Week III (Oct 17 - Oct 22):** All the Avid Tariff tickets are resolved by the team before the due date.
+- **Olympus - October Week III (Oct 17 - Oct 22):** Compensation discussion were completed.
+- **Olympus - October Week III (Oct 17 - Oct 22):** Lavanya informed the PAD team regarding the comments added with information about PAD and automated transition.
+- **Olympus - October Week II (Oct 09 - Oct 15):** UTC issue reported to tech lead for further action which was resolved by Naren, following the XREG issue.
+- **Olympus - October Week II (Oct 09 - Oct 15):** Mukes kanna, intern has been included into the team, he has been involved into PA and L1 level fixes.
+- **Olympus - October Week II (Oct 09 - Oct 15):** During Amrutha's absence, Karthik is taking care of Mukes's ticket assignments and doubt clarifications.
+- **Olympus - October Week II (Oct 09 - Oct 15):** Saipriyadarshini is working on PAD implementation for deliveryOnlyPDF scenario transition. The maximum fix is done, testing is pending.
+- **Olympus - October Week I (Oct 02 - Oct 08):** Extended support to Torque team with one BCM.
+- **Olympus - September Week V (Sep 25 - Oct 01):** Extended support to Torque team with one BCM.
+- **Olympus - September Week V (Sep 25 - Oct 01):** Focused on Future due than additional activities to extend the support for Floater leave.
+- **Olympus - September Week V (Sep 25 - Oct 01):** Template changes updated based on the team's structural changes.
+- **Olympus - September Week V (Sep 25 - Oct 01):** PiB ownership completed and Jira update request placed.
+- **Olympus - September Week V (Sep 25 - Oct 01):** Lavanya provided a workaround for processing delivery in local.
+- **Olympus - September Week V (Sep 25 - Oct 01):** Despite of UC ticket creation issue, the team was able to complete the CD and priority tickets on the same day.
+- **Olympus - September Week IV (Sep 19 - Sep 24):** Sairpriyadarsini fixed API issue in her script which triggers Defect tracker, Ymir log attachment issues.
+- **Olympus - September Week IV (Sep 19 - Sep 24):** Sathya has completed the multiple split task and the same has been cascaded to the team in the WWF session - TMPLT-12810.
+- **Olympus - September Week III (Sep 11 - Sep 18):** Saipriyadarsini has completed implementation of DeliverOnlyPDF transition via PAD implementation and its currently under testing.
+- **Olympus - September Week III (Sep 11 - Sep 18):** Sairpriyadarsini fixed API issue in her script which triggers Defect tracker, Ymir log attachment issues.
+- **Olympus - September Week III (Sep 11 - Sep 18):** Sathya has completed the multiple split task and has been merged to master and the same will be informed in the WWF session - TMPLT-12810.
+- **Olympus - September Week III (Sep 11 - Sep 18):** Team has started to work on Product Enhancement tickets.
+- **Olympus - September Week II (Sep 04 - Sep 10):** Saipriyadarsini has complemented implementation in DeliverOnlyPDF however we have limitation in hitting jenkins log.
+- **Olympus - September Week II (Sep 04 - Sep 10):** Sathya has completed the multiple split task which was given last week and it is under review - TMPLT-12810.
+- **Olympus - September Week II (Sep 04 - Sep 10):** Data quality based checks via XREG failure analysis has been initiated and 19 tickets have been raised for checksum and billing_address issue.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Chandrakanth has completed the Gradle script integration with Audit and EzValidation repo - TMPLT-12923.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Sheyne will be completely reporting to Naren and the updates will be provided to Naren.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Saipriyadarsini is working on analysis the DeliverOnlyPDF based tickets to proceed with PAD implementation.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Template shuffles has been completed yet to update in PiB.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Rookie are leveled-up to Artisan with handling the TOP300 and TOP1000 categories.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Sathya has completed the multiple split task which was given last week and it is under review - TMPLT-12810.
+
+## RCA Analysis
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Image / Partial Image Bill : 7 tickets raised for different cases
+
+## TransController
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** 2 Tickets were raised for address quality issues by Stanley
+
+## PMU Updates
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Code optimization of PMU tool to handle the network disruption to ensure smooth process without terminating the job. This items will be planned in the upcoming week.
+
+## OnGoing
+
+### Conn Downloader
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Linkify updated in the ticket.
+
+### Dummy Template List
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Nidhyalakshmi has completed the script to grep the Dummy templates.
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Nidhyalakshmi is working on a script to grep the templates which handles Dummy template provider.
+
+### Odin Downloader Extended
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adoption of code to chrome extension based downloader and integrate to Conn Downloader.
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adaptation of code to chrome extension based downloader and integrate to Conn Downloader.
+
+### PDF Highlighter
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Karthik has been working on bifrost analysis and has backtraced the UDS logic to implement similarly in UC.
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Karthik has taken this task, and has completed is initial analysis for this same.
+
+### PIB Clean-up Activity
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Karthik shared the insights on PIB update process and update here
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Karthik shared the insights on PIB update process and update here
+
+## Completed (This week)
+
+### Conn Downloader Extended
+
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Lavanya completed the implementation and has released the note on new Conn Downloader with WWF session.
+
+### Intern
+
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Senthamizhan feedback has been submitted by the mentor and we are trying new strategy and planned to provide an internal training.
+
+### Repo_Updation
+
+- **Olympus - November Week IV (Nov 20 - Nov 26):** Chandrakanth has completed the integration of EZvalidation upgrade in the repo_updation.
+
+## Process miss
+
+### CityOfCherryvilleNC
+
+- **Olympus - October Week I (Oct 02 - Oct 08):** Invalid catalyst assigned to extraction team, it was reverted to reporter with required action list.
+
+### CityOfOnalaskaWI
+
+- **Olympus - October Week I (Oct 02 - Oct 08):** Created extraction fix for new url mapping while the navigation is not fixed yet.
+
+- **Olympus - October Week I (Oct 02 - Oct 08):** Lavanya shared updated jar script for UTC dependency issue and delivery runner steps to the team.
+- **Olympus - October Week I (Oct 02 - Oct 08):** Nidhya has started to work on FortisBC CR issue fix.
+- **Olympus - October Week I (Oct 02 - Oct 08):** Saipriyadharsini is working on analysing the log from main job as a part PAD implementation.
+- **Olympus - October Week I (Oct 02 - Oct 08):** Suggested Sriya to enroll herself into TDC.
+
+## Rev-Ops meetings
+
+- **Olympus - September Week III (Sep 11 - Sep 18):** Nil.
+- **Olympus - September Week I (Aug 28 - Sep 03):** Text extension source has been processed via onboarding, requested to check them.
+- **Olympus - August Week IV (Aug 21 - Aug 27):** No updates.
+- **Olympus - August Week III (Aug 14 - Aug 20):** No updates.
+- **Olympus - August Week II (Aug 07 - Aug 13):** Informed revops on to check the shared templates before processing any templates repetitive for rejection cases.
+- **Olympus - August Week I (Jul 31 - Aug 06):** Initial_Bill_Change catalyst POC will be Mary and Sejannie.
+- **Olympus - August Week I (Jul 31 - Aug 06):** Sheyne provided the list of Repetitive wrong-provider / invalid source pattern templates and it has been forwarded to RevOps POC.
+- **Olympus - August Week I (Jul 31 - Aug 06):** A channel has been created with Initial Bill Change and Bill Change POCs for immediate
+- **Olympus - July Week V (Jul 24 - Jul 30):** Reporter moving Audit workflow tickets to dev, needs correction from the reporters end
+- **Olympus - July Week V (Jul 24 - Jul 30):** Unable to find account are still moved to developers
+- **Olympus - July Week V (Jul 24 - Jul 30):** Mnav tickets are processed incorrectly, requested reporters to check the process
+- **Olympus - July Week IV (Jul 17 - Jul 23):** Backup Person for Revised_Due_Date update will be Ajay Ganesh.
+- **Olympus - July Week IV (Jul 17 - Jul 23):** EMAIL configured job understanding required - Action item with Vaishali.
+- **Olympus - July Week III (Jul 10 - Jul 16):** Revised due date request to be integrated to the existing BCM flow, but since there is few deviations, the process remains same.
+- **Olympus - July Week III (Jul 10 - Jul 16):** LATE_REASSIGNMENT to be updated as AFTER_CUTOFF as per the request from RevOps.
+- **Olympus - July Week II (Jul 03 - Jul 09):** The DCs raised by the reporter lack proper template and customer details, which may lead to link loss issues for the associated templates.
+- **Olympus - July Week II (Jul 03 - Jul 09):** Suburban Propane delivery receipt progress request source has been requested to the reporter for further proceedings.
+
+## Weekly Wisdom Forum
+
+### Conn Downloader
+
+- **Olympus - August Week II (Aug 07 - Aug 13):** Elavarasan has updated the manifest issue in Conn Downloader
+
+### Defect Tracker
+
+- **Olympus - August Week II (Aug 07 - Aug 13):** Saipriyadarsini has been tracking ZD defect tracking entries and it has been automated.
+
+### Gradle Pro roll-out details
+
+- **Olympus - September Week III (Sep 11 - Sep 18):** Chandrakanth S.
+
+### Risk
+
+- **Olympus - August Week II (Aug 07 - Aug 13):** Nil.
+
+### Round-off Operator behaviour
+
+- **Olympus - September Week III (Sep 11 - Sep 18):** Elavarasan A.
+
+- **Olympus - August Week II (Aug 07 - Aug 13):** Lavanya will be taking WWF session on Payment History Group handling in PDS.
+- **Olympus - August Week II (Aug 07 - Aug 13):** DATE Formatting issue insights by Sheyne
+- **Olympus - August Week II (Aug 07 - Aug 13):** Team has started to work on Fusion in order to close the past dues and has completed 3 Fusion and 11 DT.
+
+## Corrective measures
+
+- **Olympus - September Week I (Aug 28 - Sep 03):** Eclipse level json validator enablement
+- **Olympus - September Week I (Aug 28 - Sep 03):** Requested for clarification on why the failure notification was updated only once - Slack thread
+
+## Process Gap
+
+### Ticket creation
+
+- **Olympus - August Week IV (Aug 21 - Aug 27):** For Yardi-plug test customer, UC tickets are been raised. Notified to the POC for further proceedings.
+
+### Zendesk
+
+- **Olympus - August Week IV (Aug 21 - Aug 27):** A zendesk was raised to fix the energy unit from giga_joules to GJ which is extracted as the platform. This was an incorrect requirement which was not reported to the POCs.
+
+- **Olympus - July Week IV (Jul 17 - Jul 23):** There is an issue with the NPC ticket, as it was raised incorrectly based on a misunderstanding of the BCM requirement.
+- **Olympus - July Week I (Jun 26 - Jul 02):** The DCs raised by the reporter lack proper template and customer details, which may lead to link loss issues for the associated templates. This concern will be escalated to the respective teams during the upcoming team meeting.
+
+## Ticket split up
+
+- **Olympus - August Week IV (Aug 21 - Aug 27):** Saipriyadarsini has automated ZD tracker and IAC validator in team level.
+- **Olympus - August Week IV (Aug 21 - Aug 27):** Effective from Aug 20, Sheyne is reporting to Naren even for recurring issues.
+- **Olympus - August Week IV (Aug 21 - Aug 27):** Chandrakanth raised 5 transController tickets, have guided him to have deeper analysis on the same.
+- **Olympus - August Week IV (Aug 21 - Aug 27):** Sriya raised 3 XREG-Failure tickets and has been tracking the same on team level.
+- **Olympus - August Week IV (Aug 21 - Aug 27):** Sathya has been assigned with Pdf split enhancement task
+
+## Ymir Year Normalisation
+
+### PDS Documentation
+
+- **Olympus - July Week V (Jul 24 - Jul 30):** Lavanya has initiated to document the process on PDS project.
+
+### TransController
+
+- **Olympus - July Week V (Jul 24 - Jul 30):** Team level analysis of TransController is taken cared by Chandrakanth. He has analysed and created a few tickets for last week.
+
+### WWF
+
+- **Olympus - July Week V (Jul 24 - Jul 30):** Lavanya will be taking WWF session on Payment History Group handling in PDS.
+
+### Y-CAP
+
+- **Olympus - July Week V (Jul 24 - Jul 30):** Saphal has developed a Console Automation Plugin in eclipse that will reduce the manual efforts involved in the Ymir process and IAC processing for UC project.
+
+- **Olympus - July Week V (Jul 24 - Jul 30):** Ymir repo is not accessible for the development team
+- **Olympus - July Week V (Jul 24 - Jul 30):** We are simulating the UDS owning providers into UC for observing the logic handled by the UC platform
+- **Olympus - July Week V (Jul 24 - Jul 30):** Team has started to work on Fusion in order to close the past dues and has completed 5 Fusion and 3 Delivery Testing.
+
+---
+
+# KTLO's
+
+## Catalyst ticket counts
+
+| Week | DeliveryTesting | Fusion | Zendesk/Migration | AGEIS | DC | Product_Enhancements | Special_OPS | PDS |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Olympus - Jul Week IV (Jul 23 - Jul 29) | 8 | 11 | 14 | 0 | 1 | 11 | 0 | 0 |
+| Olympus - Jul Week IV (Jul 23 - Jul 29) | 5 | 3 | 8 | 1 | 1 | 10 | 0 | 0 |
+| Olympus - Jul Week II (Jul 02 - Jul 08) | 3 | 2 | 20 | 0 | 0 | 10 | 0 | 0 |
+| Olympus - Jun Week V (Jun 25 - Jul 01) | 7 | 2 | 22 | 4 | 10 | 11 | 0 | 0 |
+| Olympus - Jun Week IV (Jun 18 - Jun 24) | 4 | 3 | 11 | 0 | 6 | 12 | 0 | 0 |
+| Olympus - Jun Week III (Jun 11 - Jun 17) | 0 | 0 | 21 | 0 | 10 | 15 | 0 | 0 |
+| Olympus - Jun Week II (Jun 04 - Jun 11) | 6 | 6 | 22 | 0 | 6 | 11 | 0 | 0 |
+| Olympus - Jun Week I (May 28 - Jun 03) | 7 | 0 | 20 | 0 | 5 | 2 |  | 0 |
+| Olympus - May Week IV (May 21 - May 27) | 15 | 5 | 17 |  | 0 | 3 |  | 1 |
+| Olympus - May Week III (May 14 - May 20) | 3 | 8 | 14 |  | 6 | 6 |  |  |
+| Olympus - May Week I (Apr 30 - May 06) | 21 | 1 | 24 |  | 8 | 3 |  |  |
+| Olympus - May Week II (May 07 - May 13) | 4 | 1 | 26 |  | 7 | 2 |  | 1 |
+| Olympus - March Week V (Mar 26 - Apr 01) | 9 | 5 | 24 |  | 12 | 10 |  |  |
+| Olympus - March Week IV (Mar 19 - Mar 25) | 6 | 10 | 27 |  | 11 | 12 |  | 2 |
+| Olympus - March Week III (Mar 12 - Mar 18) | 6 | 10 | 27 |  | 5 | 12 |  | 2 |
+| Olympus - March Week II (Mar 05 - Mar 11) | 4 |  | 31 |  | 7 | 9 |  |  |
+| Olympus - March Week I (Feb 26 - Mar 04) | 8 |  | 24 |  | 9 | 6 |  |  |
+| Olympus - February Week IV (Feb 19 - Feb 25) | 3 | 15 | 21 |  | 9 | 17 |  | 2 |
+| Olympus - February Week III (Feb 12 - Feb 18) | 6 | 15 | 15 |  | 9 | 31 |  | 2 |
+| Olympus - February Week II (Feb 05 - Feb 11) | 10 | 23 | 23 |  | 9 | 26 |  | 3 |
+
+## OCR / bill categorisation impacts
+
+| Week | PDF not handled | Partial woot created | Flagged as Partial OCR | Flagged as Manual provider | OCR Poor Quality |
+| --- | --- | --- | --- | --- | --- |
+| Olympus - Jul Week II (Jul 02 - Jul 08) | 70 | 59 | 34 | 19 | 8 |
+
+## Special catalyst details
+
+### AvidXChange Tariff tickets
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** 1 ticket has been resolved, 1 has been planned upcoming week.
+
+### Number of Future Due handled this week
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** 86.
+
+### Transition Trend Analysis
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** As a part of transition transition for AI, Saipriyadharsini has complete the first level analysis.
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Lavanya and Amrutha raised issue with contradicting statements in recent migration requirement has been the key step to find the process gap in the migration tickets.
+- **Olympus - February Week II (Feb 05 - Feb 11):** Amrutha has completed the manheim xls format documentation and all the steps involved.
+
+## Tools From Team
+
+### PAD implementations
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Analysed 20+ templates transition trend for PAD possible case, created and fixed one template.
+
+### PDF Highlighter
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Karthik completed the integration part in bifrost for PDF highlight. Due to limitation we are not able to proceed next, need discussion on these.
+
+### PIB Clean-up Activity
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Karthik shared the insights on PIB update process and update here, this is in-progress.
+
+### SLA Time Based
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Nidhyalakshmi is working on PMU based SLA validation.
+
+## Provider-Template Issues
+
+### CityOfChelan
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** As per UDF requirement, service dates were extracted at meter level similar to charge group.
+
+### Golden Heart Utilities
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** A part of GHU provider id migration, College Utilities has been confirmed to proceed with code merge.
+
+### Manheim
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Followed by code restructure, the processing time has been decreased and a new charge addition, new provider id fix has been done in template level.
+
+---
+
+# Key Contribution (Lead's)
+
+## AI Leverage in Recurring
+
+### DeliveryTesting
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Completed analysis for July month, the invalid ticket creation has been controlled, yet few already fixed due to Migration, Zendesk and Special-ops needs to be reported to the team.
+
+### PDS Update
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** PDS ticket creation is in declining trend, upon requesting for update, the POC updated that no submission as been done from the customer end causing the declining trend of PDS. Further requested for any reason / unsubscription of accounts/customer. Yet to get update.
+
+### PMU Task
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** To understand the inflow of "Under dev" tickets, MTD reports will be updated with the "Tickets assigned by" column. This will help us to largely monitor and observe the team that highly contributing to under dev tickets.
+
+### UC Direct Customer Ageing analysis
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** From the Direct customer ageing report, highlighted the reporter with two actionable items to avoid invalid ageing.
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Extraction Quality Validator has been upgraded to run on Claude Sonnet 3.5 by default and currently been observed at multiple levels.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Token and cost usage in the report and accumulated csv has been implemented (yet to be committed), to observe the token usage of during test phase.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** This default versioning has been done to run on same version expecting the same result.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Continuous test cases are been done to observe the result of validation.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** The extraction-quality-validator has been checked-in into templates-dev-tools.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** The EQ-Validator Skill has been optimised by adding script to log analysis phase and the validation result will be updated a report.html file for better readability. The HTML reader will have the end-to-end ticket validation results and the ticket details.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Restructured file has been tested with BCM and Zendesk catalyst, based on the testing few enhancement have been identified and work-in-progress.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Stanley will be performing the testing from team level.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** KT has been provided for the same.
+
+## Current status of test tickets
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Abby 11 OCR test Org 45
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Docling PDF conversion test org 202
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** AIR Providers 3251
+
+## Engie OCR Experimental
+
+### Annual metrics
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Annual metrics monthly data updated with INITIATIVES and Generic Audit Tickets.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Based on the feedback received on Efficiency calculation, the issues were identified and formulas were updated to include the transition hours spent by the team also updated the catalyst weightage has been updated.
+
+### DeliveryTesting
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Analysed July month data as next analysis will be based on the resolved tickets for the requirements.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Based on the last discussion with ESG QA team, a internal document created for team's understanding on the background of the process.
+
+### HoneyWell-PDF Retrieval request
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** HoneyWell Customer requested to process the PDF bills from the URL available in the XLS file submitted by the customer through Template. However, this request is not possible via template, as the template only supports direct extraction. Requested to check credentials based bill retrieval instead of file submissions, the request has been taken to the PROSERV.
+
+### Internship Completion
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Internship completion update has been submitted for Mukes Kanna
+
+### OCR Quality Analyser
+
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** OCR conversion comparison to provide the estimation of manual requirement. [Work in progress]
+
+### Stack Ranking
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Updating the team ranking for Olympus and Orin to be reviewed with Arthi for final review.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Provided team insights for annual metrics.
+
+### UC SLA
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** As per Viji's request, Direct Customer SLA & MTD has been completed and shared a sample Email format to further approvals.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** As per Viji's request, Direct Customer SLA - MTD is completed however Daily SLA is challenging and in-progress.
+
+### Zendesk Missing Bill Analysis (UC)
+
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Completed the June Zendesk Missing Bill analysis and incorporated all requested updates. Discussed the next steps with Jagadambiga. Going forward, the analysis will focus on international bill transition and reversal cases to improve resolution for invalid back-and-forth scenarios.
+
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Provided insights of 190+ failed IDs and the classification details for better understanding for the document.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Provided details on how the template works on the Converted bills.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** The third phase of conversion was with Docling, the conversion with Docling had alignment issues which has been communicated to the corresponding team for better understanding.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Reported a discrepancy in File ID process where for one file id has multiple child id - UDF-1164 raised to address the same.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Rakesh shared the database of templates, to analyse the image-bill support in the template level.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Rithwik has initiated a process through Files to estimate the First Pass Rate of the bills, by submitting the converted bills directly, causing 100+ tickets creation to dev.
+- **Olympus - Jul Week II (Jul 02 - Jul 08):** Furthermore, Rithwik has shared the no-woot created cases to analyse and fix if required.
 
 ## Observations | Compliance
 
@@ -541,8 +1431,6 @@ Weeks parsed: **53**
 - **Olympus - April Week I (Apr 02 - Apr 15):** Contractual Compliance based on MTD.
 - **Olympus - March Week V (Mar 26 - Apr 01):** Contractual Compliance based on MTD.
 - **Olympus - March Week IV (Mar 19 - Mar 25):** Contractual Compliance based on MTD.
-- **Olympus - March Week III (Mar 12 - Mar 18):** Contractual Compliance based on MTD.
-- **Olympus - March Week II (Mar 05 - Mar 11):** Contractual Compliance based on MTD.
 - **Olympus - March Week I (Feb 26 - Mar 04):** Contractual Compliance based on MTD.
 - **Olympus - February Week IV (Feb 19 - Feb 25):** Contractual Compliance based on MTD.
 - **Olympus - February Week III (Feb 12 - Feb 18):** Contractual Compliance based on MTD.
@@ -574,10 +1462,8 @@ Weeks parsed: **53**
 - **Olympus - September Week IV (Sep 19 - Sep 24):** FS ticket reopened with errors due to navigation failure as the bills were not available in the site causing reopen with FS.
 - **Olympus - September Week III (Sep 11 - Sep 18):** FS ticket reopened with errors due to navigation failure as the bills were not available in the site causing reopen with FS.
 
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** No SLA Miss | No Build failure.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** 98.93% in Recurring issue.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** 100.00% in Customer Issues.
 - **Olympus - Jul Week IV (Jul 23 - Jul 29):** 99.76% in Recurring issue.
+- **Olympus - Jul Week IV (Jul 23 - Jul 29):** 100.00% in Customer Issues.
 - **Olympus - Jul Week II (Jul 02 - Jul 08):** NO SLA Miss | No Build failure.
 - **Olympus - Jul Week II (Jul 02 - Jul 08):** 99.01% in Recurring issue.
 - **Olympus - Jul Week II (Jul 02 - Jul 08):** 100.00% in Customer Issues.
@@ -623,10 +1509,6 @@ Weeks parsed: **53**
 - **Olympus - March Week V (Mar 26 - Apr 01):** 100.00% in Customer Issues.
 - **Olympus - March Week IV (Mar 19 - Mar 25):** 98.35% in Recurring issue.
 - **Olympus - March Week IV (Mar 19 - Mar 25):** 100.00% in Customer Issues.
-- **Olympus - March Week III (Mar 12 - Mar 18):** 98.35% in Recurring issue.
-- **Olympus - March Week III (Mar 12 - Mar 18):** 100.00% in Customer Issues.
-- **Olympus - March Week II (Mar 05 - Mar 11):** 98.35% in Recurring issue.
-- **Olympus - March Week II (Mar 05 - Mar 11):** 100.00% in Customer Issues.
 - **Olympus - March Week I (Feb 26 - Mar 04):** 98.35% in Recurring issue.
 - **Olympus - March Week I (Feb 26 - Mar 04):** 100.00% in Customer Issues.
 - **Olympus - February Week IV (Feb 19 - Feb 25):** 97.76% in Recurring issue.
@@ -657,8 +1539,6 @@ Weeks parsed: **53**
 - **Olympus - November Week II (Nov 13 - Nov 20):** No SLA miss | No Build Failures.
 - **Olympus - November Week II (Nov 13 - Nov 20):** 97.37% in Recurring issue
 - **Olympus - November Week II (Nov 13 - Nov 20):** 80.21% in Customer Issues.
-- **Olympus - November Week II (Nov 13 - Nov 20):** Monthly rituals insights were shared Nidhya for further take over.
-- **Olympus - November Week II (Nov 13 - Nov 20):** Nidhyalakshmi is actively validating the SLA miss on daily basis, she will be starting to include MTD contractual misses from next week.
 - **Olympus - November Week I (Oct 31 - Nov 5):** No SLA miss
 - **Olympus - November Week I (Oct 31 - Nov 5):** 97.17% in Recurring issue
 - **Olympus - November Week I (Oct 31 - Nov 5):** 100.00% in Customer Issues.
@@ -711,6 +1591,124 @@ Weeks parsed: **53**
 - **Olympus - July Week II (Jul 03 - Jul 09):** 100% 5/5 Compliance in Current Week
 - **Olympus - July Week II (Jul 03 - Jul 09):** 53.88% Absolute Compliance and 88.76% Contractual Compliance in Recurring issue for this Month (Till this week).
 - **Olympus - July Week II (Jul 03 - Jul 09):** 53.57% Absolute Compliance and 78.57% Contractual Compliance in Customer Issues Compliance for this Month(Till this week).
+
+## Agentic AI Status
+
+### BCM Approach
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Team has been updated with the upcoming changes w.r.t. BCM Validation approach.
+
+### BCM Validation Approach
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Discussed with BCM Validation POCs to understand the existing flow and integration of existing and current flow.
+
+### Current Status
+
+- **Olympus - Jun Week V (Jun 25 - Jul 01):** Failure analysis continued completed for May data.
+- **Olympus - Jun Week IV (Jun 18 - Jun 24):** Failure analysis continued completed for May data.
+- **Olympus - Jun Week III (Jun 11 - Jun 17):** PMU report based analysis on daily basis.
+- **Olympus - Jun Week II (Jun 04 - Jun 11):** PMU report based analysis on daily basis.
+- **Olympus - Jun Week I (May 28 - Jun 03):** PMU report based analysis on daily basis.
+- **Olympus - May Week IV (May 21 - May 27):** Based on the daily monitor the frequently unhanlded scenarios are captured.
+- **Olympus - May Week III (May 14 - May 20):** Surendra provide a comment structure for analysis on failure cases.
+- **Olympus - May Week I (Apr 30 - May 06):** The Daily monitor is in-progress.
+- **Olympus - May Week II (May 07 - May 13):** Engineer Result and Failure cases are been captured for further analysis.
+- **Olympus - April Week IV (Apr 22 - Apr 29):** Currently daily process are been closely monitored
+- **Olympus - April Week III (Apr 16 - Apr 22):** Integration is completed, daily validation is in-progress.
+- **Olympus - March Week V (Mar 26 - Apr 01):** RAG model created and fine-tuning in progress.
+- **Olympus - March Week IV (Mar 19 - Mar 25):** Separate prompt has been created for Checksum-cases apart from Transition-prompt.
+- **Olympus - March Week III (Mar 12 - Mar 18):** Provided split-up for Checksum cases, error cases and workflow ticket created.
+- **Olympus - March Week II (Mar 05 - Mar 11):** Completed Fine tuning for limited checksum cases, mtr.validUsage case, zeroNumberOfDays, onlyDueDate case.
+
+### Delivery Testing Transition Case
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Transition of Delivery testing cases analysis has been completed.
+
+### Documentation
+
+- **Olympus - May Week III (May 14 - May 20):** Saipriyadarsini is working on documentation on the cases handled for better visibility.
+
+### Logic Updates
+
+- **Olympus - May Week III (May 14 - May 20):** Saipriyadarsini and Anusha are validating the failure case.
+
+### Manheim Complex fix issue
+
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Approached with different fixes to avoid the delivery impact.
+
+### PMU Updates
+
+- **Olympus - May Week III (May 14 - May 20):** Surendra suggested to update the FinalResult as OutScope when Engineer Result is N/A.
+
+### Provided Jira Field name for Error Classification Agent
+
+- **Olympus - April Week I (Apr 02 - Apr 15):** AI-AnalysisAgentStatus.
+
+### Transition
+
+- **Olympus - March Week I (Feb 26 - Mar 04):** Analysed the possibility of transitioning a valid ticket case.
+
+### Validation
+
+- **Olympus - March Week I (Feb 26 - Mar 04):** Testing in-progress for differentiating the transition evaluation.
+
+- **Olympus - Jun Week IV (Jun 18 - Jun 24):** Documentation prepared for failure cases.
+- **Olympus - Jun Week III (Jun 11 - Jun 17):** No. of bills processed updated for both the Agents and PMU fixes are in-progress for Code Adapt Agent based on recent changes.
+- **Olympus - Jun Week II (Jun 04 - Jun 11):** Few high priority enhancements are identified.
+- **Olympus - Jun Week II (Jun 04 - Jun 11):** No. of bills processed to be updated for both the Agents ( Error type and Code Adapt Agent). Provided updated to Rashi to fix the same.
+- **Olympus - Jun Week II (Jun 04 - Jun 11):** Saipriyadarsini ,Anusha and Rashi are updating the Failure feedback to understand the issue with the Approach.
+- **Olympus - Jun Week I (May 28 - Jun 03):** Cost per bill is updated in report as per Surendra's suggestion on validating the cost spend on each ticket.
+- **Olympus - May Week IV (May 21 - May 27):** Saipriyadarsini changes have been promoted to master.
+- **Olympus - May Week IV (May 21 - May 27):** The Cost retrieved from each ticket should be updated with few more data.
+- **Olympus - May Week IV (May 21 - May 27):** App script has been completed to update the SPOC details update for the closed ticket and the same has been updated for the closed tickets.
+- **Olympus - May Week IV (May 21 - May 27):** Slack-Integration has been implemented for close follow-up on Engineer-result field update. The miss tickets are reported to the respective dev for the update of same.
+- **Olympus - May Week IV (May 21 - May 27):** Daily update on the follow-up provided to the leadership.
+- **Olympus - May Week IV (May 21 - May 27):** Manual field update is done for the transition-cum-AgentAnalysis.
+- **Olympus - May Week III (May 14 - May 20):** Sowmiya updated the Engineer Pending status and Anusha & Saipriyadarsini completed the Failure case analysis for last ten days.
+- **Olympus - May Week I (Apr 30 - May 06):** Saipriyadarsini have completed the local changes into branch and currently under final review.
+- **Olympus - May Week I (Apr 30 - May 06):** Surendra suggested to update daily reports with Cost details from the tickets, the same has been completed by sowmiya.
+- **Olympus - May Week I (Apr 30 - May 06):** The Engineer result for closed tickets will be updated through script(in-progress).
+- **Olympus - May Week II (May 07 - May 13):** The processed tickets are been record through PMU.
+- **Olympus - May Week II (May 07 - May 13):** Based on the discussion with Surendra, Improvement task are been assigned to task owners.
+- **Olympus - May Week II (May 07 - May 13):** For closed tickets the manual analysis should be updated in comments and same should be captured via PMU..
+- **Olympus - April Week IV (Apr 22 - Apr 29):** Jira Automation is enabled however some fields been missed to update. Working on capturing the gaps.
+- **Olympus - April Week IV (Apr 22 - Apr 29):** Pooja Sri and Sowmiya Kirubakaran has been included for processing the Error Type Agent on EXT project.
+- **Olympus - April Week IV (Apr 22 - Apr 29):** Fine-tuning on Approach II is in progress.
+- **Olympus - April Week IV (Apr 22 - Apr 29):** AI Report generation completed in PMU. Adding few more fields are in-progress.
+- **Olympus - April Week III (Apr 16 - Apr 22):** Anusha and Saipriyadarsini are initiating the jobs daily after the PAD process.
+- **Olympus - April Week III (Apr 16 - Apr 22):** Completed the Jira Automation for AI Agent field missing case - Error Type Agent and Code Adapt Agent.
+- **Olympus - April Week III (Apr 16 - Apr 22):** Updated the comments with Internal Developers mode instead of Developer mode.
+- **Olympus - April Week III (Apr 16 - Apr 22):** The comments are updated in the form of tabular column for visibility.
+- **Olympus - April Week I (Apr 02 - Apr 15):** Current Status :Integration is in-progress.
+- **Olympus - April Week I (Apr 02 - Apr 15):** Discussed with Surendra on integration process and progress.
+- **Olympus - April Week I (Apr 02 - Apr 15):** PA analysis with AI enablement.
+- **Olympus - April Week I (Apr 02 - Apr 15):** Under OCR and Under reporter cases also implemented.
+- **Olympus - March Week V (Mar 26 - Apr 01):** RAG model been implemented to check the performance.
+- **Olympus - March Week V (Mar 26 - Apr 01):** On daily basis, tickets are been validated and the accuracy has been recorded.
+- **Olympus - March Week V (Mar 26 - Apr 01):** With RAG Approach, there are possible improvements comparing to the previous approach.
+- **Olympus - March Week V (Mar 26 - Apr 01):** RCA Agent analysis has been restructured.
+- **Olympus - March Week IV (Mar 19 - Mar 25):** Daily tracker has been raised to monitor the progress of AI Agent.
+- **Olympus - March Week IV (Mar 19 - Mar 25):** Integrated g-sheet updates to monitor the accuracy.
+- **Olympus - March Week IV (Mar 19 - Mar 25):** For each analysis the monetisation are been monitored to predict the usage and overall usage for the process.
+- **Olympus - March Week III (Mar 12 - Mar 18):** Code updated to analyse the Filter and output the AI results from daily PA.
+- **Olympus - March Week III (Mar 12 - Mar 18):** Approaching dedicated checksum prompt as it involves multiple cases.
+- **Olympus - March Week II (Mar 05 - Mar 11):** Currently fine tuning ZeroNumberOfDays case and Provider Mismatch case.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** New orchestrator installation and walk-through completed.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Started analysing the RCA-Agent Business and initiated transition classification analysis
+- **Olympus - February Week III (Feb 12 - Feb 18):** Surendra given an deep AI product discussion along with the team members.
+- **Olympus - February Week II (Feb 05 - Feb 11):** Provided first set of transition trend, and currently working on tail end provider list.
+- **Olympus - February Week I (Jan 29 - Feb 04):** Got the brief from Surendra.
+- **Olympus - February Week I (Jan 29 - Feb 04):** Dataset updated for Transition cases.
+- **Olympus - February Week I (Jan 29 - Feb 04):** Team has started to follow the new BCM validation process and all the tickets are going through lead's approval.
+- **Olympus - February Week I (Jan 29 - Feb 04):** Created a BCM workflow that allows two level approvals and branching based workflow, in discussion with Padma.
+- **Olympus - February Week I (Jan 29 - Feb 04):** AvidXChange analysis completed and created two tickets for template level tariff fixes, the tariff validation has been included in TransController and XREG-Failure analysis processes to effectively capture the invalid/incorrect delivery of Tariff
+- **Olympus - February Week I (Jan 29 - Feb 04):** Integrated Conn Downloader has been released and demo has been planned.
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Data update is in progress.
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Team changes
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Squad changes was updated and Template shuffle has been completed.
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Squad level changes are been updated and discussed to the team about the role changes.
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Provided insights on UCU plug-in, possible update suggestions.
+- **Olympus - January Week IV (Jan 22 - Jan 28):** Migration go live dates updated for January month.
 
 ## Other Process
 
@@ -964,6 +1962,22 @@ Weeks parsed: **53**
 - **Olympus - April Week IV (Apr 22 - Apr 29):** Reported the tickets with DueDate/ RevisedDueDate as April-23[Holiday] was reported in-advance and the dates where updated.
 - **Olympus - April Week III (Apr 16 - Apr 22):** Reported the tickets with April-14[Holiday] as due on FS projects and gotten due updates for the same.
 
+## Job Monitoring Tool
+
+### Golden Templates
+
+- **Olympus - April Week III (Apr 16 - Apr 22):** Updated the golden template list and details for the same.
+
+### Java Upgrade
+
+- **Olympus - April Week III (Apr 16 - Apr 22):** During Migration and roll-back, the tickets were labelled to avoid in SLA miss.
+
+### STANDARD discussion
+
+- **Olympus - April Week III (Apr 16 - Apr 22):** Had a discussion with Arthi and highlighted the cases where the provider ID extraction suggestion seems to be invalid and requires further attention [TualatinValleyWaterDistrict & RochesterPublicUtility]
+
+- **Olympus - April Week III (Apr 16 - Apr 22):** Provide KT to amrutha on monthly report generation.
+
 ## Process Updates
 
 ### Automation
@@ -1135,944 +2149,6 @@ Weeks parsed: **53**
 - **Olympus - February Week IV (Feb 19 - Feb 25):** BCM validations are finalled by the lead, the workflow has been updated in similar way.
 - **Olympus - February Week IV (Feb 19 - Feb 25):** Suggested a workflow update in ZD defect tracker with "Alternative solution"
 
-## OnGoing
-
-### Conn Downloader
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** Linkify updated in the ticket.
-
-### Dummy Template List
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** Nidhyalakshmi has completed the script to grep the Dummy templates.
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Nidhyalakshmi is working on a script to grep the templates which handles Dummy template provider.
-
-### Odin Downloader Extended
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adoption of code to chrome extension based downloader and integrate to Conn Downloader.
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adaptation of code to chrome extension based downloader and integrate to Conn Downloader.
-
-### PDF Highlighter
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** Karthik has been working on bifrost analysis and has backtraced the UDS logic to implement similarly in UC.
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Karthik has taken this task, and has completed is initial analysis for this same.
-
-### PIB Clean-up Activity
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** Karthik shared the insights on PIB update process and update here
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Karthik shared the insights on PIB update process and update here
-
-## Completed (This week)
-
-### Conn Downloader Extended
-
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Lavanya completed the implementation and has released the note on new Conn Downloader with WWF session.
-
-### Intern
-
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Senthamizhan feedback has been submitted by the mentor and we are trying new strategy and planned to provide an internal training.
-
-### Repo_Updation
-
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Chandrakanth has completed the integration of EZvalidation upgrade in the repo_updation.
-
-## Process miss
-
-### CityOfCherryvilleNC
-
-- **Olympus - October Week I (Oct 02 - Oct 08):** Invalid catalyst assigned to extraction team, it was reverted to reporter with required action list.
-
-### CityOfOnalaskaWI
-
-- **Olympus - October Week I (Oct 02 - Oct 08):** Created extraction fix for new url mapping while the navigation is not fixed yet.
-
-- **Olympus - October Week I (Oct 02 - Oct 08):** Lavanya shared updated jar script for UTC dependency issue and delivery runner steps to the team.
-- **Olympus - October Week I (Oct 02 - Oct 08):** Nidhya has started to work on FortisBC CR issue fix.
-- **Olympus - October Week I (Oct 02 - Oct 08):** Saipriyadharsini is working on analysing the log from main job as a part PAD implementation.
-- **Olympus - October Week I (Oct 02 - Oct 08):** Suggested Sriya to enroll herself into TDC.
-
-## Rev-Ops meetings
-
-- **Olympus - September Week III (Sep 11 - Sep 18):** Nil.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Text extension source has been processed via onboarding, requested to check them.
-- **Olympus - August Week IV (Aug 21 - Aug 27):** No updates.
-- **Olympus - August Week III (Aug 14 - Aug 20):** No updates.
-- **Olympus - August Week II (Aug 07 - Aug 13):** Informed revops on to check the shared templates before processing any templates repetitive for rejection cases.
-- **Olympus - August Week I (Jul 31 - Aug 06):** Initial_Bill_Change catalyst POC will be Mary and Sejannie.
-- **Olympus - August Week I (Jul 31 - Aug 06):** Sheyne provided the list of Repetitive wrong-provider / invalid source pattern templates and it has been forwarded to RevOps POC.
-- **Olympus - August Week I (Jul 31 - Aug 06):** A channel has been created with Initial Bill Change and Bill Change POCs for immediate
-- **Olympus - July Week V (Jul 24 - Jul 30):** Reporter moving Audit workflow tickets to dev, needs correction from the reporters end
-- **Olympus - July Week V (Jul 24 - Jul 30):** Unable to find account are still moved to developers
-- **Olympus - July Week V (Jul 24 - Jul 30):** Mnav tickets are processed incorrectly, requested reporters to check the process
-- **Olympus - July Week IV (Jul 17 - Jul 23):** Backup Person for Revised_Due_Date update will be Ajay Ganesh.
-- **Olympus - July Week IV (Jul 17 - Jul 23):** EMAIL configured job understanding required - Action item with Vaishali.
-- **Olympus - July Week III (Jul 10 - Jul 16):** Revised due date request to be integrated to the existing BCM flow, but since there is few deviations, the process remains same.
-- **Olympus - July Week III (Jul 10 - Jul 16):** LATE_REASSIGNMENT to be updated as AFTER_CUTOFF as per the request from RevOps.
-- **Olympus - July Week II (Jul 03 - Jul 09):** The DCs raised by the reporter lack proper template and customer details, which may lead to link loss issues for the associated templates.
-- **Olympus - July Week II (Jul 03 - Jul 09):** Suburban Propane delivery receipt progress request source has been requested to the reporter for further proceedings.
-
-## Corrective measures
-
-- **Olympus - September Week I (Aug 28 - Sep 03):** Eclipse level json validator enablement
-- **Olympus - September Week I (Aug 28 - Sep 03):** Requested for clarification on why the failure notification was updated only once - Slack thread
-
-## Process Gap
-
-### Ticket creation
-
-- **Olympus - August Week IV (Aug 21 - Aug 27):** For Yardi-plug test customer, UC tickets are been raised. Notified to the POC for further proceedings.
-
-### Zendesk
-
-- **Olympus - August Week IV (Aug 21 - Aug 27):** A zendesk was raised to fix the energy unit from giga_joules to GJ which is extracted as the platform. This was an incorrect requirement which was not reported to the POCs.
-
-- **Olympus - July Week IV (Jul 17 - Jul 23):** There is an issue with the NPC ticket, as it was raised incorrectly based on a misunderstanding of the BCM requirement.
-- **Olympus - July Week I (Jun 26 - Jul 02):** The DCs raised by the reporter lack proper template and customer details, which may lead to link loss issues for the associated templates. This concern will be escalated to the respective teams during the upcoming team meeting.
-
----
-
-# KTLO's
-
-## Catalyst ticket counts
-
-| Week | DeliveryTesting | Fusion | Zendesk/Migration | AGEIS | DC | Product_Enhancements | Special_OPS | PDS |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Olympus - Jul Week IV (Jul 23 - Jul 29) | 8 | 11 | 14 | 0 | 1 | 11 | 0 | 0 |
-| Olympus - Jul Week IV (Jul 23 - Jul 29) | 5 | 3 | 8 | 1 | 1 | 10 | 0 | 0 |
-| Olympus - Jul Week II (Jul 02 - Jul 08) | 3 | 2 | 20 | 0 | 0 | 10 | 0 | 0 |
-| Olympus - Jun Week V (Jun 25 - Jul 01) | 7 | 2 | 22 | 4 | 10 | 11 | 0 | 0 |
-| Olympus - Jun Week IV (Jun 18 - Jun 24) | 4 | 3 | 11 | 0 | 6 | 12 | 0 | 0 |
-| Olympus - Jun Week III (Jun 11 - Jun 17) | 0 | 0 | 21 | 0 | 10 | 15 | 0 | 0 |
-| Olympus - Jun Week II (Jun 04 - Jun 11) | 6 | 6 | 22 | 0 | 6 | 11 | 0 | 0 |
-| Olympus - Jun Week I (May 28 - Jun 03) | 7 | 0 | 20 | 0 | 5 | 2 |  | 0 |
-| Olympus - May Week IV (May 21 - May 27) | 15 | 5 | 17 |  | 0 | 3 |  | 1 |
-| Olympus - May Week III (May 14 - May 20) | 3 | 8 | 14 |  | 6 | 6 |  |  |
-| Olympus - May Week I (Apr 30 - May 06) | 21 | 1 | 24 |  | 8 | 3 |  |  |
-| Olympus - May Week II (May 07 - May 13) | 4 | 1 | 26 |  | 7 | 2 |  | 1 |
-| Olympus - March Week V (Mar 26 - Apr 01) | 9 | 5 | 24 |  | 12 | 10 |  |  |
-| Olympus - March Week IV (Mar 19 - Mar 25) | 6 | 10 | 27 |  | 11 | 12 |  | 2 |
-| Olympus - March Week III (Mar 12 - Mar 18) | 6 | 10 | 27 |  | 5 | 12 |  | 2 |
-| Olympus - March Week II (Mar 05 - Mar 11) | 4 |  | 31 |  | 7 | 9 |  |  |
-| Olympus - March Week I (Feb 26 - Mar 04) | 8 |  | 24 |  | 9 | 6 |  |  |
-| Olympus - February Week IV (Feb 19 - Feb 25) | 3 | 15 | 21 |  | 9 | 17 |  | 2 |
-| Olympus - February Week III (Feb 12 - Feb 18) | 6 | 15 | 15 |  | 9 | 31 |  | 2 |
-| Olympus - February Week II (Feb 05 - Feb 11) | 10 | 23 | 23 |  | 9 | 26 |  | 3 |
-
-## OCR / bill categorisation impacts
-
-| Week | PDF not handled | Partial woot created | Flagged as Partial OCR | Flagged as Manual provider | OCR Poor Quality |
-| --- | --- | --- | --- | --- | --- |
-| Olympus - Jul Week II (Jul 02 - Jul 08) | 70 | 59 | 34 | 19 | 8 |
-
-## PAD Implementations
-
-- **Olympus - Jun Week II (Jun 04 - Jun 11):** Issue with Multi-Bound validation was identified by the team and it has been fixed.
-- **Olympus - Jun Week I (May 28 - Jun 03):** Issue with Multi-Bound validation was identified by the team and it has been fixed.
-- **Olympus - May Week IV (May 21 - May 27):** Multi-bound analysis has been implemented in the PAD level and code merged.
-- **Olympus - May Week III (May 14 - May 20):** A suggestion was raised to fix the Multi-bound bill identification in PAD. Anusha completed the implementation and updated the PAD logic. Reducing the manual effort of approximately 6 tickets per month.
-- **Olympus - May Week I (Apr 30 - May 06):** A suggestion was raised to fix the Multi-bound bill identification in PAD. Anusha completed the implementation and updated the PAD logic. Reducing the manual effort of approximately 6 tickets per month.
-
-## AI Orchestrator - ErrorEvent Classification
-
-### Accuracy & Optimization
-
-- **Olympus - April Week III (Apr 16 - Apr 22):** Saipriyadarsini analysed the contradicting case and fine-tuned some cases.
-- **Olympus - April Week I (Apr 02 - Apr 15):** Saipriyadarsini and Anusha are currently initiating Open and Under-Dev tickets, the results will be validated on a daily basis. The comments are updated with Internal Developers mode as it was updated under developer restricted mode which will be visible to everyone.
-- **Olympus - March Week V (Mar 26 - Apr 01):** Sairpriyadarsini is validating the failed cases and fine-tuned. She is working with Deepika and Rashi on integration part.
-- **Olympus - March Week IV (Mar 19 - Mar 25):** Post RAG model upgrade, the accuracy seems to be better. Currently finetuning.
-- **Olympus - March Week III (Mar 12 - Mar 18):** Improved model accuracy through checksum fine-tuning, multi-line charge detection, and regex refinements across 40+ test tickets.
-
-### Logic & RCA Expansion
-
-- **Olympus - April Week I (Apr 02 - Apr 15):** Under reporter two case has been implemented yet PAD possibility needs to be evaluated before AI implementation [Sowmiya].
-- **Olympus - March Week V (Mar 26 - Apr 01):** Under OCR and Under reporter cases implemented [Sowmiya].
-- **Olympus - March Week IV (Mar 19 - Mar 25):** International bill are been restricted and Upgraded the logic to RAG model.
-- **Olympus - March Week III (Mar 12 - Mar 18):** Implemented logic for new error events (e.g., missing charge amounts) and added 4 new RCA categories, including extraction failures and undefined units.
-
-### Process Enhancements
-
-- **Olympus - March Week III (Mar 12 - Mar 18):** Integrated transition prompts for international bills, added tracking columns for cost and error events in Google Sheets, and identified further optimization needs for data consistency.
-
-- **Olympus - April Week III (Apr 16 - Apr 22):** Logic & RCA Expansion:Ticket has been raised to validate the multi-bound bill in uc - TMPLT-15074.
-- **Olympus - April Week III (Apr 16 - Apr 22):** Anusha and Saipriyadarsini are validating if the Tickets are updated with AI Agent Fields on daily basis.
-- **Olympus - April Week I (Apr 02 - Apr 15):** Currently the AI analysis comments are updated under Developer mode, however it was updated to Internal Developers mode.
-- **Olympus - March Week II (Mar 05 - Mar 11):** Saipriyadarsini started validate tickets from a filter and update in sheet for further updates.
-- **Olympus - March Week II (Mar 05 - Mar 11):** New Audits have been integrated.
-- **Olympus - March Week I (Feb 26 - Mar 04):** Saipriyadarsini worked on transition classification which includes : Checksum, mtr.validUsage, zeroNumberOfDays.
-- **Olympus - March Week I (Feb 26 - Mar 04):** The Mtr.validUsage seems to having a positive results.
-- **Olympus - March Week I (Feb 26 - Mar 04):** ZeroNumberOfDays needs fine-tuning.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Saipriyadarsini worked on transition classification and most of tickets seems to providing positive analysis.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** As a next step, she started to analysis mtr.validusage error with woot and bill validation.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Restricted the analysis only to Tail end connectors and 'Open' status tickets.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Fine-tuning continues for Checksum.
-- **Olympus - February Week III (Feb 12 - Feb 18):** Saipriyadarsini is working on analysis and testing for Transition-classification.
-- **Olympus - February Week III (Feb 12 - Feb 18):** Implemented a Transition-prompt for Transition Classification case.
-
-## SLA Updates
-
-### Conn Downloader Extended
-
-- **Olympus - March Week IV (Mar 19 - Mar 25):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
-- **Olympus - March Week III (Mar 12 - Mar 18):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
-- **Olympus - March Week II (Mar 05 - Mar 11):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
-- **Olympus - March Week I (Feb 26 - Mar 04):** Sangeetha is working on fixing the critical cases bills download feature. [Couldn't plan].
-
-### Slack updates
-
-- **Olympus - March Week IV (Mar 19 - Mar 25):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
-- **Olympus - March Week III (Mar 12 - Mar 18):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
-- **Olympus - March Week II (Mar 05 - Mar 11):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
-- **Olympus - March Week I (Feb 26 - Mar 04):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [Couldn't plan].
-
-- **Olympus - March Week IV (Mar 19 - Mar 25):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
-- **Olympus - March Week III (Mar 12 - Mar 18):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
-- **Olympus - March Week II (Mar 05 - Mar 11):** Under dev count for each team has been completed as per the requirement.
-- **Olympus - March Week II (Mar 05 - Mar 11):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
-- **Olympus - March Week I (Feb 26 - Mar 04):** Nidhyalakshmi is working on under dev ticket count update for each squads.
-- **Olympus - March Week I (Feb 26 - Mar 04):** Reopen count to be added in SLA / monthly Reports.
-- **Olympus - March Week I (Feb 26 - Mar 04):** Viji requested to have the Categorisation in the Consolidated Miss tickets.
-- **Olympus - March Week I (Feb 26 - Mar 04):** Also, providing mitigation to avoid SLA miss.
-- **Olympus - March Week I (Feb 26 - Mar 04):** Lavanya will be working on Time-based SLA in PMU and Nidhyalakshmi will be taken care of Updating the sheet.
-
-## AvidXChange Tariff fixes
-
-- **Olympus - March Week I (Feb 26 - Mar 04):** CityOfLongmont has possible tariff available, based on standard confirmation tariff will be extracted.
-- **Olympus - March Week I (Feb 26 - Mar 04):** For AmericanWater, a DC was raised for Rate confirmation, which has confirmed to extract the rate as Unkown Tariff for all the meters and format. This need further confirmation through Standards.
-
-## SLA Time Based
-
-### Conn Downloader Extended
-
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Sangeetha is working on fixing the critical cases bills download feature.
-
-### Slack updates
-
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same [In-progress].
-
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Nidhyalakshmi is working on under dev ticket count update for each squads.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Reopen count to be added in SLA / monthly Reports.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Viji requested to have the Categorisation in the Consolidated Miss tickets.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Also, providing mitigation to avoid SLA miss.
-
-## Conn Downloader Extended
-
-- **Olympus - February Week III (Feb 12 - Feb 18):** Observed an issue with bills download when the Automon has CRITICAL and AUDIT error.
-- **Olympus - February Week III (Feb 12 - Feb 18):** Only ERROR with pdf is getting downloaded. Initiated a new requirement to handle all sources.
-- **Olympus - February Week III (Feb 12 - Feb 18):** A notification will be provided if the Automon has CRITICAL & AUDIT errors.
-- **Olympus - February Week III (Feb 12 - Feb 18):** Sangeetha is working on this.
-- **Olympus - February Week III (Feb 12 - Feb 18):** Slack updates: Sangeetha provided suggestions on automating certain recurring tasks like PA update, Additional Plan update and she is working on the same.
-
-## Provider-Template Issues
-
-### BerkeleyCountyWaterAndSanitation
-
-- **Olympus - July Week V (Jul 24 - Jul 30):** Had meter details without service details, for which DC was raised. Based on this we had 15+ tickets, once the DC is resolved all the tickets were resolved. (Stanley)
-
-### CableOne
-
-- **Olympus - November Week II (Nov 13 - Nov 20):** A migration was raised for the account number change; however, both the template and ezValidation were already applicable, resulting in no disruption to delivery.
-
-### CGECHL
-
-- **Olympus - July Week III (Jul 10 - Jul 16):** A formatting issue occurred due to international bill format. Spanish interval dates are not getting formatted properly during statement storage. The issue has been escalated to the concerned team. (Sheyne)
-
-### CityOfBlouder
-
-- **Olympus - September Week IV (Sep 19 - Sep 24):** A zendesk requirement was raised to extract one particular information from the bill as message and the check the delivery if the required message can be delivered to the customer.
-
-### CityOfBufordGA
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** The disconnect bill with Disconnect date as 30-Feb-2026 causing failed to format issue, as per DC clarification disconnect date restricted in template level.
-
-### CityOfChelan
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** As per UDF requirement, service dates were extracted at meter level similar to charge group.
-
-### CityOfDurham
-
-- **Olympus - October Week III (Oct 17 - Oct 22):** For City Of Durham we encountered an ABANDONED scenario which was due to the ObjectOptimisticLockingFailureException and the same has been informed to the team for further investigations on similar instances in UC.
-
-### CityOfFairBurn
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Lavanya created a new decoder for CityOfFairBurn with required Fonts.
-
-### CityOfFishersIN
-
-- **Olympus - October Week IV (Oct 23 - Oct 29):** A ticket was raised to fixed the provider id issue in CityOfFishersIN which had Fishers Utilities, requested for Migration confirmation.
-
-### CityOfFortLoudounElectric
-
-- **Olympus - August Week III (Aug 14 - Aug 20):** Compilation error in utc and xreg due to presence of same page spec in two different path but this issue doesn't exist in Master. (Karthik)
-- **Olympus - August Week II (Aug 07 - Aug 13):** Compilation error in utc and xreg due to presence of same page spec in two different path but this issue doesn't exist in Master. (Karthik)
-
-### CityOfGalvestonTX
-
-- **Olympus - September Week III (Sep 11 - Sep 18):** A TC was raised in clarification on how and why multiple pdf has been updated under same single version log and this happens since there is changes to the intervals for all the pdfs. Considering this as same pdf.
-
-### CityOfGlendaleAZMyUtiity
-
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Received a zendesk requirement to update the extraction of STORM water from meter to account. This should have been triggered as an ALERT, but it was not. This issues has been reported to the AUDIT team for further assistance. Also, suggested to implement in internal audits.
-
-### CityOfNetherland
-
-- **Olympus - December Week II (Dec 05 - Dec 10):** A zendesk was raised due to source rendering issue which was due to the new url changes.
-
-### CityOfRockmart
-
-- **Olympus - December Week III (Dec 11 - Dec 24):** Bill had Water Previous Balance with Multiple Water meters. Initially the template handled Water Previous balance as Water meter level Previous balance, following the AA's request and DC reference the template was fixed with extracting PB as OB, which caused Checksum. But on further reference, this format of bills are been rejected with standards. So for this bill, we have raised DC for rejection confirmation.
-
-### ComcastPA
-
-- **Olympus - July Week III (Jul 10 - Jul 16):** We received a high-volume bill (~5,000 pages). The issue was resolved by processing and fixing only the affected account using the SplitScript. (Lavanya)
-
-### ConsumerEnergy
-
-- **Olympus - September Week III (Sep 11 - Sep 18):** Account number was incorrectly extracted with space, which was due to conversion issue. To handle this issue, implemented ezValidations.
-
-### ConsumersEnegy EDI
-
-- **Olympus - July Week I (Jun 26 - Jul 02):** ConsumerEnergy's EDI format has been requested to handle in the template level by Customer, though we are unsure about the origin of the bill as per the STANDARD. We have requested for STANDARDs confirmation to proceed. (Elavarasan)
-
-### FirstEnergy
-
-- **Olympus - October Week I (Oct 02 - Oct 08):** Encountered Java 17 compatibility issue causing issue with javaScriptOperator failing the data targets which was implemented with it. Along with Naren and Rohith we were able to inform the respective team and have it fixed. Post the changes the issue was fixed.
-- **Olympus - September Week III (Sep 11 - Sep 18):** A zendesk was raised to fix LifeCycle Id for the First Energy bills, but since the template uses default lifecycle id, the template changes will not change the data and declined this requirement.
-- **Olympus - September Week II (Sep 04 - Sep 10):** Totalised issue has been fixed in template level, possibilities are been analysed.
-- **Olympus - September Week I (Aug 28 - Sep 03):** The Reporter has requested for clarification on how the template has handled in few cases.
-- **Olympus - August Week IV (Aug 21 - Aug 27):** A zendesk request was raised to fix deregulation status as delivery and supply. Even when there is no additional provider available, which is not the updated with standards. Requested for standard confirmation confirmation for the same.
-- **Olympus - August Week III (Aug 14 - Aug 20):** Usage level revamp has been completed as per the STANDARDS requirement and has been resolved Updates. (Elavarasan)
-- **Olympus - August Week II (Aug 07 - Aug 13):** Usage level revamp has been completed as per the STANDARDS requirement. Had immediate connects with the stakeholders to resolve the issue and it has been resolved on Aug 12th Updates. (Elavarasan)
-- **Olympus - August Week I (Jul 31 - Aug 06):** The initial analysis has been done, the extraction is in progress with respect to the identified and confirmed cases - Updates. (Elavarasan)
-- **Olympus - July Week V (Jul 24 - Jul 30):** STANDARDs change analysis has been completed and parked under stakeholders, requires more samples and xreg checks. (Elavarasan)
-- **Olympus - July Week IV (Jul 17 - Jul 23):** In progress of analysing the STANDARDs and taking the relevant samples of the same. (Elavarasan)
-- **Olympus - July Week III (Jul 10 - Jul 16):** A STANDARD update has been raised and is currently in the analysis phase. (Elavarasan)
-
-### Golden Heart Utilities
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** A part of GHU provider id migration, College Utilities has been confirmed to proceed with code merge.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** A Migration was raised for provider ID update, with provider id and provider name as GHU , which is not fitting into our provider id extraction format. We have requested the reporter to get confirmation from all the stakeholders since the Provider Id extraction depends on many other factors.
-
-### Google based fixes
-
-- **Olympus - December Week II (Dec 05 - Dec 10):** For Google customer templates - GoogleBenMilamSolarCA and GoogleParisFarmSolarCA zendesk tickets created for interval extraction based on the quarterly indication from the bill. This was fixed in the template.
-
-### GoogleEnecoZakelijk
-
-- **Olympus - October Week II (Oct 09 - Oct 15):** An XLS file hsa been processed under different template caused the extraction failure, post the analysis it was guided to process under right template, helping the statement to promote to production.
-
-### GrandLakesMUDTX
-
-- **Olympus - July Week II (Jul 03 - Jul 09):** For Grand Lakes MUD, we have provider names listed as Grand Lakes MUD 1 and Grand Lakes MUD 4. A ticket was raised based on DC confirmation, and since there are no accounts enrolled under Grand Lakes MUD TX, we are proceeding without a migration. (Karthik)
-
-### GuadalupeBlancoRiverAuth
-
-- **Olympus - August Week III (Aug 14 - Aug 20):** For this provider a new bill format has been post were we had only Customer Id, while comparing to old bill it was with proper Account number. A dc has been raised to confirm the bill (Lavanya).
-
-### HolyCrossEnergy
-
-- **Olympus - December Week II (Dec 05 - Dec 10):** A zendesk was reported for cred failure case, while checking the issue we had almost 100 child jobs with 50% of general failure case. Upon analysing further it was found to be a valid error cases, for three child jobs there was valid error. This was identified with AuditReport availability.
-
-### LandLord Bills
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Multiple providers encountered Landlord bills format which is without Charges, based on DC the bills are rejected.
-
-### LandskronaEnergiSWE
-
-- **Olympus - November Week III (Nov 13 - Nov 19):** This is a Swedish bill, with recent format changes in usage, the bill was failing with failed to format error at actual usage level, while further analysis this format of usage was supported in Swedish_num_format, based on qualifier it has been updated in template level, supporting for both bills.
-
-### LeedsWaterWorksBoard
-
-- **Olympus - January Week II (Jan 08 - Jan 14):** Fire charge extracted at account level, based on migration, it was moved to meter level charge.
-
-### LuleaMiljoresurs
-
-- **Olympus - October Week IV (Oct 23 - Oct 29):** The templates is an international bill with date reversal case, due to the international bill, the manual correction has been rejected for handling the dates. Based on the analysis, the usage is given as negative based on this their is a possibility in handling in template level. This need confirmation from Arthi and Domain team for proceeding further.
-
-### Manheim
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** Pravallika brought-in two new cases, requested for clarification on details on provided data.
-- **Olympus - February Week II (Feb 05 - Feb 11):** Followed by code restructure, the processing time has been decreased and a new charge addition, new provider id fix has been done in template level.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Had a complex issue, followed by code restructuring was initiated.
-- **Olympus - January Week III (Jan 15 - Jan 21):** A zendesk requirement was raised to extract a charge group which was extracted as a usage due to previous XLS condition. The fix includes suppression of usage and extraction of charge from the same line making the fix complex to handle also impacting the existing format. However after implementation of separate flow with qualifying cases, the fix was done. The issues are been documented in Manheim provider issue
-- **Olympus - January Week II (Jan 08 - Jan 14):** A TC was raised to understand the usage extraction and possibility in extracting the 0.00 usage as per Cox request, same has been clarified.
-- **Olympus - November Week IV (Nov 20 - Nov 26):** For Cox-Manheim we received a zendesk ticket for extracting the usage group which was missed due to column interchange and column name restructuring. At template level both are handled, while checking at why mtr.validUsage was triggered we observed that the error has been overridden through generic override which was implemented long back. The issue has been reported to the zendesk reporters and following that Audit removal ticket was raised and fixed.
-- **Olympus - October Week IV (Oct 23 - Oct 29):** The document on processing Manheim XLS has been shared with the reporters via the email sent for the same: Manheim - Confluence.
-- **Olympus - October Week III (Oct 17 - Oct 22):** For Cox, we received a bulk XLS files which were initially processed incorrectly by the reporter, which contributed to new ticket creation and delayed deliveries, this has been informed through an email to the respective teams. Confluence has been updated : Manheim - Confluence
-- **Olympus - September Week IV (Sep 19 - Sep 24):** XLS were processed with daq, causing unwanted checksum. Requested the reporter to rerun the job with -q making the issue fixed.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Manheim received a bill format with reorder columns. Requested to check why it has been updated and clarification on if it will be recurring format.
-
-### MarangiDisposal
-
-- **Olympus - August Week III (Aug 14 - Aug 20):** A FS ticket has been raised via File module, the bill belongs to Marangi Disposal based on the site details, however due to the acquisition of this provider, it has been processed under Interstate causing an extraction level issue. We have raised DC to confirm the migration and the correct template to be processed.. (Lavanya)
-
-### MidAmericanEnergy
-
-- **Olympus - December Week III (Dec 11 - Dec 24):** The site has two different statements, likely to be updated after the initial bill generation. Requested for DC to clarify on handling the updated bill.
-
-### Minnesota
-
-- **Olympus - September Week IV (Sep 19 - Sep 24):** A summary bills with multiple monthly statement has been encountered for the first time in this provider, it was new scenario and template has been implemented without impacting the existing formats.
-
-### MinnesotaPowerMN
-
-- **Olympus - August Week II (Aug 07 - Aug 13):** A ZD was raised to fix the service address formatting issue, while checking deeper it was due to the address format in the bill which was without space causing the formatting issue. (Karthik)
-
-### Multiple pages bills
-
-- **Olympus - September Week IV (Sep 19 - Sep 24):** For BCHydro and LansingBoardOfWaterAndLight, minor issues has been raised for multi-pages bill which was fixed by splitting the bills in certain level to make the issue more manageable.
-
-### MyAccountCommonNavigation
-
-- **Olympus - August Week II (Aug 07 - Aug 13):** The recent navigation fix impacted extraction, resulting in junk data. The issue has been analyzed, necessary actions were taken, and the Navigation team has been notified for immediate resolution (Chandru & Saipriyadarsini).
-
-### NineStarConnect
-
-- **Olympus - January Week IV (Jan 22 - Jan 28):** DC raised for Smarthub - Duplicate Invoice with Final Bill string.
-- **Olympus - December Week III (Dec 11 - Dec 24):** The Final bill was posted with bill duplication. DC confirmed to processed by splitting the bills yet it had difficulty in differentiating the actual duplicate bills.
-
-### NIPSCO
-
-- **Olympus - October Week III (Oct 17 - Oct 22):** As per the migration requirement, some of the usage groups are set to Non-Contributing status making the charges non-contributing as well. Due to this we had exceptions in production. Post this issues, the usage level charges were moved to meter level resolving this issue.
-- **Olympus - October Week I (Oct 02 - Oct 08):** Received a new bill format which has similar charges with adding a multiple pages. Impacting the extraction flow.
-
-### PacGandE
-
-- **Olympus - July Week II (Jul 03 - Jul 09):** Template fix implementation will be handled by Yagarajan (Nexus). To support code fix practices, a fixable template ticket will be assigned to him for hands-on learning and better understanding. Nidhya will assist in resolving any doubts as needed. (Nidhya)
-
-### PacificGasAndElectric
-
-- **Olympus - September Week III (Sep 11 - Sep 18):** Had multiple issues due to context changes. One of which is referring AP to MP
-
-### PacificGasAndElectric Glyph monitoring in Java 17
-
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Nidhyalakshmi completed the observation on glyph behavior in java 17 and it seems to working fine.
-
-### PGandE
-
-- **Olympus - July Week I (Jun 26 - Jul 02):** Effective from June 30, PacificGasAndElectric will be handled by Nexus team and will be taken complete ownership from Jul 15th. (Nidhya)
-
-### PGI
-
-- **Olympus - September Week V (Sep 25 - Oct 01):** A summary bills with multiple monthly statement has been encountered for the first time in this provider, it was new scenario and template has been implemented without impacting the existing formats.
-
-### PittsBurghWaterAndSewerAuthority
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** Special OPS ticket was raised to extract "Backflow Fee" at account level and refer to "Fire" Meter. Amrutha analysed and requested for STANDARDs / DC as it is clueless.
-
-### SanDiegoGasAndElectric
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** For Yum Brands, SanDeigo jobs are running on Parakeet, where we faced an extraction failure case. While analysis, we found that the issues is with the bill taken from S3 bucket, which was reported and fixed via UTILDATA. (update ticket id)
-
-### SBSRicohLogisticsSystemCo
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** This is a Japanese bill, where the provider name has been changed. DC has been raised for further confirmation on Migration.
-
-### SCE
-
-- **Olympus - September Week V (Sep 25 - Oct 01):** A delivery impact was raised for SCE template provider via ask channel. It was due to usage missing case and usage not extracted due to page split case. The same has been fixed in template level.
-
-### Sinergas
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** This is an italian bill, which was created as a bill_change on 11-Feb, based on customers priority request via zendesk, the catalyst was updated. Based on analysis ticket has been identified as BCM.
-
-### SouthWaltonUtility
-
-- **Olympus - October Week II (Oct 09 - Oct 15):** A TC was raised to include a sub page in SourceRendering. Based on the analysis the page cannot be rendered due to the subpage and it has been considered out of scope.
-- **Olympus - September Week V (Sep 25 - Oct 01):** A TC was raised to check the feasibility of extracting the Usage page in source rendering pdf. But it was not possible due to pagination issues.
-
-### StateGridShanghaiElectric
-
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Received a Chinese Bill_Change_Format updated, raised DC clarifications for proceeding with BCM.
-
-### SuburbanPropane
-
-- **Olympus - August Week II (Aug 07 - Aug 13):** The DC has been reopened for better clarity on processing the Delivery Document bill format. As there is no recent standard updates. (Lead)
-- **Olympus - July Week V (Jul 24 - Jul 30):** Post the recent confirmation, DC has re-validated and confirmed to process the Delivery Document bill yet this requires STANDARD confirmation.(Nidhya)
-- **Olympus - July Week IV (Jul 17 - Jul 23):** Recent DC confirmed to reject the Receipt bill, and we have further requested to know any customer based specification is existing. (Nidhya)
-- **Olympus - July Week III (Jul 10 - Jul 16):** Due to a recent audit update, a new error (mtr.deliveriesOnlyMeasurement) was observed. This was fixed by updating the MT for all charges under the propane meter and handling both with/without usage MT extraction, as the error behavior varied accordingly. (Nidhya)
-
-### SymmetryEnergySolutions
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** STANDARD has confirmed to extract usage from the charge for No Meter number case in Symmetry.
-
-### TimeWarner_PacificGasAndElectric
-
-- **Olympus - November Week IV (Nov 20 - Nov 26):** For Specific Job - TimeWarner_PacificGasAndElectric_00 the job is aborted after processing for 1 day. While looking at the issue, the DAQ id created for each bills (670 Accounts) are triggered in a separate jobs Adhoc_Daq_FTP_Auto_1 / Adhoc_Daq_FTP_Auto_0. Processing slaves of 600+ is piling up and the main job is taking longer than expected. We have explained the extraction level analysis to the respective team over a meet to take further steps on product level / configure level. Meet concluded to have a product level meet for further steps.
-
-### TransAlta
-
-- **Olympus - September Week I (Aug 28 - Sep 03):** Received XLS format in TransAlta which was rejected due to insufficient data points.
-- **Olympus - August Week II (Aug 07 - Aug 13):** Override has not been reflecting after adding , modified override to get reflected(Karthik).
-
-### Undefined
-
-- **Olympus - October Week II (Oct 09 - Oct 15):** As an side-effects of java 17 integration, the datatargets with javascript operator were set to Undefined during XREG testing and which was impacting the charge_rate data target. This has been fixed in template level.
-
-### UrjaTestConsumersEnergy
-
-- **Olympus - July Week II (Jul 03 - Jul 09):** The template has been deprecated from Monocle. A request has been submitted to the Migration team to notify the customer regarding provider ID updates, which will be followed by access channel updates.
-- **Olympus - July Week I (Jun 26 - Jul 02):** Template depreciation has been raised and this has to be fasten up.
-
-- **Olympus - December Week III (Dec 11 - Dec 24):** PGE:For PGE we received a bill with EDI format, for which DC has clarified to proceed with NPC.
-- **Olympus - October Week I (Oct 02 - Oct 08):** [ERROR]: mtr.possibleIrrigation : For few FS tickets this errors was triggered when the bill has irrigation only service while having other services too. Based on the DC, the tickets are processed by adding overrides.
-- **Olympus - September Week II (Sep 04 - Sep 10):** C.
-- **Olympus - August Week III (Aug 14 - Aug 20):** CoronaEnergy:A credit bill has been posted for Corona Energy, which only has VAT bill, a DC has been raised to confirm the bill whether to process of reject. (Stanley)
-- **Olympus - August Week I (Jul 31 - Aug 06):** CityOfLongmont:.The pagespec of the template is existing in two different location with same name : CityOfLongmontPdfPagespceProvier , which was causing FileNotFound error in UTC as well as XREG, which was then fixed for testing and proceeded (Karthik)
-- **Olympus - July Week III (Jul 10 - Jul 16):** MunicipalOnline:Due to site updates 4 templates failed with extraction issue due to xpath failure, which has been fixed. (Teams)
-
-## Special catalyst details
-
-### AvidXChange Tariff tickets
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** 1 ticket has been resolved, 1 has been planned upcoming week.
-
-### contractUsageDetection
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** A FS ticket was raised in Audit_Workflow as per the recent AUDI fix, based on the discussion made during the AUDI ticket, the FS was reverted to AA for analysis from the AA team.
-
-### DC Documentation
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Amrutha is working on documenting the DC and Rejection cases for further reference from one place.
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Amrutha is working on documenting the DC and Rejection cases for further reference from one place.
-
-### Delivery Testing
-
-- **Olympus - September Week IV (Sep 19 - Sep 24):** 2
-- **Olympus - September Week III (Sep 11 - Sep 18):** 4 Fusion : 3
-- **Olympus - September Week II (Sep 04 - Sep 10):** 31 Fusion : 1
-- **Olympus - September Week I (Aug 28 - Sep 03):** 29 Fusion : 2
-- **Olympus - August Week IV (Aug 21 - Aug 27):** 14 Fusion : 2
-
-### Dummy Template List
-
-- **Olympus - December Week III (Dec 11 - Dec 24):** Nidhyalakshmi has completed the script to grep the Dummy templates.
-- **Olympus - December Week II (Dec 05 - Dec 10):** Nidhyalakshmi has completed the script to grep the Dummy templates.
-
-### Hackathon
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Lavanya participated in Hackathon and completed her module.
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Lavanya is working on a module in Hackathon.
-
-### Intern
-
-- **Olympus - December Week II (Dec 05 - Dec 10):** Trying out a different approach in assigning FD tickets to work for Senthamizhan. Self-review is mandated for BCM fixes, referring to old BCM the fixes should be carried forward before taking it to the next level review.
-- **Olympus - November Week I (Oct 31 - Nov 5):** Mukes Kanna has started to work on multiple catalysts and his performance seems to be good, the mentor is providing L1 and BCM along with simple Fusion and TMPLT tickets. Based on the performance the complexity level will be increased.
-
-### Migration Merge
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** The tickets planned for merge has been successfully moved except for 2 tickets with Dec 05 as due, which was moved on the following day Dec 06.
-
-### Number of Future Due handled this week
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** 86.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** 72.
-- **Olympus - January Week III (Jan 15 - Jan 21):** 57.
-- **Olympus - January Week II (Jan 08 - Jan 14):** 116.
-- **Olympus - December Week III (Dec 11 - Dec 24):** 20.
-- **Olympus - December Week II (Dec 05 - Dec 10):** 20.
-- **Olympus - December Week I (Nov 27 - Dec 04):** 69.
-- **Olympus - November Week III (Nov 13 - Nov 19):** 61.
-- **Olympus - November Week II (Nov 13 - Nov 20):** 55.
-- **Olympus - November Week I (Oct 31 - Nov 5):** 64.
-- **Olympus - October Week IV (Oct 23 - Oct 29):** 53.
-- **Olympus - October Week III (Oct 17 - Oct 22):** 71.
-- **Olympus - October Week II (Oct 09 - Oct 15):** 73.
-- **Olympus - October Week I (Oct 02 - Oct 08):** 50.
-- **Olympus - September Week V (Sep 25 - Oct 01):** 66.
-- **Olympus - September Week IV (Sep 19 - Sep 24):** 66.
-- **Olympus - September Week III (Sep 11 - Sep 18):** 80.
-- **Olympus - September Week II (Sep 04 - Sep 10):** 90.
-- **Olympus - September Week I (Aug 28 - Sep 03):** 62.
-
-### Odin Downloader Extended
-
-- **Olympus - January Week III (Jan 15 - Jan 21):** Odin Downloader review has been completed will be merged once beta-testing is completed.
-- **Olympus - January Week II (Jan 08 - Jan 14):** Sriya completed the Odin downloader and integrated to Conn Downloader, currently under review.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adoption of code to chrome extension based downloader and integrate to Conn Downloader.
-- **Olympus - December Week II (Dec 05 - Dec 10):** Sriya has completed the File Id based downloader yet it is based out of a terminal scripting, based on feedback from team, she is working on adoption of code to chrome extension based downloader and integrate to Conn Downloader.
-
-### PAD implementation
-
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Saipriyadarsini working on PAD for ticket reduction case for CityOfXenia, as of now JCON raised to configure the job with OCR parameter, and PAD will be implemented for OCR transition case.
-
-### PDF Highlighter
-
-- **Olympus - January Week III (Jan 15 - Jan 21):** Karthik completed the integration part in bifrost for PDF highlight.
-- **Olympus - January Week II (Jan 08 - Jan 14):** Karthik completed the integration part in bifrost for PDF highlight.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Karthik has been working on bifrost analysis and has backtraced the UDS logic to implement similarly in UC.
-- **Olympus - December Week II (Dec 05 - Dec 10):** Karthik has been working on bifrost analysis and has backtraced the UDS logic to implement similarly in UC.
-- **Olympus - November Week I (Oct 31 - Nov 5):** Created a Design document for PDF Highlighter tool and discussed with leads and the implementation will begin with the local integrations.
-
-### PDS
-
-- **Olympus - December Week III (Dec 11 - Dec 24):** 4 Fusion : 19
-- **Olympus - December Week III (Dec 11 - Dec 24):** 3 Fusion : 10
-- **Olympus - December Week I (Nov 27 - Dec 04):** 2
-- **Olympus - November Week IV (Nov 20 - Nov 26):** 3
-- **Olympus - November Week III (Nov 13 - Nov 19):** 5
-- **Olympus - November Week II (Nov 13 - Nov 20):** 5
-- **Olympus - November Week I (Oct 31 - Nov 5):** 3
-
-### PGE java 17 update
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Nidhya is working on testing the PGE glyph mapping on Java 17 for performance analysis.
-
-### PIB Clean-up Activity
-
-- **Olympus - January Week III (Jan 15 - Jan 21):** Karthik shared the insights on PIB update process and update here, Requested cursor access for the same.
-- **Olympus - January Week II (Jan 08 - Jan 14):** Karthik shared the insights on PIB update process and update here, Requested cursor access for the same.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Karthik shared the insights on PIB update process and update here
-- **Olympus - December Week II (Dec 05 - Dec 10):** Karthik shared the insights on PIB update process and update here
-- **Olympus - November Week I (Oct 31 - Nov 5):** Karthik has analysed a list of template that are not updated with Template Source type. Based on discussion, first level of analysis is initiated - updated here.
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Karthik has analysed a list of template that are not updated with Template Source type. This could be possible candidate to begin the cleanup activity. Discussion are pending.
-
-### Plug Special Ops
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Whole 9 tickets were created for FirstEnergy in request to update the rate_or_tariff.
-
-### Process miss
-
-- **Olympus - September Week V (Sep 25 - Oct 01):** A ticket was raised under FEATURE IMPLEMENTATION catalyst for SCE usage missing case, it was reported to Aruna Devi and the catalyst updated properly.
-
-### Project Atom
-
-- **Olympus - September Week II (Sep 04 - Sep 10):** 2
-
-### Reflection issue
-
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Code reflection issue was reported in AB. Due this is few tickets were reopened.
-
-### Role Swap
-
-- **Olympus - October Week III (Oct 17 - Oct 22):** Team level role swaps are completed.
-
-### SLA Time Based
-
-- **Olympus - January Week III (Jan 15 - Jan 21):** Nidhyalakshmi is working on PMU based SLA validation.
-- **Olympus - January Week II (Jan 08 - Jan 14):** Nidhyalakshmi is working on PMU based SLA validation.
-
-### Standard for LandLord
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Amrutha arrested the landlord bill issues which was raised in multiple providers through standard. It was confirmed to reject the bill.
-
-### Templatesdk
-
-- **Olympus - December Week II (Dec 05 - Dec 10):** Unintentationally stacktrace code has been committed into the feature branch which was reverted once it was reported and this will be updated in the WWF session to take as a precautionary measure.
-
-### Tools From Team
-
-- **Olympus - January Week III (Jan 15 - Jan 21):** (OnGoing - Not planned due to FDs plans for Events (Dec 18 and Dec 19)).
-- **Olympus - January Week II (Jan 08 - Jan 14):** (OnGoing - Not planned due to FDs plans for Events (Dec 18 and Dec 19)).
-- **Olympus - December Week III (Dec 11 - Dec 24):** (OnGoing - Not planned due to FDs plans for Events (Dec 18 and Dec 19)).
-- **Olympus - December Week II (Dec 05 - Dec 10):** (OnGoing)
-
-### TRAC
-
-- **Olympus - January Week III (Jan 15 - Jan 21):** Lavanya completed the new requirement for TRAC tool.
-
-### Transition Trend Analysis
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** As a part of transition transition for AI, Saipriyadharsini has complete the first level analysis.
-
-### XREG build reflection issue
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** While testing CityOfFairburn decoder in XREG, the decoder was not reflected. Lavanya reporter this issue to XREG Poc - Padma.
-
-### Ymir log and Reopen tracker
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Saipriyadarsini updated python project to app script which helps in trigger and tracking the data.
-
-- **Olympus - February Week II (Feb 05 - Feb 11):** Lavanya and Amrutha raised issue with contradicting statements in recent migration requirement has been the key step to find the process gap in the migration tickets.
-- **Olympus - February Week II (Feb 05 - Feb 11):** Amrutha has completed the manheim xls format documentation and all the steps involved.
-- **Olympus - February Week II (Feb 05 - Feb 11):** Fusion 5
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Fusion 7
-- **Olympus - January Week III (Jan 15 - Jan 21):** Zendesk late assignment as been reported to the Zendesk POCs.
-- **Olympus - January Week III (Jan 15 - Jan 21):** Amrutha worked on Manheim Zd fix and it was continued by Lavanya and Karthik in the following day, we were able to complete the issue and provided updated log for required files.
-- **Olympus - January Week II (Jan 08 - Jan 14):** Team completely worked on Tickets and completed FDs supporting the event days.
-- **Olympus - January Week II (Jan 08 - Jan 14):** Team completed COBE And POSH.
-- **Olympus - January Week II (Jan 08 - Jan 14):** Team reported invalid diff in XREG, which was taken to next level on fix by Tool team
-- **Olympus - December Week III (Dec 11 - Dec 24):** Team completely worked on Tickets and completed FDs supporting the event days.
-- **Olympus - December Week III (Dec 11 - Dec 24):** The migration tickets were addressed on the planned dates.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Sangeetha, Sriya Nayak and Nidhyalakshmi were available on 18 Dec and 19 Dec supported the entire team on both the days.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Sangeetha took care of Merges and ticket allocation on Dec 19.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Ownership of RCNN and Astounded moved to Saphal and one template swapped with Stanley under same band and accounts.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Saipriyadarsini requested for a Mentor based PG program in BITS through WILP, for which the required documents have been forwarded to Rakesh and HR.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Lavanya had Mac issue, followed by she had issues with installation and other stuffs.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Rohith provided KT on Migration Update process which to be take care in the next week.
-- **Olympus - December Week III (Dec 11 - Dec 24):** Lead / Sub-lead level BCM validation has been implemented based on the Troque team's
-- **Olympus - December Week II (Dec 05 - Dec 10):** Team migrated the templates2 repo to templates3 and fixed the corresponding issues were fixed helped the deliverables to run smoothly.
-- **Olympus - December Week II (Dec 05 - Dec 10):** No tickets were missed to addressed during the Bitbucket and repo migration phase.
-- **Olympus - December Week II (Dec 05 - Dec 10):** Rohith discussed on providing ownership of RCNN to one person as it is shared between to team, it is process.
-- **Olympus - December Week II (Dec 05 - Dec 10):** Team updated the hike provider data for the november month.
-- **Olympus - December Week II (Dec 05 - Dec 10):** Team has installed cron tab for templates git clean up.
-- **Olympus - December Week I (Nov 27 - Dec 04):** Team meticulous worked during the Bitbucket outage day with maring no SLA miss.
-- **Olympus - December Week I (Nov 27 - Dec 04):** Following day also covered with all possible ticket with no SLA miss.
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
-- **Olympus - November Week IV (Nov 20 - Nov 26):** Team has completed 91 provider analysis for Kwik Trip.
-- **Olympus - November Week III (Nov 13 - Nov 19):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
-- **Olympus - November Week III (Nov 13 - Nov 19):** Team has completed 38 provider analysis for Kwik Trip.
-- **Olympus - November Week III (Nov 13 - Nov 19):** Chandrakanth analysed OCR Template Feasibility list shared by Vengadesh and raised TMPLT ticket for possible cases.
-- **Olympus - November Week II (Nov 13 - Nov 20):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
-- **Olympus - November Week I (Oct 31 - Nov 5):** Team extended to support Fusion tickets, DT tickets and BCM tickets from Torque team.
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Team has installed cron-tab for git GC clean-up.
-- **Olympus - October Week IV (Oct 23 - Oct 29):** Team extended to support Fusion tickets and BCM tickets from Torque team.
-- **Olympus - October Week III (Oct 17 - Oct 22):** Mukes kanna is fixing simple fixes as of now and doing good at the same.
-- **Olympus - October Week III (Oct 17 - Oct 22):** Saipriyadarshini has completed the PAD implementation for analysing console from jenkins, currently under review.
-- **Olympus - October Week III (Oct 17 - Oct 22):** Team extending the work on Product Enhancements tickets.
-- **Olympus - October Week III (Oct 17 - Oct 22):** All the Avid Tariff tickets are resolved by the team before the due date.
-- **Olympus - October Week III (Oct 17 - Oct 22):** Compensation discussion were completed.
-- **Olympus - October Week III (Oct 17 - Oct 22):** Lavanya informed the PAD team regarding the comments added with information about PAD and automated transition.
-- **Olympus - October Week II (Oct 09 - Oct 15):** UTC issue reported to tech lead for further action which was resolved by Naren, following the XREG issue.
-- **Olympus - October Week II (Oct 09 - Oct 15):** Mukes kanna, intern has been included into the team, he has been involved into PA and L1 level fixes.
-- **Olympus - October Week II (Oct 09 - Oct 15):** During Amrutha's absence, Karthik is taking care of Mukes's ticket assignments and doubt clarifications.
-- **Olympus - October Week II (Oct 09 - Oct 15):** Saipriyadarshini is working on PAD implementation for deliveryOnlyPDF scenario transition. The maximum fix is done, testing is pending.
-- **Olympus - October Week I (Oct 02 - Oct 08):** Extended support to Torque team with one BCM.
-- **Olympus - September Week V (Sep 25 - Oct 01):** Extended support to Torque team with one BCM.
-- **Olympus - September Week V (Sep 25 - Oct 01):** Focused on Future due than additional activities to extend the support for Floater leave.
-- **Olympus - September Week V (Sep 25 - Oct 01):** Template changes updated based on the team's structural changes.
-- **Olympus - September Week V (Sep 25 - Oct 01):** PiB ownership completed and Jira update request placed.
-- **Olympus - September Week V (Sep 25 - Oct 01):** Lavanya provided a workaround for processing delivery in local.
-- **Olympus - September Week V (Sep 25 - Oct 01):** Despite of UC ticket creation issue, the team was able to complete the CD and priority tickets on the same day.
-- **Olympus - September Week IV (Sep 19 - Sep 24):** Sairpriyadarsini fixed API issue in her script which triggers Defect tracker, Ymir log attachment issues.
-- **Olympus - September Week IV (Sep 19 - Sep 24):** Sathya has completed the multiple split task and the same has been cascaded to the team in the WWF session - TMPLT-12810.
-- **Olympus - September Week III (Sep 11 - Sep 18):** Saipriyadarsini has completed implementation of DeliverOnlyPDF transition via PAD implementation and its currently under testing.
-- **Olympus - September Week III (Sep 11 - Sep 18):** Sairpriyadarsini fixed API issue in her script which triggers Defect tracker, Ymir log attachment issues.
-- **Olympus - September Week III (Sep 11 - Sep 18):** Sathya has completed the multiple split task and has been merged to master and the same will be informed in the WWF session - TMPLT-12810.
-- **Olympus - September Week III (Sep 11 - Sep 18):** Team has started to work on Product Enhancement tickets.
-- **Olympus - September Week II (Sep 04 - Sep 10):** Saipriyadarsini has complemented implementation in DeliverOnlyPDF however we have limitation in hitting jenkins log.
-- **Olympus - September Week II (Sep 04 - Sep 10):** Sathya has completed the multiple split task which was given last week and it is under review - TMPLT-12810.
-- **Olympus - September Week II (Sep 04 - Sep 10):** Data quality based checks via XREG failure analysis has been initiated and 19 tickets have been raised for checksum and billing_address issue.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Chandrakanth has completed the Gradle script integration with Audit and EzValidation repo - TMPLT-12923.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Sheyne will be completely reporting to Naren and the updates will be provided to Naren.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Saipriyadarsini is working on analysis the DeliverOnlyPDF based tickets to proceed with PAD implementation.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Template shuffles has been completed yet to update in PiB.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Rookie are leveled-up to Artisan with handling the TOP300 and TOP1000 categories.
-- **Olympus - September Week I (Aug 28 - Sep 03):** Sathya has completed the multiple split task which was given last week and it is under review - TMPLT-12810.
-
-## Data Quality
-
-### PMU Updates
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** No updates.
-
-### RCA Analysis
-
-- **Olympus - November Week II (Nov 13 - Nov 20):** No updates.
-- **Olympus - November Week I (Oct 31 - Nov 5):** No updates.
-
-- **Olympus - November Week III (Nov 13 - Nov 19):** Sriya analysed the XREG failure ids and has raised 14 PE tickets for data quality issues from XREG id for read_type_id, cycle number, demand usage group extraction and TBA extraction.
-- **Olympus - November Week II (Nov 13 - Nov 20):** Sriya analysed the XREG failure ids and has raised 14 PE tickets for data quality issues from XREG id for address issues and tariff issue.
-- **Olympus - November Week I (Oct 31 - Nov 5):** Sriya analysed the XREG failure ids and has raised 11 PE tickets for data quality issues from XREG id for address issues and charge missing issue.
-
-## Ticket split up
-
-- **Olympus - August Week IV (Aug 21 - Aug 27):** Saipriyadarsini has automated ZD tracker and IAC validator in team level.
-- **Olympus - August Week IV (Aug 21 - Aug 27):** Effective from Aug 20, Sheyne is reporting to Naren even for recurring issues.
-- **Olympus - August Week IV (Aug 21 - Aug 27):** Chandrakanth raised 5 transController tickets, have guided him to have deeper analysis on the same.
-- **Olympus - August Week IV (Aug 21 - Aug 27):** Sriya raised 3 XREG-Failure tickets and has been tracking the same on team level.
-- **Olympus - August Week IV (Aug 21 - Aug 27):** Sathya has been assigned with Pdf split enhancement task
-
----
-
-# Key Contribution (Lead's)
-
-## AI Leverage in Recurring
-
-### DeliveryTesting
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Completed analysis for July month, the invalid ticket creation has been controlled, yet few already fixed due to Migration, Zendesk and Special-ops needs to be reported to the team.
-
-### PDS Update
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** PDS ticket creation is in declining trend, upon requesting for update, the POC updated that no submission as been done from the customer end causing the declining trend of PDS. Further requested for any reason / unsubscription of accounts/customer. Yet to get update.
-
-### PMU Task
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** To understand the inflow of "Under dev" tickets, MTD reports will be updated with the "Tickets assigned by" column. This will help us to largely monitor and observe the team that highly contributing to under dev tickets.
-
-### UC Direct Customer Ageing analysis
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** From the Direct customer ageing report, highlighted the reporter with two actionable items to avoid invalid ageing.
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Extraction Quality Validator has been upgraded to run on Claude Sonnet 3.5 by default and currently been observed at multiple levels.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Token and cost usage in the report and accumulated csv has been implemented (yet to be committed), to observe the token usage of during test phase.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** This default versioning has been done to run on same version expecting the same result.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Continuous test cases are been done to observe the result of validation.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** The extraction-quality-validator has been checked-in into templates-dev-tools.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** The EQ-Validator Skill has been optimised by adding script to log analysis phase and the validation result will be updated a report.html file for better readability. The HTML reader will have the end-to-end ticket validation results and the ticket details.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Restructured file has been tested with BCM and Zendesk catalyst, based on the testing few enhancement have been identified and work-in-progress.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Stanley will be performing the testing from team level.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** KT has been provided for the same.
-
-## Current status of test tickets
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Abby 11 OCR test Org 45
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Docling PDF conversion test org 202
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** AIR Providers 3251
-
-## Engie OCR Experimental
-
-### Annual metrics
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Annual metrics monthly data updated with INITIATIVES and Generic Audit Tickets.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Based on the feedback received on Efficiency calculation, the issues were identified and formulas were updated to include the transition hours spent by the team also updated the catalyst weightage has been updated.
-
-### DeliveryTesting
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Analysed July month data as next analysis will be based on the resolved tickets for the requirements.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Based on the last discussion with ESG QA team, a internal document created for team's understanding on the background of the process.
-
-### HoneyWell-PDF Retrieval request
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** HoneyWell Customer requested to process the PDF bills from the URL available in the XLS file submitted by the customer through Template. However, this request is not possible via template, as the template only supports direct extraction. Requested to check credentials based bill retrieval instead of file submissions, the request has been taken to the PROSERV.
-
-### Internship Completion
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Internship completion update has been submitted for Mukes Kanna
-
-### OCR Quality Analyser
-
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** OCR conversion comparison to provide the estimation of manual requirement. [Work in progress]
-
-### Stack Ranking
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Updating the team ranking for Olympus and Orin to be reviewed with Arthi for final review.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Provided team insights for annual metrics.
-
-### UC SLA
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** As per Viji's request, Direct Customer SLA & MTD has been completed and shared a sample Email format to further approvals.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** As per Viji's request, Direct Customer SLA - MTD is completed however Daily SLA is challenging and in-progress.
-
-### Zendesk Missing Bill Analysis (UC)
-
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Completed the June Zendesk Missing Bill analysis and incorporated all requested updates. Discussed the next steps with Jagadambiga. Going forward, the analysis will focus on international bill transition and reversal cases to improve resolution for invalid back-and-forth scenarios.
-
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Provided insights of 190+ failed IDs and the classification details for better understanding for the document.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Provided details on how the template works on the Converted bills.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** The third phase of conversion was with Docling, the conversion with Docling had alignment issues which has been communicated to the corresponding team for better understanding.
-- **Olympus - Jul Week IV (Jul 23 - Jul 29):** Reported a discrepancy in File ID process where for one file id has multiple child id - UDF-1164 raised to address the same.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Rakesh shared the database of templates, to analyse the image-bill support in the template level.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Rithwik has initiated a process through Files to estimate the First Pass Rate of the bills, by submitting the converted bills directly, causing 100+ tickets creation to dev.
-- **Olympus - Jul Week II (Jul 02 - Jul 08):** Furthermore, Rithwik has shared the no-woot created cases to analyse and fix if required.
-
-## Agentic AI Status
-
-### BCM Approach
-
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Team has been updated with the upcoming changes w.r.t. BCM Validation approach.
-
-### BCM Validation Approach
-
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Discussed with BCM Validation POCs to understand the existing flow and integration of existing and current flow.
-
-### Current Status
-
-- **Olympus - Jun Week V (Jun 25 - Jul 01):** Failure analysis continued completed for May data.
-- **Olympus - Jun Week IV (Jun 18 - Jun 24):** Failure analysis continued completed for May data.
-- **Olympus - Jun Week III (Jun 11 - Jun 17):** PMU report based analysis on daily basis.
-- **Olympus - Jun Week II (Jun 04 - Jun 11):** PMU report based analysis on daily basis.
-- **Olympus - Jun Week I (May 28 - Jun 03):** PMU report based analysis on daily basis.
-- **Olympus - May Week IV (May 21 - May 27):** Based on the daily monitor the frequently unhanlded scenarios are captured.
-- **Olympus - May Week III (May 14 - May 20):** Surendra provide a comment structure for analysis on failure cases.
-- **Olympus - May Week I (Apr 30 - May 06):** The Daily monitor is in-progress.
-- **Olympus - May Week II (May 07 - May 13):** Engineer Result and Failure cases are been captured for further analysis.
-- **Olympus - April Week IV (Apr 22 - Apr 29):** Currently daily process are been closely monitored
-- **Olympus - April Week III (Apr 16 - Apr 22):** Integration is completed, daily validation is in-progress.
-- **Olympus - March Week V (Mar 26 - Apr 01):** RAG model created and fine-tuning in progress.
-- **Olympus - March Week IV (Mar 19 - Mar 25):** Separate prompt has been created for Checksum-cases apart from Transition-prompt.
-- **Olympus - March Week III (Mar 12 - Mar 18):** Provided split-up for Checksum cases, error cases and workflow ticket created.
-- **Olympus - March Week II (Mar 05 - Mar 11):** Completed Fine tuning for limited checksum cases, mtr.validUsage case, zeroNumberOfDays, onlyDueDate case.
-
-### Delivery Testing Transition Case
-
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Transition of Delivery testing cases analysis has been completed.
-
-### Documentation
-
-- **Olympus - May Week III (May 14 - May 20):** Saipriyadarsini is working on documentation on the cases handled for better visibility.
-
-### Logic Updates
-
-- **Olympus - May Week III (May 14 - May 20):** Saipriyadarsini and Anusha are validating the failure case.
-
-### Manheim Complex fix issue
-
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Approached with different fixes to avoid the delivery impact.
-
-### PMU Updates
-
-- **Olympus - May Week III (May 14 - May 20):** Surendra suggested to update the FinalResult as OutScope when Engineer Result is N/A.
-
-### Provided Jira Field name for Error Classification Agent
-
-- **Olympus - April Week I (Apr 02 - Apr 15):** AI-AnalysisAgentStatus.
-
-### Transition
-
-- **Olympus - March Week I (Feb 26 - Mar 04):** Analysed the possibility of transitioning a valid ticket case.
-
-### Validation
-
-- **Olympus - March Week I (Feb 26 - Mar 04):** Testing in-progress for differentiating the transition evaluation.
-
-- **Olympus - Jun Week IV (Jun 18 - Jun 24):** Documentation prepared for failure cases.
-- **Olympus - Jun Week III (Jun 11 - Jun 17):** No. of bills processed updated for both the Agents and PMU fixes are in-progress for Code Adapt Agent based on recent changes.
-- **Olympus - Jun Week II (Jun 04 - Jun 11):** Few high priority enhancements are identified.
-- **Olympus - Jun Week II (Jun 04 - Jun 11):** No. of bills processed to be updated for both the Agents ( Error type and Code Adapt Agent). Provided updated to Rashi to fix the same.
-- **Olympus - Jun Week II (Jun 04 - Jun 11):** Saipriyadarsini ,Anusha and Rashi are updating the Failure feedback to understand the issue with the Approach.
-- **Olympus - Jun Week I (May 28 - Jun 03):** Cost per bill is updated in report as per Surendra's suggestion on validating the cost spend on each ticket.
-- **Olympus - May Week IV (May 21 - May 27):** Saipriyadarsini changes have been promoted to master.
-- **Olympus - May Week IV (May 21 - May 27):** The Cost retrieved from each ticket should be updated with few more data.
-- **Olympus - May Week IV (May 21 - May 27):** App script has been completed to update the SPOC details update for the closed ticket and the same has been updated for the closed tickets.
-- **Olympus - May Week IV (May 21 - May 27):** Slack-Integration has been implemented for close follow-up on Engineer-result field update. The miss tickets are reported to the respective dev for the update of same.
-- **Olympus - May Week IV (May 21 - May 27):** Daily update on the follow-up provided to the leadership.
-- **Olympus - May Week IV (May 21 - May 27):** Manual field update is done for the transition-cum-AgentAnalysis.
-- **Olympus - May Week III (May 14 - May 20):** Sowmiya updated the Engineer Pending status and Anusha & Saipriyadarsini completed the Failure case analysis for last ten days.
-- **Olympus - May Week I (Apr 30 - May 06):** Saipriyadarsini have completed the local changes into branch and currently under final review.
-- **Olympus - May Week I (Apr 30 - May 06):** Surendra suggested to update daily reports with Cost details from the tickets, the same has been completed by sowmiya.
-- **Olympus - May Week I (Apr 30 - May 06):** The Engineer result for closed tickets will be updated through script(in-progress).
-- **Olympus - May Week II (May 07 - May 13):** The processed tickets are been record through PMU.
-- **Olympus - May Week II (May 07 - May 13):** Based on the discussion with Surendra, Improvement task are been assigned to task owners.
-- **Olympus - May Week II (May 07 - May 13):** For closed tickets the manual analysis should be updated in comments and same should be captured via PMU..
-- **Olympus - April Week IV (Apr 22 - Apr 29):** Jira Automation is enabled however some fields been missed to update. Working on capturing the gaps.
-- **Olympus - April Week IV (Apr 22 - Apr 29):** Pooja Sri and Sowmiya Kirubakaran has been included for processing the Error Type Agent on EXT project.
-- **Olympus - April Week IV (Apr 22 - Apr 29):** Fine-tuning on Approach II is in progress.
-- **Olympus - April Week IV (Apr 22 - Apr 29):** AI Report generation completed in PMU. Adding few more fields are in-progress.
-- **Olympus - April Week III (Apr 16 - Apr 22):** Anusha and Saipriyadarsini are initiating the jobs daily after the PAD process.
-- **Olympus - April Week III (Apr 16 - Apr 22):** Completed the Jira Automation for AI Agent field missing case - Error Type Agent and Code Adapt Agent.
-- **Olympus - April Week III (Apr 16 - Apr 22):** Updated the comments with Internal Developers mode instead of Developer mode.
-- **Olympus - April Week III (Apr 16 - Apr 22):** The comments are updated in the form of tabular column for visibility.
-- **Olympus - April Week I (Apr 02 - Apr 15):** Current Status :Integration is in-progress.
-- **Olympus - April Week I (Apr 02 - Apr 15):** Discussed with Surendra on integration process and progress.
-- **Olympus - April Week I (Apr 02 - Apr 15):** PA analysis with AI enablement.
-- **Olympus - April Week I (Apr 02 - Apr 15):** Under OCR and Under reporter cases also implemented.
-- **Olympus - March Week V (Mar 26 - Apr 01):** RAG model been implemented to check the performance.
-- **Olympus - March Week V (Mar 26 - Apr 01):** On daily basis, tickets are been validated and the accuracy has been recorded.
-- **Olympus - March Week V (Mar 26 - Apr 01):** With RAG Approach, there are possible improvements comparing to the previous approach.
-- **Olympus - March Week V (Mar 26 - Apr 01):** RCA Agent analysis has been restructured.
-- **Olympus - March Week IV (Mar 19 - Mar 25):** Daily tracker has been raised to monitor the progress of AI Agent.
-- **Olympus - March Week IV (Mar 19 - Mar 25):** Integrated g-sheet updates to monitor the accuracy.
-- **Olympus - March Week IV (Mar 19 - Mar 25):** For each analysis the monetisation are been monitored to predict the usage and overall usage for the process.
-- **Olympus - March Week III (Mar 12 - Mar 18):** Code updated to analyse the Filter and output the AI results from daily PA.
-- **Olympus - March Week III (Mar 12 - Mar 18):** Approaching dedicated checksum prompt as it involves multiple cases.
-- **Olympus - March Week II (Mar 05 - Mar 11):** Currently fine tuning ZeroNumberOfDays case and Provider Mismatch case.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** New orchestrator installation and walk-through completed.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Started analysing the RCA-Agent Business and initiated transition classification analysis
-- **Olympus - February Week III (Feb 12 - Feb 18):** Surendra given an deep AI product discussion along with the team members.
-- **Olympus - February Week II (Feb 05 - Feb 11):** Provided first set of transition trend, and currently working on tail end provider list.
-- **Olympus - February Week I (Jan 29 - Feb 04):** Got the brief from Surendra.
-- **Olympus - February Week I (Jan 29 - Feb 04):** Dataset updated for Transition cases.
-- **Olympus - February Week I (Jan 29 - Feb 04):** Team has started to follow the new BCM validation process and all the tickets are going through lead's approval.
-- **Olympus - February Week I (Jan 29 - Feb 04):** Created a BCM workflow that allows two level approvals and branching based workflow, in discussion with Padma.
-- **Olympus - February Week I (Jan 29 - Feb 04):** AvidXChange analysis completed and created two tickets for template level tariff fixes, the tariff validation has been included in TransController and XREG-Failure analysis processes to effectively capture the invalid/incorrect delivery of Tariff
-- **Olympus - February Week I (Jan 29 - Feb 04):** Integrated Conn Downloader has been released and demo has been planned.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Data update is in progress.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Team changes
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Squad changes was updated and Template shuffle has been completed.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Squad level changes are been updated and discussed to the team about the role changes.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Provided insights on UCU plug-in, possible update suggestions.
-- **Olympus - January Week IV (Jan 22 - Jan 28):** Migration go live dates updated for January month.
-
 ## Manheim Updates
 
 ### Case I
@@ -2172,6 +2248,22 @@ Weeks parsed: **53**
 - **Olympus - December Week II (Dec 05 - Dec 10):** Discussed the issue with Audit Analyst on handling the isuse for better and discussed on removing the acct.validUsage for making the delivery better.
 - **Olympus - December Week II (Dec 05 - Dec 10):** Inputs from lead for better handling the missing usage scenario.
 - **Olympus - December Week II (Dec 05 - Dec 10):** Provided suggestion on updating the TOOLS confluence with recent updates.
+
+## Ticket Validator / GitHub Monitoring
+
+- **Olympus - March Week II (Mar 05 - Mar 11):** Revisited TNT ticket raised for TV download issue, and given priority P3.
+- **Olympus - March Week II (Mar 05 - Mar 11):** As per the leadership requirement updated the TV usage percentage.
+- **Olympus - March Week I (Feb 26 - Mar 04):** The current email depicts the previous day resolved ticket analysis along with current utilisation based on the discussion going forward the mail will be with current day updates.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** As per leadership request, the TV tracking leverage with Hike provider usage via TV, Daily TV utilisation update.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Planned to Trigger TV during PA to check the impacts for created tickets. Same will be monitored for two-three weeks for the progresses.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** UC Zendesk MissingBill: Analysed Missing Bill from Jan Month and reported the issues to the POC of UC Zendesk.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Request the POC to track the tickets even if it transitioned incorrectly.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Based on the meeting, TNT discussions are in place for including the AB processing when the catalyst is ZENDESK.
+- **Olympus - February Week IV (Feb 19 - Feb 25):** Provided samples on FS and EXT failure cases.
+
+## Risk
+
+- **Olympus - March Week I (Feb 26 - Mar 04):** Sriya Nayak's Mac is currently unusable due to a hardware failure (permanent Caps Lock and non-functional Command key), preventing her from processing tickets. IT has diagnosed the issue and initiated a laptop swap via courier.
 
 ## UC updates
 
@@ -2715,7 +2807,6 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - Jun Week I (May 28 - Jun 03):** No updates
 - **Olympus - May Week IV (May 21 - May 27):** No updates
 - **Olympus - May Week I (Apr 30 - May 06):** Chandrakanth raised 1 ticket for missing charges
-- **Olympus - December Week I (Nov 27 - Dec 04):** 2 Tickets were raised for address quality issues by Stanley
 - **Olympus - September Week III (Sep 11 - Sep 18):** This week 3 tickets were created. The extraction requires updates to include the Format hint updates and Final bill updates.
 - **Olympus - September Week II (Sep 04 - Sep 10):** This week 5 tickets were created. The extraction requires updates to include the Final Bill, Checksum, TBA, and Charges. Additionally, fixes are needed for EZ and Checksum, along with corrections for the missing Charges.
 - **Olympus - September Week I (Aug 28 - Sep 03):** This week 5 tickets were created. The extraction requires updates to include the Final Bill, Checksum, TBA, and Charges. Additionally, fixes are needed for EZ and Checksum, along with corrections for the missing Charges.
@@ -2740,7 +2831,6 @@ Values are Created / Open / Resolved as reported that week.
 ### Image / Partial Image Bill
 
 - **Olympus - January Week IV (Jan 22 - Jan 28):** Raised one ticket where we had data quality and possible fix.
-- **Olympus - December Week I (Nov 27 - Dec 04):** 7 tickets raised for different cases
 - **Olympus - December Week I (Nov 27 - Dec 04):** 2 tickets raised for Tariff and Irrigation meter issues.
 - **Olympus - November Week IV (Nov 20 - Nov 26):** 6 tickets created by Sriya and Saipriyadarsini
 
@@ -2803,15 +2893,15 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - October Week I (Oct 02 - Oct 08):** No updates.
 - **Olympus - September Week V (Sep 25 - Oct 01):** No updates.
 
+## PAD Implementations
+
+- **Olympus - Jun Week II (Jun 04 - Jun 11):** Issue with Multi-Bound validation was identified by the team and it has been fixed.
+- **Olympus - Jun Week I (May 28 - Jun 03):** Issue with Multi-Bound validation was identified by the team and it has been fixed.
+- **Olympus - May Week IV (May 21 - May 27):** Multi-bound analysis has been implemented in the PAD level and code merged.
+- **Olympus - May Week III (May 14 - May 20):** A suggestion was raised to fix the Multi-bound bill identification in PAD. Anusha completed the implementation and updated the PAD logic. Reducing the manual effort of approximately 6 tickets per month.
+- **Olympus - May Week I (Apr 30 - May 06):** A suggestion was raised to fix the Multi-bound bill identification in PAD. Anusha completed the implementation and updated the PAD logic. Reducing the manual effort of approximately 6 tickets per month.
+
 ## Ticket Validator / GitHub Monitoring
-
-### Automation on TV monitoring
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Requested Yagarajan (Nexus) to brainstorm the possibility of automating the daily monitoring of Ticket Validator daily jobs. Enabling this would reduce the manual intervention once for all.
-
-### UC Zendesk MissingBill
-
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Analysed Missing Bill from Jan Month and reported the issues to the POC of UC Zendesk.
 
 - **Olympus - May Week IV (May 21 - May 27):** The Email notifications are automated [Closing this section].
 - **Olympus - May Week III (May 14 - May 20):** TV monitoring script is completed with email notification.
@@ -2840,21 +2930,13 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - March Week IV (Mar 19 - Mar 25):** GitHub monitoring tool tracks 2 weeks old failure which needs to be neglected [WIP].
 - **Olympus - March Week III (Mar 12 - Mar 18):** TV monitoring tool is in-progress by Yagarajan B.
 - **Olympus - March Week III (Mar 12 - Mar 18):** Eniyan will be monitoring TV as per the regular process until the tool is live.
-- **Olympus - March Week II (Mar 05 - Mar 11):** Revisited TNT ticket raised for TV download issue, and given priority P3.
-- **Olympus - March Week II (Mar 05 - Mar 11):** As per the leadership requirement updated the TV usage percentage.
 - **Olympus - March Week II (Mar 05 - Mar 11):** As per Viji's requirement Utilisation percentage and TNT ticket status was updated.
 - **Olympus - March Week II (Mar 05 - Mar 11):** As per Arthi's requirement, team name has been updated for better follow-up.
-- **Olympus - March Week I (Feb 26 - Mar 04):** The current email depicts the previous day resolved ticket analysis along with current utilisation based on the discussion going forward the mail will be with current day updates.
 - **Olympus - March Week I (Feb 26 - Mar 04):** Yagarajan (Nexus) started to analyse the TV utilisation and started to update the same in the mail
 - **Olympus - March Week I (Feb 26 - Mar 04):** PA level TV initialisation will be tracked for two weeks.
 - **Olympus - March Week I (Feb 26 - Mar 04):** Documentation on the process execution has been completed and currently under review.
 - **Olympus - March Week I (Feb 26 - Mar 04):** GitHubMonitoring(GHM) tool has been re-initiated without branch validations.
 - **Olympus - March Week I (Feb 26 - Mar 04):** Checked with SRE for GHA notifications for bypassing this tool but looks like the Git hub is limited with actions. So will be checking on getting access for Template-dev-tools repo to initiate GHA.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** As per leadership request, the TV tracking leverage with Hike provider usage via TV, Daily TV utilisation update.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Planned to Trigger TV during PA to check the impacts for created tickets. Same will be monitored for two-three weeks for the progresses.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Request the POC to track the tickets even if it transitioned incorrectly.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Based on the meeting, TNT discussions are in place for including the AB processing when the catalyst is ZENDESK.
-- **Olympus - February Week IV (Feb 19 - Feb 25):** Provided samples on FS and EXT failure cases.
 - **Olympus - February Week IV (Feb 19 - Feb 25):** Yagarajan (Nexus) started to analyse the TV utilisation and started to update the same in the mail
 - **Olympus - February Week IV (Feb 19 - Feb 25):** PA level TV initialisation will be tracked for two weeks.
 - **Olympus - February Week IV (Feb 19 - Feb 25):** Documentation on the process execution has been completed.
@@ -2874,6 +2956,7 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - November Week III (Nov 13 - Nov 19):** TV resolving past due tickets, TNT-3502 : Ticket has been raised to regulate the TV process.
 - **Olympus - November Week II (Nov 13 - Nov 20):** TV resolving past due tickets, TNT-3502 : Ticket has been raised to regulate the TV process.
 - **Olympus - November Week I (Oct 31 - Nov 5):** TV resolving past due tickets, TNT-3502 : Ticket has been raised to regulate the TV process.
+- **Olympus - November Week I (Oct 31 - Nov 5):** Automation on TV monitoring: Requested Yagarajan (Nexus) to brainstorm the possibility of automating the daily monitoring of Ticket Validator daily jobs. Enabling this would reduce the manual intervention once for all.
 - **Olympus - October Week IV (Oct 23 - Oct 29):** TV resolving past due tickets, TNT-3502 : Ticket has been raised to regulate the TV process.
 - **Olympus - October Week III (Oct 17 - Oct 22):** TV resolving past due tickets, TNT-3502 : Ticket has been raised to regulate the TV process.
 - **Olympus - October Week II (Oct 09 - Oct 15):** TV resolving past due tickets, TNT-3502 : Ticket has been raised to regulate the TV process.
@@ -2897,21 +2980,19 @@ Values are Created / Open / Resolved as reported that week.
 
 - **Olympus - May Week I (Apr 30 - May 06):** Raised follow-up tickets for Quality improvements.
 
-## Job Monitoring Tool
+## Template Stabilization
 
-### Golden Templates
+### CityOfBethlam
 
-- **Olympus - April Week III (Apr 16 - Apr 22):** Updated the golden template list and details for the same.
+- **Olympus - February Week III (Feb 12 - Feb 18):** Optimised meter level base Xpath with updating the xpath, which avoids frequent Xpath update.
 
-### Java Upgrade
+### Manheim
 
-- **Olympus - April Week III (Apr 16 - Apr 22):** During Migration and roll-back, the tickets were labelled to avoid in SLA miss.
+- **Olympus - February Week II (Feb 05 - Feb 11):** Code revamp has been completed.
 
-### STANDARD discussion
+### Vicinity
 
-- **Olympus - April Week III (Apr 16 - Apr 22):** Had a discussion with Arthi and highlighted the cases where the provider ID extraction suggestion seems to be invalid and requires further attention [TualatinValleyWaterDistrict & RochesterPublicUtility]
-
-- **Olympus - April Week III (Apr 16 - Apr 22):** Provide KT to amrutha on monthly report generation.
+- **Olympus - February Week III (Feb 12 - Feb 18):** Code revamped completed which had a code complexity and the same has been fixed for xreg bills as well.
 
 ## Automation on TV monitoring
 
@@ -2955,6 +3036,10 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - November Week III (Nov 13 - Nov 19):** The POCs are expected to roll out a mail on daily basis with the possible usage of TV.
 - **Olympus - November Week II (Nov 13 - Nov 20):** Requested Yagarajan (Nexus) to brainstorm the possibility of automating the daily monitoring of Ticket Validator daily jobs. Enabling this would reduce the manual intervention once for all.
 - **Olympus - November Week II (Nov 13 - Nov 20):** Eniyan has started to track the Ticket Validating usage.
+
+## Special catalyst details
+
+- **Olympus - February Week II (Feb 05 - Feb 11):** Fusion 5
 
 ## PMU Updates
 
@@ -3022,8 +3107,6 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - December Week III (Dec 11 - Dec 24):** AFTER_CUTOFF 36 Tickets | REVERSAL 25 Tickets
 - **Olympus - December Week II (Dec 05 - Dec 10):** AFTER_CUTOFF 76 Tickets | REVERSAL 80 Tickets
 - **Olympus - December Week I (Nov 27 - Dec 04):** AFTER_CUTOFF 73 Tickets | REVERSAL 76 Tickets
-- **Olympus - November Week III (Nov 13 - Nov 19):** AFTER_CUTOFF 29 Tickets | REVERSAL 27 Tickets
-- **Olympus - November Week II (Nov 13 - Nov 20):** AFTER_CUTOFF 29 Tickets | REVERSAL 27 Tickets
 - **Olympus - November Week II (Nov 13 - Nov 20):** AFTER_CUTOFF 65 Tickets
 - **Olympus - November Week II (Nov 13 - Nov 20):** REVERSAL 21 Tickets
 - **Olympus - November Week I (Oct 31 - Nov 5):** AFTER_CUTOFF 271 Tickets
@@ -3046,6 +3129,49 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - September Week II (Sep 04 - Sep 10):** AFTER_CUTOFF 77 Tickets
 - **Olympus - September Week II (Sep 04 - Sep 10):** REVERSAL 95 Tickets
 
+## Weekly Wisdom Forum
+
+### Delivery Testing Insights
+
+- **Olympus - November Week III (Nov 13 - Nov 19):** Sowmiya K
+
+### Enhancement in Conn Downloader
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Lavanya N - ( Completed )
+
+### Insights on Extraction Failure case in XREG
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** Lavanya N
+
+### Repo_Updation
+
+- **Olympus - December Week I (Nov 27 - Dec 04):** Chandrakanth
+
+- **Olympus - November Week III (Nov 13 - Nov 19):** Insights on Extraction Failure case in XREG and Enhancement in Conn Downloader - Lavanya N
+- **Olympus - November Week II (Nov 13 - Nov 20):** Insights on Extraction Failure case in XREG ,Hackathon project TRAC - Lavanya N
+- **Olympus - November Week II (Nov 13 - Nov 20):** Lavanya N
+- **Olympus - October Week IV (Oct 23 - Oct 29):** An heads-up was given to the team regarding the UC Abandoned case on how to identify the issues and relate them.
+
+## Data Quality
+
+### PMU Updates
+
+- **Olympus - November Week I (Oct 31 - Nov 5):** No updates.
+
+### RCA Analysis
+
+- **Olympus - November Week II (Nov 13 - Nov 20):** No updates.
+- **Olympus - November Week I (Oct 31 - Nov 5):** No updates.
+
+- **Olympus - November Week III (Nov 13 - Nov 19):** Sriya analysed the XREG failure ids and has raised 14 PE tickets for data quality issues from XREG id for read_type_id, cycle number, demand usage group extraction and TBA extraction.
+- **Olympus - November Week II (Nov 13 - Nov 20):** Sriya analysed the XREG failure ids and has raised 14 PE tickets for data quality issues from XREG id for address issues and tariff issue.
+- **Olympus - November Week I (Oct 31 - Nov 5):** Sriya analysed the XREG failure ids and has raised 11 PE tickets for data quality issues from XREG id for address issues and charge missing issue.
+
+## Observations | Compliance
+
+- **Olympus - November Week II (Nov 13 - Nov 20):** Monthly rituals insights were shared Nidhya for further take over.
+- **Olympus - November Week II (Nov 13 - Nov 20):** Nidhyalakshmi is actively validating the SLA miss on daily basis, she will be starting to include MTD contractual misses from next week.
+
 ## Jira Automations
 
 ### Label Addition
@@ -3057,22 +3183,6 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - October Week IV (Oct 23 - Oct 29):** For New URL mapping case, a jira automation has been implemented to add comments, under review.
 
 ## Ymir Year Normalisation
-
-### PDS Documentation
-
-- **Olympus - July Week V (Jul 24 - Jul 30):** Lavanya has initiated to document the process on PDS project.
-
-### TransController
-
-- **Olympus - July Week V (Jul 24 - Jul 30):** Team level analysis of TransController is taken cared by Chandrakanth. He has analysed and created a few tickets for last week.
-
-### WWF
-
-- **Olympus - July Week V (Jul 24 - Jul 30):** Lavanya will be taking WWF session on Payment History Group handling in PDS.
-
-### Y-CAP
-
-- **Olympus - July Week V (Jul 24 - Jul 30):** Saphal has developed a Console Automation Plugin in eclipse that will reduce the manual efforts involved in the Ymir process and IAC processing for UC project.
 
 - **Olympus - September Week IV (Sep 19 - Sep 24):** An AUDI-27 has been cancelled since the Ymir Year Normalisation fix is required at platform level.
 - **Olympus - September Week III (Sep 11 - Sep 18):** An AUDI-27 has been cancelled since the Ymir Year Normalisation fix is required at platform level.
@@ -3088,9 +3198,6 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - August Week II (Aug 07 - Aug 13):** A script has been created to get the reopen count for the annual metrics
 - **Olympus - August Week I (Jul 31 - Aug 06):** Nidhya analysed year normalisation impacts in UC and found a discrepancy in UC behaviour.
 - **Olympus - August Week I (Jul 31 - Aug 06):** For interval oversized error, in UC environment the error is not thrown. An AUDI-27 has been raised for further analysis on the same.
-- **Olympus - July Week V (Jul 24 - Jul 30):** Ymir repo is not accessible for the development team
-- **Olympus - July Week V (Jul 24 - Jul 30):** We are simulating the UDS owning providers into UC for observing the logic handled by the UC platform
-- **Olympus - July Week V (Jul 24 - Jul 30):** Team has started to work on Fusion in order to close the past dues and has completed 5 Fusion and 3 Delivery Testing.
 
 ## Other internal-tracking notes
 
@@ -3197,10 +3304,6 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - Jul Week IV (Jul 23 - Jul 29):** Revamp initiated for charge level data which needs charge level expansion.[WIP]
 - **Olympus - Jul Week II (Jul 02 - Jul 08):** Revamp initiated for charge level data which needs charge level expansion.
 
-### CityOfBethlam
-
-- **Olympus - February Week III (Feb 12 - Feb 18):** Optimised meter level base Xpath with updating the xpath, which avoids frequent Xpath update.
-
 ### CityOfBillingsMT
 
 - **Olympus - November Week III (Nov 13 - Nov 19):** Stanley analysed the Top transition case for CityOfBillings, for past cases it was due to the charge block issue which has been recently updated in bill reducing the noise for this template.
@@ -3283,7 +3386,6 @@ Values are Created / Open / Resolved as reported that week.
 
 ### Manheim
 
-- **Olympus - February Week II (Feb 05 - Feb 11):** Code revamp has been completed.
 - **Olympus - January Week III (Jan 15 - Jan 21):** Based on the format confirmation, the Manheim template stabilization will be planned out.
 
 ### NIPSCO Standardisation and stabilization
@@ -3352,10 +3454,6 @@ Values are Created / Open / Resolved as reported that week.
 
 - **Olympus - Jul Week IV (Jul 23 - Jul 29):** Multiplier to be extracted.
 
-### Vicinity
-
-- **Olympus - February Week III (Feb 12 - Feb 18):** Code revamped completed which had a code complexity and the same has been fixed for xreg bills as well.
-
 ### VillageOfRoselleIL
 
 - **Olympus - July Week III (Jul 10 - Jul 16):** An issue has been identified due to a recent navigation update, where provider IDs were not extracted. This is causing a critical impact and will be fixed after a feasibility check. (Lavanya)
@@ -3391,46 +3489,6 @@ Values are Created / Open / Resolved as reported that week.
 
 ## Weekly Wisdom Forum
 
-### Conn Downloader
-
-- **Olympus - August Week II (Aug 07 - Aug 13):** Elavarasan has updated the manifest issue in Conn Downloader
-
-### Defect Tracker
-
-- **Olympus - August Week II (Aug 07 - Aug 13):** Saipriyadarsini has been tracking ZD defect tracking entries and it has been automated.
-
-### Delivery Testing Insights
-
-- **Olympus - November Week III (Nov 13 - Nov 19):** Sowmiya K
-
-### Enhancement in Conn Downloader
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** Lavanya N - ( Completed )
-
-### Gradle Pro roll-out details
-
-- **Olympus - September Week III (Sep 11 - Sep 18):** Chandrakanth S.
-
-### Insights on Extraction Failure case in XREG
-
-- **Olympus - November Week I (Oct 31 - Nov 5):** Lavanya N
-
-### Repo_Updation
-
-- **Olympus - December Week I (Nov 27 - Dec 04):** Chandrakanth
-
-### Risk
-
-- **Olympus - August Week II (Aug 07 - Aug 13):** Nil.
-
-### Round-off Operator behaviour
-
-- **Olympus - October Week II (Oct 09 - Oct 15):** Elavarasan A.
-- **Olympus - October Week I (Oct 02 - Oct 08):** Elavarasan A.
-- **Olympus - September Week V (Sep 25 - Oct 01):** Elavarasan A.
-- **Olympus - September Week IV (Sep 19 - Sep 24):** Elavarasan A.
-- **Olympus - September Week III (Sep 11 - Sep 18):** Elavarasan A.
-
 - **Olympus - Jul Week IV (Jul 23 - Jul 29):** Karthik will be planning the WWF session on PGE post the optimisation.
 - **Olympus - Jul Week IV (Jul 23 - Jul 29):** Sowmiya provided insights on OCR Experimental and high-level background during WWF session.
 - **Olympus - Jul Week II (Jul 02 - Jul 08):** Informed the team regarding the "Abby 11 Ocr test Org" tickets
@@ -3444,18 +3502,29 @@ Values are Created / Open / Resolved as reported that week.
 - **Olympus - Jun Week I (May 28 - Jun 03):** Karthik will be planning the WWF session on PGE post the optimisation.
 - **Olympus - May Week IV (May 21 - May 27):** Lavanya provided WWF session on Configuration options that are available for template fixes.
 - **Olympus - May Week IV (May 21 - May 27):** Karthik will be planning the WWF session on PGE post the optimisation.
-- **Olympus - November Week III (Nov 13 - Nov 19):** Insights on Extraction Failure case in XREG and Enhancement in Conn Downloader - Lavanya N
-- **Olympus - November Week II (Nov 13 - Nov 20):** Insights on Extraction Failure case in XREG ,Hackathon project TRAC - Lavanya N
-- **Olympus - November Week II (Nov 13 - Nov 20):** Lavanya N
-- **Olympus - October Week IV (Oct 23 - Oct 29):** An heads-up was given to the team regarding the UC Abandoned case on how to identify the issues and relate them.
+- **Olympus - October Week II (Oct 09 - Oct 15):** Round-off Operator behaviour - Elavarasan A.
+- **Olympus - October Week I (Oct 02 - Oct 08):** Round-off Operator behaviour - Elavarasan A.
+- **Olympus - September Week V (Sep 25 - Oct 01):** Round-off Operator behaviour - Elavarasan A.
+- **Olympus - September Week IV (Sep 19 - Sep 24):** Round-off Operator behaviour - Elavarasan A.
 - **Olympus - September Week IV (Sep 19 - Sep 24):** Update on Re-resolution case and status for QA transition - Sowmiya K. (Completed)
-- **Olympus - August Week II (Aug 07 - Aug 13):** Lavanya will be taking WWF session on Payment History Group handling in PDS.
-- **Olympus - August Week II (Aug 07 - Aug 13):** DATE Formatting issue insights by Sheyne
-- **Olympus - August Week II (Aug 07 - Aug 13):** Team has started to work on Fusion in order to close the past dues and has completed 3 Fusion and 11 DT.
+
+## Observations | Compliance
+
+- **Olympus - March Week III (Mar 12 - Mar 18):** SLA : Contractual Compliance based on MTD.
+- **Olympus - March Week III (Mar 12 - Mar 18):** 98.35% in Recurring issue.
+- **Olympus - March Week III (Mar 12 - Mar 18):** 100.00% in Customer Issues.
+- **Olympus - March Week II (Mar 05 - Mar 11):** SLA : Contractual Compliance based on MTD.
+- **Olympus - March Week II (Mar 05 - Mar 11):** 98.35% in Recurring issue.
+- **Olympus - March Week II (Mar 05 - Mar 11):** 100.00% in Customer Issues.
 
 ## Notes
 
 - **Olympus - February Week II (Feb 05 - Feb 11):** Sangeetha's Reliant fix on Range filter : documentation & WWF on diff in RangeFilter Vs Vertical Filter False.
+
+## MTD AFTER_CUTOFF Details
+
+- **Olympus - November Week III (Nov 13 - Nov 19):** AFTER_CUTOFF 29 Tickets | REVERSAL 27 Tickets
+- **Olympus - November Week II (Nov 13 - Nov 20):** AFTER_CUTOFF 29 Tickets | REVERSAL 27 Tickets
 
 ## UC
 
@@ -3497,6 +3566,10 @@ Values are Created / Open / Resolved as reported that week.
 ### UnisourceEnergyServices
 
 - **Olympus - September Week III (Sep 11 - Sep 18):** TBA=AD=0 and SOC = Checksum SOC same as new charges
+
+## Risk
+
+- **Olympus - July Week IV (Jul 17 - Jul 23):** Sheyne is on summer break this week with this everyone has completed the Summer break.
 
 ## Initiative / provider reductions
 
