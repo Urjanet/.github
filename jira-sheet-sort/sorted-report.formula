@@ -1,0 +1,17 @@
+=LET(
+  raw, JIRA(Sheet1!$B$30),
+  header, HSTACK(CHOOSEROWS(raw, 1), "AK", "AM", "AO"),
+  IF(ROWS(raw) < 2, header,
+    LET(
+      body, CHOOSEROWS(raw, SEQUENCE(ROWS(raw) - 1, 1, 2)),
+      c, COLUMNS(body),
+      ak, AK_EXPR,
+      am, AM_EXPR,
+      ao, AO_EXPR,
+      VSTACK(
+        header,
+        SORT(HSTACK(body, ak, am, ao), c + 1, FALSE, c + 2, FALSE, c + 3, FALSE)
+      )
+    )
+  )
+)
