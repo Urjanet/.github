@@ -16,6 +16,7 @@ function onOpen() {
     ui.createMenu('KTLO Skill - Ticket Distribution')
       .addItem('Overall Fetch Jira Tickets & Distribute', 'fetchJiraDataFromB27Query')
       .addItem('Run Hierarchical Distribution & Sort Only', 'distributeTickets')
+      .addItem('Code Adapt Update', 'fetchJiraDataFromB28Query')
       .addToUi();
   } catch (e) {
     Logger.log("Skipped UI creation: Executed outside active sheet UI context.");

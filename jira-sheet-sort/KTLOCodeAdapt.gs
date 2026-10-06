@@ -1,22 +1,9 @@
 /**
- * Separate script for KTLO - Code Adapt.
+ * Separate file from the ticket distribution script.
  * Reads the JQL in KTLO_Daily_Data!B28, writes columns A:T, then fills formulas in U:AP.
- * This script does not assign tickets or sort rows.
- */
-function onOpen() {
-  try {
-    SpreadsheetApp.getUi()
-      .createMenu('KTLO Code Adapt')
-      .addItem('Fetch Jira Tickets', 'fetchJiraDataFromB28Query')
-      .addToUi();
-  } catch (e) {
-    Logger.log("Skipped UI creation: Executed outside active sheet UI context.");
-  }
-}
-
-/**
- * Reads JQL from KTLO_Daily_Data!B28, executes Jira query returning ONLY the 20 specified columns (A:T),
- * and populates calculated formulas across columns U:AP for the exact returned row count.
+ * This file does not assign tickets or sort rows.
+ * The distribution script's menu calls fetchJiraDataFromB28Query. This file has no onOpen,
+ * so both files can live in the same Apps Script project.
  */
 function fetchJiraDataFromB28Query() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
