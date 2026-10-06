@@ -256,11 +256,118 @@ function issueToRow(issue) {
   ];
 }
 
+function rosterCellText(value) {
+  return value === undefined || value === null ? "" : value.toString().trim();
+}
+
+function rosterNorm(value) {
+  return rosterCellText(value).toLowerCase();
+}
+
+var ROSTER_HARD_LEAVE = ["pl", "cl", "sl", "fl", "al", "leave", "on leave", "absent", "unavailable", "not available", "not planned"];
+
+function rosterMarksLeave(status) {
+  return ROSTER_HARD_LEAVE.indexOf(status) !== -1;
+}
+
 /**
- * 2. Template-Grouped Hierarchical Ticket Distribution Engine
- *    - Keeps all tickets with the same Template Provider (Column N) assigned to the SAME member.
- *    - Respects Leave filtering from Range AE2:AK20.
- *    - Applies Squad -> Team -> Cross-Team Priority Allocation.
+ * Attendance columns in AE2:AK20 are: date, Availability, Not planned.
+ * "Not planned" = No means the person is planned and stays in the share.
+ */
+function memberIsOnLeave(attendance, availability, notPlanned) {
+  const day = rosterNorm(attendance);
+  const avail = rosterNorm(availability);
+  const planned = rosterNorm(notPlanned);
+
+  if (rosterMarksLeave(day) || day === "no" || day === "n" || day === "0") return true;
+  if (rosterMarksLeave(avail) || avail === "no" || avail === "n" || avail === "0") return true;
+  if (rosterMarksLeave(planned) || planned === "yes" || planned === "y" || planned === "1" || planned === "true") return true;
+  return false;
+}
+
+function rememberLabel(canonByNorm, raw) {
+  const display = rosterCellText(raw);
+  if (!display) return "";
+  const key = display.toLowerCase();
+  if (!canonByNorm[key]) canonByNorm[key] = display;
+  return canonByNorm[key];
+}
+
+function canonicalLabel(canonByNorm, raw) {
+  const display = rosterCellText(raw);
+  if (!display) return "";
+  return canonByNorm[display.toLowerCase()] || display;
+}
+
+function addMemberToGroup(groupMap, groupName, memberName) {
+  if (!groupName) return;
+  if (!groupMap[groupName]) groupMap[groupName] = [];
+  groupMap[groupName].push(memberName);
+}
+
+function majorityLabel(rowIndexes, columnValues, canonByNorm) {
+  const counts = {};
+  rowIndexes.forEach(idx => {
+    const label = canonicalLabel(canonByNorm, columnValues[idx][0]);
+    if (!label) return;
+    counts[label] = (counts[label] || 0) + 1;
+  });
+
+  let best = "";
+  let bestCount = 0;
+  Object.keys(counts).forEach(label => {
+    if (counts[label] > bestCount) {
+      best = label;
+      bestCount = counts[label];
+    }
+  });
+  return best;
+}
+
+function leastLoadedName(names, assignedCount) {
+  if (!names || names.length === 0) return "";
+  const sorted = names.slice().sort((a, b) => {
+    const diff = (assignedCount[a] || 0) - (assignedCount[b] || 0);
+    return diff !== 0 ? diff : a.localeCompare(b);
+  });
+  return sorted[0];
+}
+
+function pickUnderCap(names, batchSize, cap, assignedCount) {
+  if (!names || names.length === 0 || batchSize > cap) return "";
+  const sorted = names.slice().sort((a, b) => {
+    const diff = (assignedCount[a] || 0) - (assignedCount[b] || 0);
+    return diff !== 0 ? diff : a.localeCompare(b);
+  });
+  const under = sorted.filter(name => (assignedCount[name] || 0) + batchSize <= cap);
+  return under.length ? under[0] : "";
+}
+
+/**
+ * Fill the ticket's team up to its equal share, then the squad, then everyone.
+ * A template batch is never split: one person receives the whole group.
+ */
+function chooseAssignee(teamNames, squadNames, allNames, batchSize, teamCap, globalCap, assignedCount) {
+  return pickUnderCap(teamNames, batchSize, teamCap, assignedCount)
+    || pickUnderCap(squadNames, batchSize, globalCap, assignedCount)
+    || pickUnderCap(allNames, batchSize, globalCap, assignedCount)
+    || leastLoadedName(teamNames, assignedCount)
+    || leastLoadedName(squadNames, assignedCount)
+    || leastLoadedName(allNames, assignedCount);
+}
+
+function formatShare(numerator, denominator) {
+  if (!denominator) return "0";
+  const value = numerator / denominator;
+  return value === Math.round(value) ? String(value) : value.toFixed(2);
+}
+
+/**
+ * Template-grouped ticket distribution.
+ * Roster AE2:AK20 columns: Team, Member, attendance date, Availability, Not planned, Member, Squad.
+ * Ticket team is column AK. Same column N template stays with one person.
+ * Share within that team, then that squad, then all available members.
+ * Leave members are excluded from the share and listed as disabled in the summary.
  */
 function distributeTickets() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -279,47 +386,34 @@ function distributeTickets() {
   }
 
   const totalRows = lastRow - 1;
-
-  // Read AE2:AK20 range (7 columns: AE: Squad, AF: Name, AG..AJ: Leave Columns, AK: Team)
   const availabilityData = rosterSheet ? rosterSheet.getRange("AE2:AK20").getValues() : [];
 
   const availableMembers = [];
-  const squadMemberMap = {};   // Squad -> Member Names
-  const teamMemberMap = {};    // Team -> Member Names
-
-  const leaveCodes = ["pl", "cl", "sl", "fl", "al", "leave", "absent", "no", "0", "not planned"];
+  const leaveMembers = [];
+  const squadMemberMap = {};
+  const teamMemberMap = {};
+  const teamCanon = {};
+  const squadCanon = {};
+  const seenNames = {};
 
   for (let i = 0; i < availabilityData.length; i++) {
-    const squad = availabilityData[i][0] ? availabilityData[i][0].toString().trim() : "";
-    const name = availabilityData[i][1] ? availabilityData[i][1].toString().trim() : "";
-    const team = availabilityData[i][6] ? availabilityData[i][6].toString().trim() : ""; // Col AK
+    const row = availabilityData[i];
+    const team = rememberLabel(teamCanon, row[0]);
+    let name = rosterCellText(row[1]);
+    if (!name) name = rosterCellText(row[5]);
+    const squad = rememberLabel(squadCanon, row[6]);
+    if (!name || seenNames[name.toLowerCase()]) continue;
+    seenNames[name.toLowerCase()] = true;
 
-    if (name !== "") {
-      let isAvailable = true;
-
-      // Check leave status across columns AG to AJ (indices 2 to 5)
-      for (let j = 2; j <= 5; j++) {
-        const status = availabilityData[i][j] ? availabilityData[i][j].toString().toLowerCase().trim() : "";
-        if (leaveCodes.includes(status)) {
-          isAvailable = false;
-          break;
-        }
-      }
-
-      if (isAvailable) {
-        availableMembers.push({ name: name, squad: squad, team: team });
-
-        if (squad !== "") {
-          if (!squadMemberMap[squad]) squadMemberMap[squad] = [];
-          squadMemberMap[squad].push(name);
-        }
-
-        if (team !== "") {
-          if (!teamMemberMap[team]) teamMemberMap[team] = [];
-          teamMemberMap[team].push(name);
-        }
-      }
+    const person = { name: name, squad: squad, team: team };
+    if (memberIsOnLeave(row[2], row[3], row[4])) {
+      leaveMembers.push(person);
+      continue;
     }
+
+    availableMembers.push(person);
+    addMemberToGroup(teamMemberMap, team, name);
+    addMemberToGroup(squadMemberMap, squad, name);
   }
 
   if (availableMembers.length === 0) {
@@ -327,190 +421,147 @@ function distributeTickets() {
     return;
   }
 
-  // Read ticket data from Overall-Analysis - Test2
-  const ticketKeys = dataSheet.getRange(2, 1, totalRows, 1).getValues();      // Col A: Key
-  const templates = dataSheet.getRange(2, 14, totalRows, 1).getValues();      // Col N: Search Template
-  const ticketSquads = dataSheet.getRange(2, 23, totalRows, 1).getValues();  // Col W: Squad
-  const ticketTeams = dataSheet.getRange(2, 37, totalRows, 1).getValues();   // Col AK: Team
-  const colAMData = dataSheet.getRange(2, 39, totalRows, 1).getValues();    // Col AM: Error Type
-  const colAOData = dataSheet.getRange(2, 41, totalRows, 1).getValues();    // Col AO: Code Adapt
+  const ticketKeys = dataSheet.getRange(2, 1, totalRows, 1).getValues();
+  const templates = dataSheet.getRange(2, 14, totalRows, 1).getValues();
+  const ticketSquads = dataSheet.getRange(2, 23, totalRows, 1).getValues();
+  const ticketTeams = dataSheet.getRange(2, 37, totalRows, 1).getValues();
+  const colAMData = dataSheet.getRange(2, 39, totalRows, 1).getValues();
+  const colAOData = dataSheet.getRange(2, 41, totalRows, 1).getValues();
 
   const initialCalculatedCount = {};
   const finalAssignedCount = {};
-
   availableMembers.forEach(m => {
     initialCalculatedCount[m.name] = 0;
     finalAssignedCount[m.name] = 0;
   });
 
   let totalEligibleTickets = 0;
-
-  // Group eligible tickets by Template Provider (Col N)
-  // templateGroups = { "TemplateName": [rowIndexes] }
   const templateGroups = {};
-  const rowToTemplateKey = {};
+  const teamBefore = {};
+  const squadBefore = {};
 
   for (let k = 0; k < totalRows; k++) {
-    const key = ticketKeys[k][0] ? ticketKeys[k][0].toString().trim() : "";
-    const tName = templates[k][0] ? templates[k][0].toString().trim() : "";
-    const ticketSquad = ticketSquads[k][0] ? ticketSquads[k][0].toString().trim() : "";
-    const amVal = colAMData[k][0] ? colAMData[k][0].toString().trim().toLowerCase() : "";
-    const aoVal = colAOData[k][0] ? colAOData[k][0].toString().trim().toLowerCase() : "";
+    const key = rosterCellText(ticketKeys[k][0]);
+    const templateName = rosterCellText(templates[k][0]);
+    const amVal = rosterNorm(colAMData[k][0]);
+    const aoVal = rosterNorm(colAOData[k][0]);
+    const isSkillEligible = amVal === "skill eligible" || aoVal === "skill eligible";
+    if (!key || !isSkillEligible) continue;
 
-    const isSkillEligible = (amVal === "skill eligible" || aoVal === "skill eligible");
+    totalEligibleTickets++;
+    const groupKey = templateName || `NO_TEMPLATE_${k}`;
+    if (!templateGroups[groupKey]) templateGroups[groupKey] = [];
+    templateGroups[groupKey].push(k);
 
-    if (key !== "" && isSkillEligible) {
-      totalEligibleTickets++;
-
-      // Use template name or fallback to unique row index if blank
-      const groupKey = tName !== "" ? tName : `NO_TEMPLATE_${k}`;
-      if (!templateGroups[groupKey]) {
-        templateGroups[groupKey] = [];
-      }
-      templateGroups[groupKey].push(k);
-      rowToTemplateKey[k] = groupKey;
-
-      // Calculate initial origin count for squad members
-      const squadMembers = (ticketSquad && squadMemberMap[ticketSquad]) ? squadMemberMap[ticketSquad] : [];
-      if (squadMembers.length > 0) {
-        const share = 1 / squadMembers.length;
-        squadMembers.forEach(mName => {
-          if (initialCalculatedCount[mName] !== undefined) {
-            initialCalculatedCount[mName] += share;
-          }
-        });
-      }
-    }
+    const teamLabel = canonicalLabel(teamCanon, ticketTeams[k][0]) || "Unassigned Team";
+    const squadLabel = canonicalLabel(squadCanon, ticketSquads[k][0]) || "Unassigned Squad";
+    teamBefore[teamLabel] = (teamBefore[teamLabel] || 0) + 1;
+    squadBefore[squadLabel] = (squadBefore[squadLabel] || 0) + 1;
   }
 
   availableMembers.forEach(m => {
-    initialCalculatedCount[m.name] = Math.round(initialCalculatedCount[m.name]);
+    const teamLabel = m.team || "Unassigned Team";
+    const squadLabel = m.squad || "Unassigned Squad";
+    const mates = teamMemberMap[m.team] || [];
+    const teamTickets = teamBefore[teamLabel] || 0;
+    initialCalculatedCount[m.name] = mates.length ? Math.round(teamTickets / mates.length) : 0;
+    if (teamBefore[teamLabel] === undefined) teamBefore[teamLabel] = 0;
+    if (squadBefore[squadLabel] === undefined) squadBefore[squadLabel] = 0;
   });
 
-  const FAIR_CAP = Math.max(Math.ceil(totalEligibleTickets / availableMembers.length), 1);
-
-  // Map to store chosen assignee per row index
+  const globalCap = Math.max(Math.ceil(totalEligibleTickets / availableMembers.length), 1);
+  const allNames = availableMembers.map(m => m.name);
   const assignedMemberByRow = {};
 
-  // Sort template groups by size (descending) to allocate larger template clusters first
   const sortedTemplateKeys = Object.keys(templateGroups).sort((a, b) => {
     return templateGroups[b].length - templateGroups[a].length;
   });
 
-  // Perform Batch Distribution per Template Group
   sortedTemplateKeys.forEach(groupKey => {
     const rowIndices = templateGroups[groupKey];
     const batchSize = rowIndices.length;
+    const templateTeam = majorityLabel(rowIndices, ticketTeams, teamCanon);
+    const templateSquad = majorityLabel(rowIndices, ticketSquads, squadCanon);
+    const teamNames = templateTeam ? (teamMemberMap[templateTeam] || []) : [];
+    const squadNames = templateSquad ? (squadMemberMap[templateSquad] || []) : [];
+    const teamTickets = teamBefore[templateTeam] || batchSize;
+    const teamCap = Math.max(Math.ceil(teamTickets / Math.max(teamNames.length, 1)), 1);
 
-    // Determine primary squad and team for this template group from its first row
-    const firstRowIndex = rowIndices[0];
-    const templateSquad = ticketSquads[firstRowIndex][0] ? ticketSquads[firstRowIndex][0].toString().trim() : "";
-    const templateTeam = ticketTeams[firstRowIndex][0] ? ticketTeams[firstRowIndex][0].toString().trim() : "";
+    const chosenMember = chooseAssignee(
+      teamNames,
+      squadNames,
+      allNames,
+      batchSize,
+      teamCap,
+      globalCap,
+      finalAssignedCount
+    );
 
-    let chosenMember = "";
-
-    // PRIORITY 1: Squad Members (Prefer those under Fair Cap)
-    const squadCandidates = (templateSquad && squadMemberMap[templateSquad]) ? squadMemberMap[templateSquad] : [];
-    const eligibleSquadMembers = squadCandidates
-      .slice()
-      .sort((a, b) => finalAssignedCount[a] - finalAssignedCount[b]);
-
-    const squadUnderCap = eligibleSquadMembers.filter(m => finalAssignedCount[m] + batchSize <= FAIR_CAP + 1);
-
-    if (squadUnderCap.length > 0) {
-      chosenMember = squadUnderCap[0];
-    } else if (eligibleSquadMembers.length > 0) {
-      chosenMember = eligibleSquadMembers[0];
-    } else {
-      // PRIORITY 2: Team Members
-      const teamCandidates = (templateTeam && teamMemberMap[templateTeam]) ? teamMemberMap[templateTeam] : [];
-      const eligibleTeamMembers = teamCandidates
-        .slice()
-        .sort((a, b) => finalAssignedCount[a] - finalAssignedCount[b]);
-
-      const teamUnderCap = eligibleTeamMembers.filter(m => finalAssignedCount[m] + batchSize <= FAIR_CAP + 1);
-
-      if (teamUnderCap.length > 0) {
-        chosenMember = teamUnderCap[0];
-      } else if (eligibleTeamMembers.length > 0) {
-        chosenMember = eligibleTeamMembers[0];
-      } else {
-        // PRIORITY 3: Cross-Team Allocation (Lowest workload)
-        const sortedAllMembers = availableMembers
-          .slice()
-          .sort((a, b) => finalAssignedCount[a.name] - finalAssignedCount[b.name]);
-
-        chosenMember = sortedAllMembers[0].name;
-      }
-    }
-
-    // Assign all tickets in this template group to the chosen member
     rowIndices.forEach(rIdx => {
       assignedMemberByRow[rIdx] = chosenMember;
     });
-
     finalAssignedCount[chosenMember] += batchSize;
   });
 
-  // Prepare Column AL outputs array
   const assignmentsAL = [];
   for (let k = 0; k < totalRows; k++) {
-    if (assignedMemberByRow[k]) {
-      assignmentsAL.push([assignedMemberByRow[k]]);
-    } else {
-      assignmentsAL.push([""]);
-    }
+    assignmentsAL.push([assignedMemberByRow[k] || ""]);
   }
 
-  // Write outputs to Column AL (Column 38)
   dataSheet.getRange(2, 38, totalRows, 1).setValues(assignmentsAL);
   SpreadsheetApp.flush();
 
-  // Multi-column Sorting (AL Ascending, AO Descending, AM Descending)
   const maxColumn = dataSheet.getLastColumn();
-  const sortRange = dataSheet.getRange(2, 1, totalRows, maxColumn);
-
-  sortRange.sort([
-    { column: 38, ascending: true },  // AL: Assigned Member Name
-    { column: 41, ascending: false }, // AO: Code Adapt Eligibility
-    { column: 39, ascending: false }  // AM: Error Type Eligibility
+  dataSheet.getRange(2, 1, totalRows, maxColumn).sort([
+    { column: 38, ascending: true },
+    { column: 41, ascending: false },
+    { column: 39, ascending: false }
   ]);
 
-  // Aggregate Team & Squad Level Statistics
-  const teamStats = {};
-  const squadStats = {};
-
+  const teamAfter = {};
+  const squadAfter = {};
   availableMembers.forEach(m => {
-    const tName = m.team || "Unassigned Team";
-    const sName = m.squad || "Unassigned Squad";
-
-    if (!teamStats[tName]) teamStats[tName] = { before: 0, after: 0 };
-    if (!squadStats[sName]) squadStats[sName] = { before: 0, after: 0 };
-
-    teamStats[tName].before += initialCalculatedCount[m.name];
-    teamStats[tName].after += finalAssignedCount[m.name];
-
-    squadStats[sName].before += initialCalculatedCount[m.name];
-    squadStats[sName].after += finalAssignedCount[m.name];
+    const teamLabel = m.team || "Unassigned Team";
+    const squadLabel = m.squad || "Unassigned Squad";
+    if (!teamAfter[teamLabel]) teamAfter[teamLabel] = 0;
+    if (!squadAfter[squadLabel]) squadAfter[squadLabel] = 0;
+    teamAfter[teamLabel] += finalAssignedCount[m.name];
+    squadAfter[squadLabel] += finalAssignedCount[m.name];
+    if (teamBefore[teamLabel] === undefined) teamBefore[teamLabel] = 0;
+    if (squadBefore[squadLabel] === undefined) squadBefore[squadLabel] = 0;
   });
 
-  // Construct Detailed Summary Message
-  let summaryText = `Total Eligible Tickets: ${totalEligibleTickets}\nTarget Fair Cap: ~${FAIR_CAP}\nTotal Unique Template Providers: ${sortedTemplateKeys.length}\n\n`;
+  let summaryText = `Total Eligible Tickets: ${totalEligibleTickets}\n`;
+  summaryText += `Available Members: ${availableMembers.length}\n`;
+  summaryText += `On Leave (disabled): ${leaveMembers.length}\n`;
+  summaryText += `Per head count: ${totalEligibleTickets} / ${availableMembers.length} = ${formatShare(totalEligibleTickets, availableMembers.length)}\n`;
+  summaryText += `Total Unique Template Providers: ${sortedTemplateKeys.length}\n\n`;
 
-  summaryText += `=== TEAM BREAKDOWN ===\n`;
-  for (let team in teamStats) {
-    summaryText += `Team ${team}: Before = ${teamStats[team].before} -> After = ${teamStats[team].after}\n`;
-  }
+  summaryText += `=== TEAM BREAKDOWN (from column AK) ===\n`;
+  Object.keys(teamBefore).sort().forEach(team => {
+    const after = teamAfter[team] || 0;
+    summaryText += `Team ${team}: Before = ${teamBefore[team]} -> After = ${after}\n`;
+  });
 
   summaryText += `\n=== SQUAD BREAKDOWN ===\n`;
-  for (let squad in squadStats) {
-    summaryText += `Squad ${squad}: Before = ${squadStats[squad].before} -> After = ${squadStats[squad].after}\n`;
-  }
+  Object.keys(squadBefore).sort().forEach(squad => {
+    const after = squadAfter[squad] || 0;
+    summaryText += `Squad ${squad}: Before = ${squadBefore[squad]} -> After = ${after}\n`;
+  });
 
   summaryText += `\n=== INDIVIDUAL MEMBER BREAKDOWN ===\n`;
   availableMembers.forEach(m => {
-    summaryText += `${m.name} [Squad: ${m.squad} | Team: ${m.team}]: Before = ${initialCalculatedCount[m.name]} -> After = ${finalAssignedCount[m.name]}\n`;
+    summaryText += `${m.name} [Squad: ${m.squad || "Unassigned Squad"} | Team: ${m.team || "Unassigned Team"}]: Before = ${initialCalculatedCount[m.name]} -> After = ${finalAssignedCount[m.name]}\n`;
   });
+
+  summaryText += `\n=== ON LEAVE (disabled, excluded from sharing) ===\n`;
+  if (leaveMembers.length === 0) {
+    summaryText += "None\n";
+  } else {
+    leaveMembers.forEach(m => {
+      summaryText += `${m.name} [Squad: ${m.squad || "Unassigned Squad"} | Team: ${m.team || "Unassigned Team"}]: On leave — disabled\n`;
+    });
+  }
 
   Logger.log(summaryText);
   SpreadsheetApp.getUi().alert("Ticket Distribution Summary (Template Grouped)", summaryText, SpreadsheetApp.getUi().ButtonSet.OK);
