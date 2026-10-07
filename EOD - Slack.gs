@@ -9,10 +9,10 @@
  * Script properties (Project Settings -> Script properties):
  * - SLACK_BOT_TOKEN (required): Bot User OAuth token (xoxb-...) with chat:write.
  *   Invite that bot to the channel before the first run.
- * - SLACK_EOD_CHANNEL (optional): channel ID. Defaults to #connector-java-skills-testing.
+ * - SLACK_EOD_CHANNEL (optional): channel ID. Defaults to #ktlo-tracking for testing.
  */
 
-var EOD_SLACK_CHANNEL_ID = "C0BQV1ULZEG";
+var EOD_SLACK_CHANNEL_ID = "C0B3MSQABRV";
 var EOD_SLACK_TEXT_LIMIT = 35000;
 
 /**
