@@ -191,6 +191,10 @@ function postEodSlackMessage_(token, channel, text) {
   });
 
   const body = JSON.parse(response.getContentText() || "{}");
+  if (body.error === "channel_not_found" || body.error === "not_in_channel") {
+    throw new Error("Slack chat.postMessage failed: " + body.error + " for channel " + channel +
+      ". Private channels are hidden from the bot until it is added: in Slack, open the channel and run /invite @<bot name>.");
+  }
   if (!body.ok) {
     throw new Error("Slack chat.postMessage failed: " + (body.error || response.getContentText()));
   }
