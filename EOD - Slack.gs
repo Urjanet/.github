@@ -13,7 +13,6 @@
  */
 
 var EOD_SLACK_CHANNEL_ID = "C0B3MSQABRV";
-var EOD_SLACK_TEXT_LIMIT = 35000;
 
 /**
  * Entry point. Bind a time-driven trigger to this function to send the EOD
@@ -46,29 +45,32 @@ function postEodToSlack() {
   }
 
   const channel = eodScriptProperty_("SLACK_EOD_CHANNEL") || EOD_SLACK_CHANNEL_ID;
-  const sections = [
-    buildEodHeading_(),
-    buildKtloDailySection_(),
-    buildUnprocessedSection_(),
-    buildMissingJavaSuiteSection_()
-  ];
+  const blocks = [{
+    type: "header",
+    text: { type: "plain_text", text: "EOD" }
+  }];
 
-  const messages = chunkEodMessages_(sections, EOD_SLACK_TEXT_LIMIT);
+  const ktloBlocks = buildKtloBlocks_();
+  for (let i = 0; i < ktloBlocks.length; i++) {
+    blocks.push(ktloBlocks[i]);
+  }
+  blocks.push({ type: "divider" });
+  eodPushMarkdown_(blocks, buildUnprocessedSection_());
+  eodPushMarkdown_(blocks, buildMissingJavaSuiteSection_());
+
+  const messages = chunkEodBlocks_(blocks);
   for (let i = 0; i < messages.length; i++) {
-    postEodSlackMessage_(token, channel, messages[i]);
+    postEodSlackMessage_(token, channel, "EOD", messages[i]);
   }
 
   Logger.log("Posted EOD to Slack channel " + channel + " in " + messages.length + " message(s).");
 }
 
-function buildEodHeading_() {
-  return "*EOD*";
-}
-
 /**
  * KTLO_Daily_Data columns A and F:P, rows 1 through 10.
+ * The wide grid is posted as two Slack tables: Error-Type, then Code-Adapt.
  */
-function buildKtloDailySection_() {
+function buildKtloBlocks_() {
   const sheet = eodRequireSheet_("KTLO_Daily_Data");
   const columnA = sheet.getRange("A1:A10").getDisplayValues();
   const columnsFToP = sheet.getRange("F1:P10").getDisplayValues();
@@ -78,7 +80,179 @@ function buildKtloDailySection_() {
     rows.push([columnA[i][0]].concat(columnsFToP[i]));
   }
 
-  return "*KTLO_Daily_Data*\n" + formatEodTable_(rows);
+  const split = eodSplitKtloGrid_(rows);
+  const blocks = [];
+
+  if (split.notes.length) {
+    const lines = [];
+    for (let i = 0; i < split.notes.length; i++) {
+      lines.push("*" + split.notes[i].section + " unprocessed:* " + split.notes[i].value);
+    }
+    blocks.push({
+      type: "section",
+      text: { type: "mrkdwn", text: lines.join("\n") }
+    });
+  }
+
+  if (!split.codeAdapt.length) {
+    blocks.push({
+      type: "header",
+      text: { type: "plain_text", text: "KTLO_Daily_Data" }
+    });
+    blocks.push(eodMetricTableBlock_(split.errorType) || eodNoneSection_());
+    return blocks;
+  }
+
+  blocks.push({
+    type: "header",
+    text: { type: "plain_text", text: "Error-Type" }
+  });
+  blocks.push(eodMetricTableBlock_(split.errorType) || eodNoneSection_());
+  blocks.push({
+    type: "header",
+    text: { type: "plain_text", text: "Code-Adapt" }
+  });
+  blocks.push(eodMetricTableBlock_(split.codeAdapt) || eodNoneSection_());
+  return blocks;
+}
+
+/**
+ * Split the KTLO grid on the first Code-Adapt column.
+ * A blank team row that carries a label plus a count becomes the unprocessed note.
+ */
+function eodSplitKtloGrid_(rows) {
+  const result = { errorType: [], codeAdapt: [], notes: [] };
+  if (!rows.length) {
+    return result;
+  }
+
+  const headers = rows[0].map(eodCellText_);
+  let codeStart = -1;
+  for (let i = 1; i < headers.length; i++) {
+    if (/code[-\s]?adapt/i.test(headers[i])) {
+      codeStart = i;
+      break;
+    }
+  }
+
+  if (codeStart === -1) {
+    result.errorType = rows;
+    return result;
+  }
+
+  result.errorType.push(["Team"].concat(headers.slice(1, codeStart).map(eodShortHeader_)));
+  result.codeAdapt.push(["Team"].concat(headers.slice(codeStart).map(eodShortHeader_)));
+
+  for (let r = 1; r < rows.length; r++) {
+    const team = eodCellText_(rows[r][0]);
+    const etCells = rows[r].slice(1, codeStart).map(eodCellText_);
+    const caCells = rows[r].slice(codeStart).map(eodCellText_);
+    const hasValue = etCells.concat(caCells).some(function (cell) {
+      return !eodIsBlank_(cell);
+    });
+    if (!hasValue && !team) {
+      continue;
+    }
+
+    if (!team) {
+      const etNote = eodFootnote_(etCells);
+      const caNote = eodFootnote_(caCells);
+      if (etNote) {
+        result.notes.push({ section: "Error-Type", label: etNote.label, value: etNote.value });
+      }
+      if (caNote) {
+        result.notes.push({ section: "Code-Adapt", label: caNote.label, value: caNote.value });
+      }
+      if (etNote || caNote) {
+        continue;
+      }
+    }
+
+    result.errorType.push([team].concat(etCells));
+    result.codeAdapt.push([team].concat(caCells));
+  }
+
+  return result;
+}
+
+function eodShortHeader_(header) {
+  let text = eodCellText_(header).replace(/^(error[-\s]?type|code[-\s]?adapt)\s*/i, "");
+  text = text.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
+  if (/^%\s*processed$/i.test(text)) {
+    return "%";
+  }
+  if (/^total tickets$/i.test(text)) {
+    return "Total";
+  }
+  if (/^not eligible$/i.test(text)) {
+    return "Not eligible";
+  }
+  return text || eodCellText_(header);
+}
+
+function eodFootnote_(cells) {
+  for (let i = 0; i < cells.length - 1; i++) {
+    const label = cells[i];
+    const value = cells[i + 1];
+    if (label && !eodIsNumericText_(label) && eodIsNumericText_(value)) {
+      return { label: label, value: value };
+    }
+  }
+  return null;
+}
+
+function eodIsNumericText_(value) {
+  const text = eodCellText_(value).replace(/,/g, "").replace(/%$/, "");
+  return text !== "" && !isNaN(Number(text));
+}
+
+function eodMetricTableBlock_(rows) {
+  if (!rows.length) {
+    return null;
+  }
+
+  const columnCount = rows[0].length;
+  const columnSettings = [];
+  for (let c = 0; c < columnCount; c++) {
+    columnSettings.push(c === 0 ? { align: "left" } : { align: "right" });
+  }
+
+  const tableRows = [];
+  for (let r = 0; r < rows.length; r++) {
+    const bold = r === 0 || /^total$/i.test(eodCellText_(rows[r][0]));
+    const cells = [];
+    for (let c = 0; c < columnCount; c++) {
+      cells.push(eodTableCell_(c < rows[r].length ? rows[r][c] : "", bold));
+    }
+    tableRows.push(cells);
+  }
+
+  return {
+    type: "table",
+    column_settings: columnSettings,
+    rows: tableRows
+  };
+}
+
+function eodTableCell_(value, bold) {
+  const text = eodCellText_(value) || " ";
+  if (!bold) {
+    return { type: "raw_text", text: text };
+  }
+  return {
+    type: "rich_text",
+    elements: [{
+      type: "rich_text_section",
+      elements: [{ type: "text", text: text, style: { bold: true } }]
+    }]
+  };
+}
+
+function eodNoneSection_() {
+  return {
+    type: "section",
+    text: { type: "mrkdwn", text: "None" }
+  };
 }
 
 /**
@@ -103,9 +277,9 @@ function buildUnprocessedSection_() {
     ? [["Agent", "Ticket ID", "Team", "Eligibility Analysis"]].concat(selected)
     : [];
 
-  return "*Unprocessed ticket without Update (To be updated)*\n" +
-    "Unprocessed tickets without data\n" +
-    formatEodTable_(tableRows);
+  return "## Unprocessed ticket without Update (To be updated)\n\n" +
+    "Unprocessed tickets without data\n\n" +
+    formatEodMarkdownTable_(tableRows);
 }
 
 /**
@@ -125,7 +299,7 @@ function buildMissingJavaSuiteSection_() {
   }
 
   const tableRows = selected.length ? [["Ticket ID", "Team"]].concat(selected) : [];
-  return "*Missing ticket from Java suit (To be updated)*\n" + formatEodTable_(tableRows);
+  return "## Missing ticket from Java suit (To be updated)\n\n" + formatEodMarkdownTable_(tableRows);
 }
 
 /**
@@ -176,17 +350,22 @@ function eodSelectMissingTickets_(tickets, teams, suiteStatus) {
   return rows;
 }
 
-function postEodSlackMessage_(token, channel, text) {
+function postEodSlackMessage_(token, channel, text, blocks) {
+  const payload = {
+    channel: channel,
+    text: text,
+    unfurl_links: false,
+    unfurl_media: false
+  };
+  if (blocks && blocks.length) {
+    payload.blocks = blocks;
+  }
+
   const response = UrlFetchApp.fetch("https://slack.com/api/chat.postMessage", {
     method: "post",
     contentType: "application/json; charset=utf-8",
     headers: { Authorization: "Bearer " + token },
-    payload: JSON.stringify({
-      channel: channel,
-      text: text,
-      unfurl_links: false,
-      unfurl_media: false
-    }),
+    payload: JSON.stringify(payload),
     muteHttpExceptions: true
   });
 
@@ -200,30 +379,61 @@ function postEodSlackMessage_(token, channel, text) {
   }
 }
 
-function chunkEodMessages_(sections, limit) {
-  const pieces = [];
-  for (let i = 0; i < sections.length; i++) {
-    const split = splitEodSection_(sections[i], limit);
-    for (let j = 0; j < split.length; j++) {
-      pieces.push(split[j]);
+function chunkEodBlocks_(blocks) {
+  const messages = [];
+  let current = [];
+  let markdownChars = 0;
+
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    const added = block.type === "markdown" ? block.text.length : 0;
+    const full = current.length >= 45 || (markdownChars + added > 11000 && current.length > 0);
+    if (full) {
+      messages.push(current);
+      current = [];
+      markdownChars = 0;
     }
+    current.push(block);
+    markdownChars += added;
   }
 
-  const messages = [];
-  let current = "";
-  for (let i = 0; i < pieces.length; i++) {
-    const addition = current ? "\n\n" + pieces[i] : pieces[i];
-    if (current && current.length + addition.length > limit) {
-      messages.push(current);
-      current = pieces[i];
-    } else {
-      current += addition;
-    }
-  }
-  if (current) {
+  if (current.length) {
     messages.push(current);
   }
   return messages;
+}
+
+function eodPushMarkdown_(blocks, text) {
+  const parts = splitEodSection_(text, 4000);
+  for (let i = 0; i < parts.length; i++) {
+    blocks.push({ type: "markdown", text: parts[i] });
+  }
+}
+
+function formatEodMarkdownTable_(rows) {
+  const dataRows = rows.filter(function (row) {
+    return row.some(function (cell) {
+      return !eodIsBlank_(cell);
+    });
+  });
+  if (dataRows.length === 0) {
+    return "None";
+  }
+
+  const rendered = dataRows.map(function (row) {
+    return row.map(function (cell) {
+      return eodCellText_(cell).replace(/\|/g, "\\|");
+    });
+  });
+  const header = "| " + rendered[0].join(" | ") + " |";
+  const separator = "| " + rendered[0].map(function () {
+    return "---";
+  }).join(" | ") + " |";
+  const body = [];
+  for (let i = 1; i < rendered.length; i++) {
+    body.push("| " + rendered[i].join(" | ") + " |");
+  }
+  return [header, separator].concat(body).join("\n");
 }
 
 function splitEodSection_(section, limit) {
@@ -264,35 +474,6 @@ function openEodCodeFence_(line, previous) {
     return "```\n" + line;
   }
   return line;
-}
-
-function formatEodTable_(rows) {
-  const dataRows = rows.filter(function (row) {
-    return row.some(function (cell) {
-      return !eodIsBlank_(cell);
-    });
-  });
-  if (dataRows.length === 0) {
-    return "None";
-  }
-
-  const rendered = dataRows.map(function (row) {
-    return row.map(eodCellText_);
-  });
-  const widths = [];
-  for (let r = 0; r < rendered.length; r++) {
-    for (let c = 0; c < rendered[r].length; c++) {
-      widths[c] = Math.max(widths[c] || 0, rendered[r][c].length);
-    }
-  }
-
-  const lines = rendered.map(function (row) {
-    return row.map(function (cell, index) {
-      return cell.padEnd(widths[index], " ");
-    }).join(" | ");
-  });
-
-  return "```\n" + lines.join("\n") + "\n```";
 }
 
 function eodRequireSheet_(name) {
