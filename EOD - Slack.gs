@@ -284,7 +284,9 @@ function buildUnprocessedSection_() {
 
 /**
  * Overall-Analysis rows missing from the Java suite.
- * AY is empty, AU is filled, AP is Feasible, and AO (Code Adapt) is Skill Eligible.
+ * Same rule as the AY formula: AU is filled, AO is Skill Eligible, AP is Feasible,
+ * and VLOOKUP of column A on the imported sheet returns nothing.
+ * IFNA hides that miss as a blank AY cell, so the ticket list is read from the suite sheet.
  * Posts ticket (A) and team (AK).
  */
 function buildMissingJavaSuiteSection_() {
@@ -300,11 +302,66 @@ function buildMissingJavaSuiteSection_() {
     const feasible = sheet.getRange(2, 42, numRows, 1).getDisplayValues();
     const au = sheet.getRange(2, 47, numRows, 1).getDisplayValues();
     const ay = sheet.getRange(2, 51, numRows, 1).getDisplayValues();
-    selected = eodSelectMissingTickets_(tickets, teams, codeAdapt, feasible, au, ay);
+    const suiteTickets = eodJavaSuiteTicketSet_(sheet);
+    selected = eodSelectMissingTickets_(tickets, teams, codeAdapt, feasible, au, ay, suiteTickets);
   }
 
   const tableRows = selected.length ? [["Ticket ID", "Team"]].concat(selected) : [];
   return "## Missing ticket from Java suit (To be updated)\n\n" + formatEodMarkdownTable_(tableRows);
+}
+
+/**
+ * Ticket IDs from the sheet named in AY1 of the IMPORTRANGE in column AY.
+ * Returns null when that workbook cannot be opened, so the caller can use blank AY instead.
+ */
+function eodJavaSuiteTicketSet_(overallSheet) {
+  const formula = eodJavaSuiteFormula_(overallSheet);
+  const idMatch = formula.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  const spreadsheetId = idMatch ? idMatch[1] : "17znON2jpaGDm_7KH0FEf9z4OvV4HmZ-E9go43MkkxwE";
+  const tabName = eodCellText_(overallSheet.getRange("AY1").getDisplayValue());
+  if (!tabName) {
+    Logger.log("AY1 has no Java suite tab name.");
+    return null;
+  }
+
+  try {
+    const external = SpreadsheetApp.openById(spreadsheetId).getSheetByName(tabName);
+    if (!external) {
+      Logger.log("Java suite tab '" + tabName + "' was not found.");
+      return null;
+    }
+    const lastRow = external.getLastRow();
+    if (lastRow < 1) {
+      return {};
+    }
+    const values = external.getRange(1, 1, lastRow, 1).getDisplayValues();
+    const found = {};
+    for (let i = 0; i < values.length; i++) {
+      const key = eodCellText_(values[i][0]).toLowerCase();
+      if (key) {
+        found[key] = true;
+      }
+    }
+    return found;
+  } catch (err) {
+    Logger.log("Java suite lookup failed: " + err);
+    return null;
+  }
+}
+
+function eodJavaSuiteFormula_(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) {
+    return "";
+  }
+  const scanRows = Math.min(lastRow - 1, 40);
+  const formulas = sheet.getRange(2, 51, scanRows, 1).getFormulas();
+  for (let i = 0; i < formulas.length; i++) {
+    if (formulas[i][0] && formulas[i][0].indexOf("IMPORTRANGE") !== -1) {
+      return formulas[i][0];
+    }
+  }
+  return "";
 }
 
 /**
@@ -342,19 +399,33 @@ function eodSelectUnprocessedRows_(values, display, todayFormatted, timeZone) {
 }
 
 /**
- * Keep ticket A and team AK when AY is empty, AU is filled,
- * AP is Feasible, and Code Adapt (AO) is Skill Eligible.
+ * Keep ticket A and team AK when AU is filled, AP is Feasible, and AO is Skill Eligible,
+ * and the ticket is not on the Java suite sheet.
+ * A blank AY cell is the formula's IFNA result for that miss. #N/A is treated the same way
+ * when the suite sheet cannot be opened.
  */
-function eodSelectMissingTickets_(tickets, teams, codeAdapt, feasible, au, ay) {
+function eodSelectMissingTickets_(tickets, teams, codeAdapt, feasible, au, ay, suiteTickets) {
   const rows = [];
   for (let i = 0; i < tickets.length; i++) {
-    if (eodIsBlank_(tickets[i][0]) || !eodIsBlank_(ay[i][0]) || eodIsBlank_(au[i][0])) {
+    const ticket = eodCellText_(tickets[i][0]);
+    if (!ticket || eodIsBlank_(au[i][0])) {
       continue;
     }
     if (eodCellText_(feasible[i][0]).toLowerCase() !== "feasible") {
       continue;
     }
     if (eodCellText_(codeAdapt[i][0]).toLowerCase() !== "skill eligible") {
+      continue;
+    }
+
+    const ayText = eodCellText_(ay[i][0]).toUpperCase();
+    const ayMissing = ayText === "" || ayText === "#N/A" || ayText === "#N/A!";
+    const onSuite = suiteTickets ? !!suiteTickets[ticket.toLowerCase()] : false;
+    if (suiteTickets) {
+      if (onSuite) {
+        continue;
+      }
+    } else if (!ayMissing) {
       continue;
     }
     rows.push([tickets[i][0], teams[i][0]]);
