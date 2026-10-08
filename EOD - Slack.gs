@@ -283,7 +283,9 @@ function buildUnprocessedSection_() {
 }
 
 /**
- * Overall-Analysis rows whose column AY is #N/A. Posts ticket (A) and team (AK).
+ * Overall-Analysis rows missing from the Java suite.
+ * AY is empty, AU is filled, AP is Feasible, and AO (Code Adapt) is Skill Eligible.
+ * Posts ticket (A) and team (AK).
  */
 function buildMissingJavaSuiteSection_() {
   const sheet = eodRequireSheet_("Overall-Analysis");
@@ -294,8 +296,11 @@ function buildMissingJavaSuiteSection_() {
     const numRows = lastRow - 1;
     const tickets = sheet.getRange(2, 1, numRows, 1).getDisplayValues();
     const teams = sheet.getRange(2, 37, numRows, 1).getDisplayValues();
-    const suiteStatus = sheet.getRange(2, 51, numRows, 1).getDisplayValues();
-    selected = eodSelectMissingTickets_(tickets, teams, suiteStatus);
+    const codeAdapt = sheet.getRange(2, 41, numRows, 1).getDisplayValues();
+    const feasible = sheet.getRange(2, 42, numRows, 1).getDisplayValues();
+    const au = sheet.getRange(2, 47, numRows, 1).getDisplayValues();
+    const ay = sheet.getRange(2, 51, numRows, 1).getDisplayValues();
+    selected = eodSelectMissingTickets_(tickets, teams, codeAdapt, feasible, au, ay);
   }
 
   const tableRows = selected.length ? [["Ticket ID", "Team"]].concat(selected) : [];
@@ -337,12 +342,19 @@ function eodSelectUnprocessedRows_(values, display, todayFormatted, timeZone) {
 }
 
 /**
- * Keep Overall-Analysis ticket A and team AK when AY is #N/A and A is filled.
+ * Keep ticket A and team AK when AY is empty, AU is filled,
+ * AP is Feasible, and Code Adapt (AO) is Skill Eligible.
  */
-function eodSelectMissingTickets_(tickets, teams, suiteStatus) {
+function eodSelectMissingTickets_(tickets, teams, codeAdapt, feasible, au, ay) {
   const rows = [];
   for (let i = 0; i < tickets.length; i++) {
-    if (eodIsBlank_(tickets[i][0]) || !eodIsNa_(suiteStatus[i][0])) {
+    if (eodIsBlank_(tickets[i][0]) || !eodIsBlank_(ay[i][0]) || eodIsBlank_(au[i][0])) {
+      continue;
+    }
+    if (eodCellText_(feasible[i][0]).toLowerCase() !== "feasible") {
+      continue;
+    }
+    if (eodCellText_(codeAdapt[i][0]).toLowerCase() !== "skill eligible") {
       continue;
     }
     rows.push([tickets[i][0], teams[i][0]]);
@@ -505,11 +517,6 @@ function eodDateLabel_(value, timeZone) {
     return Utilities.formatDate(value, timeZone, "MMM-dd");
   }
   return eodCellText_(value);
-}
-
-function eodIsNa_(value) {
-  const text = eodCellText_(value).toUpperCase();
-  return text === "#N/A" || text === "#N/A!";
 }
 
 /**
