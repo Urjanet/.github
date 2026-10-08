@@ -511,3 +511,155 @@ function eodIsNa_(value) {
   const text = eodCellText_(value).toUpperCase();
   return text === "#N/A" || text === "#N/A!";
 }
+
+/**
+ * Rebalance a share table (Name, Team, Squad, Kept, Remaining share, After).
+ *
+ * Within each squad, Kept above the cap is returned to the pool. The cap is
+ * the squad total divided by the number of people, rounded up. Remaining
+ * tickets are then shared so everyone finishes on the same count, or one higher.
+ */
+function applyFairShareDistribution() {
+  const located = findShareTable_();
+  const sheet = located.sheet;
+  const numRows = sheet.getLastRow() - located.headerRow;
+  if (numRows < 1) {
+    Logger.log("No share rows to update.");
+    return;
+  }
+
+  const values = sheet.getRange(located.headerRow + 1, 1, numRows, located.width).getValues();
+  const people = [];
+  for (let i = 0; i < values.length; i++) {
+    const name = eodCellText_(values[i][located.cols.name]);
+    if (!name) {
+      continue;
+    }
+    people.push({
+      rowIndex: i,
+      squad: eodCellText_(values[i][located.cols.squad]),
+      kept: shareNumber_(values[i][located.cols.kept]),
+      remaining: shareNumber_(values[i][located.cols.remaining])
+    });
+  }
+
+  distributeSharesBySquad_(people);
+
+  const keptCol = sheet.getRange(located.headerRow + 1, located.cols.kept + 1, numRows, 1).getValues();
+  const remainingCol = sheet.getRange(located.headerRow + 1, located.cols.remaining + 1, numRows, 1).getValues();
+  const afterCol = sheet.getRange(located.headerRow + 1, located.cols.after + 1, numRows, 1).getValues();
+
+  for (let i = 0; i < people.length; i++) {
+    const person = people[i];
+    keptCol[person.rowIndex][0] = person.keptOut;
+    remainingCol[person.rowIndex][0] = person.receives;
+    afterCol[person.rowIndex][0] = person.after;
+  }
+
+  sheet.getRange(located.headerRow + 1, located.cols.kept + 1, numRows, 1).setValues(keptCol);
+  sheet.getRange(located.headerRow + 1, located.cols.remaining + 1, numRows, 1).setValues(remainingCol);
+  sheet.getRange(located.headerRow + 1, located.cols.after + 1, numRows, 1).setValues(afterCol);
+  Logger.log("Updated fair shares for " + people.length + " people.");
+}
+
+function findShareTable_() {
+  const sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+  for (let s = 0; s < sheets.length; s++) {
+    const sheet = sheets[s];
+    const lastRow = Math.min(sheet.getLastRow(), 15);
+    const lastCol = sheet.getLastColumn();
+    if (lastRow < 1 || lastCol < 1) {
+      continue;
+    }
+    const grid = sheet.getRange(1, 1, lastRow, lastCol).getDisplayValues();
+    for (let r = 0; r < grid.length; r++) {
+      const cols = {};
+      for (let c = 0; c < grid[r].length; c++) {
+        const header = eodCellText_(grid[r][c]).toLowerCase();
+        if (header === "name") cols.name = c;
+        if (header === "team") cols.team = c;
+        if (header === "squad") cols.squad = c;
+        if (header === "kept") cols.kept = c;
+        if (header === "remaining share") cols.remaining = c;
+        if (header === "after") cols.after = c;
+      }
+      if (cols.squad === undefined || cols.kept === undefined || cols.remaining === undefined || cols.after === undefined) {
+        continue;
+      }
+      return { sheet: sheet, headerRow: r + 1, width: lastCol, cols: cols };
+    }
+  }
+  throw new Error("No sheet with columns Squad, Kept, Remaining share, and After was found.");
+}
+
+/**
+ * people: {squad, kept, remaining} gets keptOut, receives, and after.
+ * Kept above the squad cap is released. Remaining tickets fill the lowest totals first.
+ */
+function distributeSharesBySquad_(people) {
+  const groups = {};
+  for (let i = 0; i < people.length; i++) {
+    const key = people[i].squad || "";
+    if (!groups[key]) {
+      groups[key] = [];
+    }
+    groups[key].push(people[i]);
+  }
+
+  const keys = Object.keys(groups);
+  for (let g = 0; g < keys.length; g++) {
+    applySquadFairShare_(groups[keys[g]]);
+  }
+}
+
+function applySquadFairShare_(group) {
+  let keptSum = 0;
+  let pool = 0;
+  for (let i = 0; i < group.length; i++) {
+    keptSum += group[i].kept;
+    pool += group[i].remaining;
+  }
+
+  const total = keptSum + pool;
+  const cap = group.length ? Math.ceil(total / group.length) : 0;
+
+  for (let i = 0; i < group.length; i++) {
+    const allowed = Math.min(group[i].kept, cap);
+    pool += group[i].kept - allowed;
+    group[i].level = allowed;
+  }
+
+  while (pool > 0) {
+    let choice = -1;
+    let lowest = Infinity;
+    for (let i = 0; i < group.length; i++) {
+      if (group[i].level < cap && group[i].level < lowest) {
+        lowest = group[i].level;
+        choice = i;
+      }
+    }
+    if (choice === -1) {
+      break;
+    }
+    group[choice].level += 1;
+    pool -= 1;
+  }
+
+  for (let i = 0; i < group.length; i++) {
+    group[i].keptOut = Math.min(group[i].kept, cap);
+    group[i].receives = group[i].level - group[i].keptOut;
+    group[i].after = group[i].level;
+  }
+}
+
+function shareNumber_(value) {
+  if (typeof value === "number" && !isNaN(value)) {
+    return value;
+  }
+  const text = eodCellText_(value).replace(/,/g, "");
+  if (!text) {
+    return 0;
+  }
+  const parsed = Number(text);
+  return isNaN(parsed) ? 0 : parsed;
+}
