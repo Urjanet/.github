@@ -580,6 +580,88 @@ function pickResolversInGroup(val, groupMembers) {
   return picked.join(", ");
 }
 
+function changelogTime(value) {
+  if (typeof value === "number") return value < 100000000000 ? value * 1000 : value;
+  const text = rosterCellText(value);
+  if (/^\d+$/.test(text)) return changelogTime(Number(text));
+  const parsed = Date.parse(text);
+  return isNaN(parsed) ? 0 : parsed;
+}
+
+function isResolverChange(item) {
+  if (!item) return false;
+  if (item.fieldId) return item.fieldId === RESOLVER_FIELD;
+  return rosterNorm(item.field) === "resolver";
+}
+
+function changelogResolverUser(item) {
+  const to = rosterCellText(item && item.to);
+  const toString = rosterCellText(item && item.toString);
+  const toIsAccount = to && to.toLowerCase() !== toString.toLowerCase() && to.indexOf(" ") === -1;
+  return {
+    accountId: toIsAccount ? to : "",
+    displayName: toString || (toIsAccount ? "" : to)
+  };
+}
+
+function changelogResolverEvents(histories) {
+  const events = [];
+  (histories || []).forEach(history => {
+    const created = changelogTime(history && history.created);
+    ((history && history.items) || []).forEach(item => {
+      if (!isResolverChange(item)) return;
+      const user = changelogResolverUser(item);
+      if (!user.accountId && !user.displayName) return;
+      events.push({ created: created, order: events.length, accountId: user.accountId, displayName: user.displayName });
+    });
+  });
+  events.sort((a, b) => a.created - b.created || a.order - b.order);
+  return events;
+}
+
+function sameResolver(left, right) {
+  if (left.accountId && right.accountId) return left.accountId === right.accountId;
+  if (!left.accountId && !right.accountId) return rosterNorm(left.displayName) === rosterNorm(right.displayName);
+  return false;
+}
+
+function firstResolverInGroup(currentField, histories, groupMembers) {
+  const events = changelogResolverEvents(histories);
+  const ordered = events.slice();
+  const currentUsers = resolverCandidates(currentField);
+  if (!events.length) {
+    currentUsers.forEach(user => ordered.push(user));
+  } else {
+    const last = events[events.length - 1];
+    currentUsers.forEach(user => {
+      if (!sameResolver(user, last)) ordered.push(user);
+    });
+  }
+  for (let i = 0; i < ordered.length; i++) {
+    const name = resolverInGroup(ordered[i], groupMembers);
+    if (name) return name;
+  }
+  return "";
+}
+
+function resolverWasSet(currentField, histories) {
+  if (changelogResolverEvents(histories).length) return true;
+  return resolverCandidates(currentField).some(user => user.accountId || user.displayName);
+}
+
+function collectChangelogHistories(pages, idToKey) {
+  const historiesByKey = {};
+  (pages || []).forEach(page => {
+    (page.issueChangeLogs || []).forEach(entry => {
+      const key = idToKey[String(entry.issueId || "")];
+      if (!key) return;
+      if (!historiesByKey[key]) historiesByKey[key] = [];
+      (entry.changeHistories || []).forEach(history => historiesByKey[key].push(history));
+    });
+  });
+  return historiesByKey;
+}
+
 function fetchJiraGroupMembers(groupName, headers) {
   const users = [];
   let startAt = 0;
@@ -612,6 +694,44 @@ function fetchJiraGroupMembers(groupName, headers) {
   throw new Error("Jira group '" + groupName + "' has more members than this run reads.");
 }
 
+function fetchResolverChangelogs(issues, headers) {
+  const idToKey = {};
+  const keys = [];
+  (issues || []).forEach(issue => {
+    const key = issue && issue.key ? String(issue.key).toUpperCase() : "";
+    if (!key) return;
+    keys.push(key);
+    if (issue.id !== undefined && issue.id !== null && issue.id !== "") idToKey[String(issue.id)] = key;
+  });
+  const pages = [];
+  for (let i = 0; i < keys.length; i += 100) {
+    const batch = keys.slice(i, i + 100);
+    let nextPageToken = "";
+    for (let page = 0; page < 40; page++) {
+      const payload = { issueIdsOrKeys: batch, fieldIds: [RESOLVER_FIELD], maxResults: 1000 };
+      if (nextPageToken) payload.nextPageToken = nextPageToken;
+      const response = UrlFetchApp.fetch("https://" + JIRA_DOMAIN + "/rest/api/3/changelog/bulkfetch", {
+        method: "post",
+        headers: headers,
+        contentType: "application/json",
+        payload: JSON.stringify(payload),
+        muteHttpExceptions: true
+      });
+      const code = response.getResponseCode();
+      const body = response.getContentText();
+      if (code !== 200) throw new Error("Jira changelog lookup failed (" + code + "): " + body.substring(0, 500));
+      let data;
+      try { data = JSON.parse(body); }
+      catch (e) { throw new Error("Jira changelog lookup returned invalid JSON: " + body.substring(0, 500)); }
+      pages.push(data);
+      if (!data.nextPageToken || data.nextPageToken === nextPageToken) break;
+      nextPageToken = data.nextPageToken;
+      if (page === 39) throw new Error("Resolver changelog has more pages than this run reads.");
+    }
+  }
+  return collectChangelogHistories(pages, idToKey);
+}
+
 function fetchResolverToColumnAX() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(SHEET_NAME_OVERALL_ANALYSISOverall);
@@ -633,15 +753,20 @@ function fetchResolverToColumnAX() {
       SpreadsheetApp.getUi().alert("Jira group '" + RESOLVER_GROUP + "' has no members. Column AX was not changed.");
       return;
     }
+    const issues = [];
     for (let i = 0; i < uniqueKeys.length; i += 50) {
-      fetchIssuesByJql("key in (" + uniqueKeys.slice(i, i + 50).join(",") + ")", ["key", RESOLVER_FIELD], headers).issues.forEach(issue => {
-        const field = (issue.fields || {})[RESOLVER_FIELD];
-        resolverByKey[issue.key.toUpperCase()] = {
-          picked: pickResolversInGroup(field, groupMembers),
-          hadResolver: rosterCellText(extractFieldValue(field)) !== ""
-        };
-      });
+      fetchIssuesByJql("key in (" + uniqueKeys.slice(i, i + 50).join(",") + ")", ["key", RESOLVER_FIELD], headers).issues.forEach(issue => issues.push(issue));
     }
+    const historiesByKey = fetchResolverChangelogs(issues, headers);
+    issues.forEach(issue => {
+      const key = issue.key.toUpperCase();
+      const field = (issue.fields || {})[RESOLVER_FIELD];
+      const histories = historiesByKey[key] || [];
+      resolverByKey[key] = {
+        picked: firstResolverInGroup(field, histories, groupMembers),
+        hadResolver: resolverWasSet(field, histories)
+      };
+    });
   } catch (e) { SpreadsheetApp.getUi().alert("Resolver fetch failed:\n" + e.message); return; }
   let kept = 0, outside = 0;
   const values = rowKeys.map(key => {
@@ -654,7 +779,7 @@ function fetchResolverToColumnAX() {
   sheet.getRange(1, 50).setValue("Resolver");
   sheet.getRange(2, 50, totalRows, 1).setValues(values);
   SpreadsheetApp.flush();
-  ss.toast("Kept " + kept + " resolvers in " + RESOLVER_GROUP + ". Left " + outside + " blank because they are not in that group.", "Jira", 8);
+  ss.toast("Kept " + kept + " earliest resolvers from " + RESOLVER_GROUP + ". Left " + outside + " blank because that group never resolved them.", "Jira", 8);
 }
 
 function safeAlert(title, message) {
