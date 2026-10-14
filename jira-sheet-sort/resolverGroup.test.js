@@ -18,6 +18,9 @@ const group = context.indexGroupMembers([
   { accountId: "acct-other", displayName: "Ben Cole" }
 ]);
 
+const source = fs.readFileSync(__dirname + "/KTLOTicketDistribution.gs", "utf8");
+assertEqual(source.indexOf('const RESOLVER_GROUP = "ops_dev_extraction";') !== -1, true, "resolver group name");
+
 assertEqual(
   context.pickResolversInGroup({ accountId: "acct-in", displayName: "Asha Rao" }, group),
   "Asha Rao",

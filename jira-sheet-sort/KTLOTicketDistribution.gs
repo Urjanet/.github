@@ -6,7 +6,7 @@ const JIRA_EMAIL = "sowmiya.kirubakaran@arcadia.com";
 const JIRA_SEARCH_PAGE_SIZE = 100;
 const JIRA_SEARCH_MAX_PAGES = 50;
 const RESOLVER_FIELD = "customfield_11178";
-const RESOLVER_GROUP = "ops_dev_extractoin";
+const RESOLVER_GROUP = "ops_dev_extraction";
 const EXTERNAL_LOOKUP_URL = "https://docs.google.com/spreadsheets/d/17znON2jpaGDm_7KH0FEf9z4OvV4HmZ-E9go43MkkxwE";
 
 function onOpen() {
@@ -15,7 +15,7 @@ function onOpen() {
     ui.createMenu('KTLO Skill - Ticket Distribution')
       .addItem('Overall Fetch Jira Tickets & Distribute', 'fetchJiraDataFromB27Query')
       .addItem('Run Hierarchical Distribution & Sort Only', 'distributeTickets')
-      .addItem('Fetch Resolver in ops_dev_extractoin (Column AX)', 'fetchResolverToColumnAX')
+      .addItem('Fetch Resolver in ops_dev_extraction (Column AX)', 'fetchResolverToColumnAX')
       .addItem('Update Overall Analysis (AR-AW)', 'populateOverallAnalysisARtoAW')
       .addToUi();
   } catch (e) {
@@ -596,7 +596,7 @@ function fetchJiraGroupMembers(groupName, headers) {
     });
     const code = response.getResponseCode();
     const body = response.getContentText();
-    if (code === 404) throw new Error("Jira group '" + groupName + "' was not found.");
+    if (code === 404) throw new Error("Jira group '" + groupName + "' was not found. " + body.substring(0, 300));
     if (code === 403) throw new Error("Jira denied access to group '" + groupName + "'. The API token needs permission to browse users and groups.");
     if (code !== 200) throw new Error("Jira group '" + groupName + "' lookup failed (" + code + "): " + body.substring(0, 500));
     let data;
