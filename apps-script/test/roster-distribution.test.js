@@ -15,59 +15,84 @@ function assert(condition, message) {
   console.error("FAIL: " + message);
 }
 
-const teamNames = ["Nebula", "Neon", "Nova", "Olympus", "Orin", "Team"];
-
-// Physical columns AE:AL. Distribution must read AF:AL, not AE:AK.
-const sheetRows = [
-  ["", "Team", "Member", "Status", "Availability", "Not Planned", "Alt name", "Squad"],
-  ["", "Nebula", "Asha", "IN", "", "", "", "Terran"],
-  ["", "Nebula", "Bala", "in", "", "", "", "Terran"],
-  ["", "Neon", "Chitra", "PL", "", "", "", "Titan"],
-  ["", "Orin", "Dev", "OUT", "", "", "", "Titan"],
-  ["", "Nova", "", "", "", "", "Eve", "Terran"],
-  ["", "Nova", "Hema", "IN", "", "yes", "", "Terran"],
-  ["", "Olympus", "Frank", "IN", "no", "", "", "Titan"],
-  ["", "Orin", "Gita", "IN", "", "", "", "Titan"]
+// AF:AL as pasted from KTLO_Daily_Data.
+// Team, Member, Oct 15, Availability, Not planned, Member, Squad
+const rosterRows = [
+  ["Team", "Member", "Oct 15", "Availability", "Not planned", "Member", "Squad"],
+  ["Nexus", "Tharun Vijayakumar", "@Tharun", "CL", "", "Skill Member", "Titan"],
+  ["Nebula", "Venkat Ganesh R", "@Venkat Ganesh R", "In", "", "Skill Member", "Titan"],
+  ["Neon", "Chandana C Savalgimath", "@Chandana CS", "In", "", "Skill Member", "Titan"],
+  ["Nexus", "Esvar K N", "@Esvar K N", "In", "", "Skill Member", "Titan"],
+  ["Nexus", "Janani Nataraj Kumar", "@Janani", "In", "", "Skill Member", "Titan"],
+  ["Nexus", "K Pavankumar", "@Pavankumar", "In", "", "Skill Member", "Titan"],
+  ["Nova", "Raghuram selvaraj", "@raghuram.selvaraj", "In", "", "Skill Member", "Titan"],
+  ["Nova", "Pooja Sri Balakrishnan", "@Pooja Sri", "In", "", "Skill Member", "Titan"],
+  ["Neon", "Nitish Kumar Jangam", "@Nitish Kumar", "In", "", "Skill Member", "Titan"],
+  ["Nova", "Sartaj R", "@Sartaj", "In", "", "Skill Member", "Titan"],
+  ["Olympus", "Karthik C", "@Karthik C", "In", "", "Skill Member", "Terran"],
+  ["Olympus", "Saipriyadarsini Balaji", "@Saipriyadarsini", "In", "", "Skill Member", "Terran"],
+  ["Olympus", "Chandru K S", "@Chandru", "In", "", "Skill Member", "Terran"],
+  ["Olympus", "Stanley Deivanayagam", "@Stanley", "SL", "", "Skill Member", "Terran"],
+  ["Orin", "Anusha M", "@anusha.maladri", "In", "", "Skill Member", "Terran"],
+  ["Orin", "Dinesh Ramasamy", "@Dinesh R", "In", "", "Skill Member", "Terran"],
+  ["Orin", "Smitha R Gulalakai", "@SMITHA G", "In", "", "Skill Member", "Terran"],
+  ["Orin", "Yogesh Thambidurai", "@Yogesh T", "SL", "", "Skill Member", "Terran"]
 ];
-const oldWindow = sheetRows.map(row => row.slice(0, 7));
-const memberWindow = sheetRows.map(row => row.slice(1, 8));
 
-const misaligned = context.rosterMembersFromValues(oldWindow);
-const roster = context.rosterMembersFromValues(memberWindow);
+const roster = context.rosterMembersFromValues(rosterRows);
 const availableNames = roster.availableMembers.map(member => member.name).sort();
+const expectedIn = [
+  "Anusha M",
+  "Chandana C Savalgimath",
+  "Chandru K S",
+  "Dinesh Ramasamy",
+  "Esvar K N",
+  "Janani Nataraj Kumar",
+  "K Pavankumar",
+  "Karthik C",
+  "Nitish Kumar Jangam",
+  "Pooja Sri Balakrishnan",
+  "Raghuram selvaraj",
+  "Saipriyadarsini Balaji",
+  "Sartaj R",
+  "Smitha R Gulalakai",
+  "Venkat Ganesh R"
+];
 
-assert(availableNames.join(",") === "Asha,Bala,Gita", "IN members should be Asha, Bala, and Gita, got " + availableNames.join(","));
-assert(roster.availableMembers.every(member => teamNames.indexOf(member.name) === -1), "available assignees must be people, not team names");
-assert(roster.leaveMembers.map(member => member.name).sort().join(",") === "Chitra,Dev,Eve,Frank,Hema", "non-IN and blocked members should be withheld, got " + roster.leaveMembers.map(member => member.name).join(","));
-assert(!roster.rosterByName.team && !roster.rosterByName.member, "header row must not become a member");
-assert(misaligned.availableMembers.length === 0, "the old AE:AK window does not line up with the IN column, so it cannot select members");
-assert(roster.teamMemberMap.Nebula.slice().sort().join(",") === "Asha,Bala", "Nebula's IN members should stay on Nebula");
-assert(!roster.teamMemberMap.Neon, "Neon has no IN member, so tickets must not be given to the team name");
+assert(availableNames.join("|") === expectedIn.join("|"), "Availability In should select members, got " + availableNames.join(", "));
+assert(roster.leaveMembers.map(member => member.name).sort().join("|") === "Stanley Deivanayagam|Tharun Vijayakumar|Yogesh Thambidurai", "CL and SL stay out, got " + roster.leaveMembers.map(member => member.name).join(", "));
+assert(availableNames.indexOf("Skill Member") === -1, "the role column must not be used as a person");
+assert(availableNames.every(name => name.charAt(0) !== "@"), "the date column @handles must not be used as people");
+assert(["Nexus", "Nebula", "Neon", "Nova", "Olympus", "Orin", "Team"].every(team => availableNames.indexOf(team) === -1), "team names must not be assignees");
+assert(!roster.rosterByName.member, "the header row must not become a member");
 
-const groups = [0, 1, 2, 3].map(index => ({
-  key: "ticket-" + index,
+const venkat = roster.availableMembers.filter(member => member.name === "Venkat Ganesh R")[0];
+assert(venkat && venkat.team === "Nebula" && venkat.squad === "Titan", "Venkat should stay on Nebula / Titan");
+assert(roster.teamMemberMap.Nebula.join(",") === "Venkat Ganesh R", "Nebula's only In member is Venkat");
+assert(!roster.teamMemberMap.Nebula || roster.teamMemberMap.Nebula.indexOf("Tharun Vijayakumar") === -1, "Tharun is CL and must not receive Nebula tickets");
+
+const groups = [0, 1].map(index => ({
+  key: "nebula-" + index,
   size: 1,
-  team: index < 3 ? "Nebula" : "Neon",
-  squad: index < 3 ? "Terran" : "Titan",
-  rows: [{ index: index, team: index < 3 ? "Nebula" : "Neon", squad: index < 3 ? "Terran" : "Titan" }]
+  team: "Nebula",
+  squad: "Titan",
+  rows: [{ index: index, team: "Nebula", squad: "Titan" }]
 }));
-const placement = context.placeHierarchically(groups, roster.availableMembers, 2, {});
-const assigned = [0, 1, 2, 3].map(index => placement.placed[index]);
-assert(assigned.every(name => ["Asha", "Bala", "Gita"].indexOf(name) !== -1), "shared tickets should land on IN members, got " + assigned.join(","));
-assert(assigned.slice(0, 3).every(name => name === "Asha" || name === "Bala"), "Nebula tickets should stay with Nebula members, got " + assigned.slice(0, 3).join(","));
-assert(assigned[3] !== "Neon" && assigned[3] !== "Team", "a team with nobody IN should not be used as the assignee");
-assert((placement.assignedCount.Asha || 0) <= 2 && (placement.assignedCount.Bala || 0) <= 2, "per-person cap should hold");
+const placement = context.placeHierarchically(groups, roster.availableMembers, 4, {});
+assert(placement.placed[0] === "Venkat Ganesh R" && placement.placed[1] === "Venkat Ganesh R", "Nebula tickets should go to Venkat, got " + placement.placed[0] + ", " + placement.placed[1]);
 
-assert(context.memberIsIn("IN", "", "") === true, "IN is available");
-assert(context.memberIsIn(" In ", "", "") === true, "IN ignores case and surrounding space");
-assert(context.memberIsIn("OUT", "", "") === false, "OUT is not available");
-assert(context.memberIsIn("", "", "") === false, "blank status is not available");
-assert(context.memberIsIn("IN", "no", "") === false, "IN does not override an explicit unavailable flag");
-assert(context.memberIsIn("IN", "", "yes") === false, "IN does not override unplanned leave");
+assert(context.memberIsIn("In", "") === true, "In is available");
+assert(context.memberIsIn(" IN ", "") === true, "In ignores case and surrounding space");
+assert(context.memberIsIn("CL", "") === false, "CL is not available");
+assert(context.memberIsIn("SL", "") === false, "SL is not available");
+assert(context.memberIsIn("@Venkat Ganesh R", "") === false, "a date-column handle is not a status");
+assert(context.memberIsIn("In", "yes") === false, "not planned yes withholds an In member");
 
 assert(source.indexOf('const ROSTER_RANGE = "AF2:AL20"') !== -1, "distribution must read AF2:AL20");
+assert(source.indexOf("const ROSTER_COL_AVAILABILITY = 3") !== -1, "Availability is column AI");
+assert(source.indexOf("memberIsIn(source[ROSTER_COL_AVAILABILITY], source[ROSTER_COL_NOT_PLANNED])") !== -1, "In is read from Availability, not the date column");
 assert(source.indexOf('getRange("AE2:AK20")') === -1, "distribution must not load the old AE2:AK20 window");
-assert(source.indexOf("getRange(ROSTER_RANGE)") !== -1, "distributeTickets must load the IN roster range");
+assert(source.indexOf("Column AH is the status") === -1, "the alert must not point at the date column");
 
 if (failures) {
   console.error(failures + " assertion(s) failed");

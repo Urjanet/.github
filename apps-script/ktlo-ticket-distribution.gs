@@ -9,15 +9,16 @@ const RESOLVER_FIELD = "customfield_11178";
 const RESOLVER_GROUP = "ops_dev_extraction";
 const EXTERNAL_LOOKUP_URL = "https://docs.google.com/spreadsheets/d/17znON2jpaGDm_7KH0FEf9z4OvV4HmZ-E9go43MkkxwE";
 
-// KTLO_Daily_Data!AF2:AL20 — Team, Member, Status, Availability, Not Planned, Alternate name, Squad.
-// Status must be IN. The previous window AE2:AK20 treated the team column as the member name.
+// KTLO_Daily_Data!AF2:AL20
+// AF Team | AG Member | AH date (@handles) | AI Availability (In, CL, SL) | AJ Not planned | AK role | AL Squad
+// Availability must be In. The date column is not the status.
 const ROSTER_RANGE = "AF2:AL20";
 const ROSTER_COL_TEAM = 0;
 const ROSTER_COL_NAME = 1;
-const ROSTER_COL_STATUS = 2;
+const ROSTER_COL_DATE = 2;
 const ROSTER_COL_AVAILABILITY = 3;
 const ROSTER_COL_NOT_PLANNED = 4;
-const ROSTER_COL_ALT_NAME = 5;
+const ROSTER_COL_ROLE = 5;
 const ROSTER_COL_SQUAD = 6;
 
 function onOpen() {
@@ -172,9 +173,11 @@ function memberIsOnLeave(attendance, availability, notPlanned) {
   if (rosterMarksLeave(planned) || planned === "yes" || planned === "y" || planned === "1" || planned === "true") return true;
   return false;
 }
-function memberIsIn(attendance, availability, notPlanned) {
-  if (rosterNorm(attendance) !== "in") return false;
-  return !memberIsOnLeave(attendance, availability, notPlanned);
+function memberIsIn(availability, notPlanned) {
+  if (rosterNorm(availability) !== "in") return false;
+  const planned = rosterNorm(notPlanned);
+  if (rosterMarksLeave(planned) || planned === "yes" || planned === "y" || planned === "1" || planned === "true") return false;
+  return true;
 }
 function rememberLabel(canonByNorm, raw) {
   const display = rosterCellText(raw);
@@ -314,8 +317,7 @@ function rosterMembersFromValues(availabilityData) {
   (availabilityData || []).forEach(row => {
     const source = row || [];
     const teamRaw = source[ROSTER_COL_TEAM];
-    let name = rosterCellText(source[ROSTER_COL_NAME]);
-    if (!name) name = rosterCellText(source[ROSTER_COL_ALT_NAME]);
+    const name = rosterCellText(source[ROSTER_COL_NAME]);
     const squadRaw = source[ROSTER_COL_SQUAD];
     if (isRosterHeader(teamRaw, name, squadRaw) || !name || seenNames[rosterNorm(name)]) return;
     seenNames[rosterNorm(name)] = true;
@@ -327,7 +329,7 @@ function rosterMembersFromValues(availabilityData) {
       if (!squadVotes[team]) squadVotes[team] = {};
       squadVotes[team][squad] = (squadVotes[team][squad] || 0) + 1;
     }
-    if (memberIsIn(source[ROSTER_COL_STATUS], source[ROSTER_COL_AVAILABILITY], source[ROSTER_COL_NOT_PLANNED])) {
+    if (memberIsIn(source[ROSTER_COL_AVAILABILITY], source[ROSTER_COL_NOT_PLANNED])) {
       availableMembers.push(person);
       addMemberToGroup(teamMemberMap, team, name);
       addMemberToGroup(squadMemberMap, squad, name);
@@ -369,7 +371,7 @@ function distributeTickets() {
   const rosterByName = roster.rosterByName;
   const teamSquad = roster.teamSquad;
   if (availableMembers.length === 0) {
-    SpreadsheetApp.getUi().alert("No members marked IN were found in " + ROSTER_RANGE + " of 'KTLO_Daily_Data'. Column AH is the status. Tickets are shared only with those members.");
+    SpreadsheetApp.getUi().alert("No members marked In were found in " + ROSTER_RANGE + " of 'KTLO_Daily_Data'. Column AI (Availability) must be In. Tickets are shared only with those members.");
     return;
   }
 
@@ -916,7 +918,7 @@ function writeDistributionSummary(sheet, report) {
     { kind: "table", title: "Teams", note: "Before and After count tickets that are shared. A ticket stays with its assignee only when that person is marked IN, and only up to the cap.", headers: ["Team", "Squad", "IN", "Before", "Each", "After", "Shared to", "Received from"], rows: teamRows },
     { kind: "table", title: "Squads", headers: ["Squad", "IN", "Before", "Each", "After", "Cap", "Status"], rows: squadRows },
     { kind: "table", title: "Individuals", note: "Kept is limited to the cap. Remaining share is what they received. After = Kept + Remaining share.", headers: ["Name", "Team", "Squad", "Kept", "Remaining share", "After"], rows: peopleRows },
-    { kind: "table", title: "Not IN", note: "Only members marked IN in KTLO_Daily_Data!AF2:AL20 keep or receive tickets. Everyone else has their skill-eligible tickets released.", headers: ["Name", "Team", "Squad", "Released"], rows: leaveRows }
+    { kind: "table", title: "Not IN", note: "Only members with Availability In in KTLO_Daily_Data!AF2:AL20 keep or receive tickets. CL, SL, and the other leave marks release their skill-eligible tickets.", headers: ["Name", "Team", "Squad", "Released"], rows: leaveRows }
   ]);
 }
 
