@@ -27,6 +27,7 @@ const rosterRows = [
   ["Nexus", "K Pavankumar", "@Pavankumar", "In", "", "Skill Member", "Titan"],
   ["Nova", "Raghuram selvaraj", "@raghuram.selvaraj", "In", "", "Skill Member", "Titan"],
   ["Nova", "Pooja Sri Balakrishnan", "@Pooja Sri", "In", "", "Skill Member", "Titan"],
+  ["Neon", "Meera S", "@Meera", "", "", "Skill Member", "Titan"],
   ["Neon", "Nitish Kumar Jangam", "@Nitish Kumar", "In", "", "Skill Member", "Titan"],
   ["Nova", "Sartaj R", "@Sartaj", "In", "", "Skill Member", "Titan"],
   ["Olympus", "Karthik C", "@Karthik C", "In", "", "Skill Member", "Terran"],
@@ -50,6 +51,7 @@ const expectedIn = [
   "Janani Nataraj Kumar",
   "K Pavankumar",
   "Karthik C",
+  "Meera S",
   "Nitish Kumar Jangam",
   "Pooja Sri Balakrishnan",
   "Raghuram selvaraj",
@@ -59,7 +61,7 @@ const expectedIn = [
   "Venkat Ganesh R"
 ];
 
-assert(availableNames.join("|") === expectedIn.join("|"), "Availability In should select members, got " + availableNames.join(", "));
+assert(availableNames.join("|") === expectedIn.join("|"), "In and blank Availability should select members, got " + availableNames.join(", "));
 assert(roster.leaveMembers.map(member => member.name).sort().join("|") === "Stanley Deivanayagam|Tharun Vijayakumar|Yogesh Thambidurai", "CL and SL stay out, got " + roster.leaveMembers.map(member => member.name).join(", "));
 assert(availableNames.indexOf("Skill Member") === -1, "the role column must not be used as a person");
 assert(availableNames.every(name => name.charAt(0) !== "@"), "the date column @handles must not be used as people");
@@ -82,11 +84,14 @@ const placement = context.placeHierarchically(groups, roster.availableMembers, 4
 assert(placement.placed[0] === "Venkat Ganesh R" && placement.placed[1] === "Venkat Ganesh R", "Nebula tickets should go to Venkat, got " + placement.placed[0] + ", " + placement.placed[1]);
 
 assert(context.memberIsIn("In", "") === true, "In is available");
+assert(context.memberIsIn("", "") === true, "a blank status has not been submitted and stays available");
+assert(context.memberIsIn("   ", "") === true, "whitespace-only status counts as not submitted");
 assert(context.memberIsIn(" IN ", "") === true, "In ignores case and surrounding space");
 assert(context.memberIsIn("CL", "") === false, "CL is not available");
 assert(context.memberIsIn("SL", "") === false, "SL is not available");
 assert(context.memberIsIn("@Venkat Ganesh R", "") === false, "a date-column handle is not a status");
 assert(context.memberIsIn("In", "yes") === false, "not planned yes withholds an In member");
+assert(roster.availableMembers.some(member => member.name === "Meera S"), "a member who has not submitted Availability receives tickets");
 
 assert(source.indexOf('const ROSTER_RANGE = "AF2:AL20"') !== -1, "distribution must read AF2:AL20");
 assert(source.indexOf("const ROSTER_COL_AVAILABILITY = 3") !== -1, "Availability is column AI");

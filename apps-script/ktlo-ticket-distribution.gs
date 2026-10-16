@@ -10,8 +10,8 @@ const RESOLVER_GROUP = "ops_dev_extraction";
 const EXTERNAL_LOOKUP_URL = "https://docs.google.com/spreadsheets/d/17znON2jpaGDm_7KH0FEf9z4OvV4HmZ-E9go43MkkxwE";
 
 // KTLO_Daily_Data!AF2:AL20
-// AF Team | AG Member | AH date (@handles) | AI Availability (In, CL, SL) | AJ Not planned | AK role | AL Squad
-// Availability must be In. The date column is not the status.
+// AF Team | AG Member | AH date (@handles) | AI Availability (In, blank, CL, SL) | AJ Not planned | AK role | AL Squad
+// Availability In or blank receives tickets. A submitted leave mark such as CL or SL does not.
 const ROSTER_RANGE = "AF2:AL20";
 const ROSTER_COL_TEAM = 0;
 const ROSTER_COL_NAME = 1;
@@ -174,7 +174,8 @@ function memberIsOnLeave(attendance, availability, notPlanned) {
   return false;
 }
 function memberIsIn(availability, notPlanned) {
-  if (rosterNorm(availability) !== "in") return false;
+  const status = rosterNorm(availability);
+  if (status !== "in" && status !== "") return false;
   const planned = rosterNorm(notPlanned);
   if (rosterMarksLeave(planned) || planned === "yes" || planned === "y" || planned === "1" || planned === "true") return false;
   return true;
@@ -371,7 +372,7 @@ function distributeTickets() {
   const rosterByName = roster.rosterByName;
   const teamSquad = roster.teamSquad;
   if (availableMembers.length === 0) {
-    SpreadsheetApp.getUi().alert("No members marked In were found in " + ROSTER_RANGE + " of 'KTLO_Daily_Data'. Column AI (Availability) must be In. Tickets are shared only with those members.");
+    SpreadsheetApp.getUi().alert("No members with Availability In or blank were found in " + ROSTER_RANGE + " of 'KTLO_Daily_Data'. CL, SL, and other submitted leave marks are skipped.");
     return;
   }
 
@@ -907,18 +908,18 @@ function writeDistributionSummary(sheet, report) {
   const leaveRows = report.leaveMembers.map(member => [member.name, member.team || "Unassigned Team", member.squad || "Unassigned Squad", (report.releasedByLeave || {})[member.name] || 0]);
   showUiTables("Before split -> After split", [
     { kind: "stats", items: [
-      { label: "Kept with IN assignee", value: report.keptTickets },
-      { label: "Released (assignee not IN)", value: report.releasedFromLeave },
+      { label: "Kept with available assignee", value: report.keptTickets },
+      { label: "Released (assignee on leave)", value: report.releasedFromLeave },
       { label: "Remaining tickets shared", value: report.restTickets },
-      { label: "Members marked IN", value: report.availableMembers.length },
-      { label: "Not IN", value: report.leaveMembers.length },
+      { label: "In or not submitted", value: report.availableMembers.length },
+      { label: "Submitted leave", value: report.leaveMembers.length },
       { label: "Cap per person", value: report.personCap },
       { label: "Per head", value: formatShare(report.shareBase, report.availableMembers.length) }
     ]},
-    { kind: "table", title: "Teams", note: "Before and After count tickets that are shared. A ticket stays with its assignee only when that person is marked IN, and only up to the cap.", headers: ["Team", "Squad", "IN", "Before", "Each", "After", "Shared to", "Received from"], rows: teamRows },
-    { kind: "table", title: "Squads", headers: ["Squad", "IN", "Before", "Each", "After", "Cap", "Status"], rows: squadRows },
+    { kind: "table", title: "Teams", note: "Before and After count tickets that are shared. A ticket stays with its assignee when Availability is In or still blank, and only up to the cap.", headers: ["Team", "Squad", "Available", "Before", "Each", "After", "Shared to", "Received from"], rows: teamRows },
+    { kind: "table", title: "Squads", headers: ["Squad", "Available", "Before", "Each", "After", "Cap", "Status"], rows: squadRows },
     { kind: "table", title: "Individuals", note: "Kept is limited to the cap. Remaining share is what they received. After = Kept + Remaining share.", headers: ["Name", "Team", "Squad", "Kept", "Remaining share", "After"], rows: peopleRows },
-    { kind: "table", title: "Not IN", note: "Only members with Availability In in KTLO_Daily_Data!AF2:AL20 keep or receive tickets. CL, SL, and the other leave marks release their skill-eligible tickets.", headers: ["Name", "Team", "Squad", "Released"], rows: leaveRows }
+    { kind: "table", title: "Submitted leave", note: "Members with Availability In or blank in KTLO_Daily_Data!AF2:AL20 keep or receive tickets. CL, SL, and other submitted leave marks release their skill-eligible tickets.", headers: ["Name", "Team", "Squad", "Released"], rows: leaveRows }
   ]);
 }
 
