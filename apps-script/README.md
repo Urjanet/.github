@@ -12,7 +12,7 @@ The query is in the script. It is the open issues assigned to `ops_dev_extractio
 | B | Summary | Jira |
 | C | Catalyst (migrated) | Jira |
 | D | Status | Jira. Only a moved row is set to `On Hold` |
-| K | Change note | `status changed to - On Hold` on moved rows only |
+| K | Status Change | `status changed to - On Hold` on moved rows only |
 | E | Assignee | Jira |
 | F | Search Template | Jira |
 | G | Reporter | Jira |
@@ -27,7 +27,9 @@ Column J for row 2:
 =IF(I2 = "", "", IF(ISNUMBER(MATCH(I2, L:L, 0)), "InActive", "Active"))
 ```
 
-A row is moved only when column J is `InActive` and column D is not already `On Hold`. Active rows stay open. Column K is written only on the rows that Jira accepted. The other status cells are left as they were.
+A row is moved only when column J is `InActive` and column D is not already `On Hold`. Active rows stay open. After Jira accepts a move, that row’s column D becomes `On Hold` and its column K becomes `status changed to - On Hold`. The other status cells are left as they were.
+
+A fetch clears the old notes in column K for the reloaded rows, then writes the note again only on the rows moved in that run. Column L is never cleared.
 
 ## Install
 
@@ -39,7 +41,7 @@ A row is moved only when column J is `InActive` and column D is not already `On 
 
 ## Menu
 
-**Fetch inactive tickets and move to On Hold** rewrites columns A–J, fills column J, waits for it to calculate, and transitions the InActive rows.
+**Fetch inactive tickets and move to On Hold** rewrites columns A–J, clears old notes in column K, fills column J, waits for it to calculate, and transitions the InActive rows.
 
 **Move InActive tickets to On Hold** uses the rows already on the sheet. It does not clear the sheet.
 

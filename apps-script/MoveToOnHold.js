@@ -99,7 +99,7 @@ function fetchJiraDataAndMoveToOnHold() {
   if (!sheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
   var headers = onHoldAuthHeaders_();
   if (!headers) { onHoldAlert_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
-  if (!onHoldConfirm_("This rewrites columns A-J on '" + ON_HOLD_SHEET + "' from the customer-alias query, then moves rows whose column J is InActive to On Hold. Column L is not changed. Continue?")) return;
+  if (!onHoldConfirm_("This rewrites columns A-J on '" + ON_HOLD_SHEET + "' from the customer-alias query, then moves rows whose column J is InActive to On Hold. Column K is filled only on the rows that move. Column L is not changed. Continue?")) return;
 
   var fieldIds;
   var searchResult;
@@ -111,7 +111,9 @@ function fetchJiraDataAndMoveToOnHold() {
   var issues = searchResult.issues;
   var clearRows = Math.max(999, issues.length);
   sheet.getRange(1, 1, 1, ON_HOLD_COLUMN_COUNT).setValues([ON_HOLD_HEADERS]);
+  sheet.getRange(1, 11).setValue("Status Change");
   sheet.getRange(2, 1, clearRows, ON_HOLD_COLUMN_COUNT).clearContent();
+  sheet.getRange(2, 11, clearRows, 1).clearContent();
   if (!issues.length) {
     onHoldAlert_("No issues", "The customer-alias query returned no open issues.");
     return;
