@@ -1,37 +1,75 @@
 /**
- * Same opening as fetchJiraDataFromB27Query: read the JQL in
- * KTLO_Daily_Data!B27, load those Jira issues onto Overall-Analysis, then
- * transition each issue to On Hold.
+ * Load the open ops_dev_extraction tickets for the inactive customer aliases
+ * onto the Tickets sheet, then move only the rows whose column J is InActive
+ * to On Hold.
  *
- * Paste this into the existing Apps Script project as a new script file
- * (the editor saves it as .gs). Do not add a manifest. Function names here
- * do not overlap the KTLO distribution script.
+ * Columns written on Tickets:
+ *   A Key
+ *   B Summary
+ *   C Catalyst (migrated)
+ *   D Status
+ *   E Assignee
+ *   F Search Template
+ *   G Reporter
+ *   H Created
+ *   I Customer Alias
+ *   J Active Status
+ *       =IF(I2 = "", "", IF(ISNUMBER(MATCH(I2, L:L, 0)), "InActive", "Active"))
+ * Column L is the inactive customer alias list. This script does not clear it.
  *
- * Auth is the same Script Property: Jira_API_TOKEN_SK.
- * The On Hold transition id is read from each issue, because that id depends
- * on the workflow and the current status. Run logOnHoldTransitionId to print
- * the id available on FS-187174.
+ * Paste this into the existing Apps Script project as a new script file.
+ * Do not add a manifest. Auth is Script Property Jira_API_TOKEN_SK.
+ * Run logOnHoldTransitionId to see the On Hold transition id on FS-187174.
  *
  * Add these lines to the existing onOpen menu, or run installOnHoldMenu once:
- *   .addItem('Fetch B27 tickets and move to On Hold', 'fetchJiraDataAndMoveToOnHold')
- *   .addItem('Move loaded tickets to On Hold', 'moveLoadedTicketsToOnHold')
+ *   .addItem('Fetch inactive tickets and move to On Hold', 'fetchJiraDataAndMoveToOnHold')
+ *   .addItem('Move InActive tickets to On Hold', 'moveLoadedTicketsToOnHold')
  */
-var ON_HOLD_SHEET_KTLO = "KTLO_Daily_Data";
-var ON_HOLD_SHEET_ANALYSIS = "Overall-Analysis";
+var ON_HOLD_SHEET = "Tickets";
 var ON_HOLD_JIRA_DOMAIN = "arcadiapower.atlassian.net";
 var ON_HOLD_JIRA_EMAIL = "sowmiya.kirubakaran@arcadia.com";
 var ON_HOLD_PAGE_SIZE = 100;
 var ON_HOLD_MAX_PAGES = 500;
 var ON_HOLD_STATUS = "On Hold";
+var ON_HOLD_INACTIVE = "InActive";
 var ON_HOLD_SAMPLE_KEY = "FS-187174";
 var ON_HOLD_BATCH_SIZE = 10;
+var ON_HOLD_COLUMN_COUNT = 10;
 
-var ON_HOLD_FIELDS = [
-  "key", "reporter", "status", "created", "duedate",
-  "customfield_11168", "customfield_15610", "customfield_11271", "customfield_11183",
-  "customfield_11772", "customfield_11178", "customfield_11171", "assignee",
-  "customfield_12282", "customfield_12284", "labels",
-  "customfield_19783", "customfield_19818", "customfield_19782", "customfield_19817"
+var ON_HOLD_HEADERS = [
+  "Key",
+  "Summary",
+  "Catalyst (migrated)",
+  "Status",
+  "Assignee",
+  "Search Template",
+  "Reporter",
+  "Created",
+  "Customer Alias",
+  "Active Status"
+];
+
+var ON_HOLD_CUSTOMER_ALIASES = [
+  "7-Eleven, Inc",
+  "Albertson's Companies, Inc.",
+  "BillPay Conjoined Credentials",
+  "Canadian Pacific Railway Limited",
+  "Chipotle Mexican Grill, Inc.",
+  "Costco Wholesale Corporation",
+  "CVS Health Corporation",
+  "Darden Restaurants, Inc.",
+  "Extra Space Storage Inc.",
+  "Paylease / Zego",
+  "Public Storage",
+  "Simon Property Group, Inc.",
+  "Starbucks Corporation",
+  "State of Texas",
+  "Tesla Motors, Inc.",
+  "The Cheesecake Factory Incorporated",
+  "The Home Depot Inc",
+  "Verizon",
+  "Webster Bank",
+  "Westfield, LLC"
 ];
 
 function installOnHoldMenu() {
@@ -41,71 +79,83 @@ function installOnHoldMenu() {
   });
   ScriptApp.newTrigger("onOpenOnHoldMenu").forSpreadsheet(ss).onOpen().create();
   onOpenOnHoldMenu();
-  onHoldAlert_("KTLO On Hold", "The KTLO On Hold menu is installed. It appears when this spreadsheet opens.");
+  onHoldAlert_("On Hold", "The On Hold menu is installed. It appears when this spreadsheet opens.");
 }
 
 function onOpenOnHoldMenu() {
   SpreadsheetApp.getUi()
-    .createMenu("KTLO On Hold")
-    .addItem("Fetch B27 tickets and move to On Hold", "fetchJiraDataAndMoveToOnHold")
-    .addItem("Move loaded tickets to On Hold", "moveLoadedTicketsToOnHold")
+    .createMenu("On Hold")
+    .addItem("Fetch inactive tickets and move to On Hold", "fetchJiraDataAndMoveToOnHold")
+    .addItem("Move InActive tickets to On Hold", "moveLoadedTicketsToOnHold")
     .addSeparator()
     .addItem("Show On Hold transition id for FS-187174", "logOnHoldTransitionId")
     .addToUi();
 }
 
-/**
- * Fetch the B27 JQL, replace Overall-Analysis rows the same way as
- * fetchJiraDataFromB27Query, then transition those issues to On Hold.
- */
+/** Reload the customer-alias query onto Tickets, then transition column J = InActive. */
 function fetchJiraDataAndMoveToOnHold() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var ktloSheet = ss.getSheetByName(ON_HOLD_SHEET_KTLO);
-  var targetSheet = ss.getSheetByName(ON_HOLD_SHEET_ANALYSIS);
-  if (!ktloSheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET_KTLO + "' was not found."); return; }
-  if (!targetSheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET_ANALYSIS + "' was not found."); return; }
-
-  var jqlCell = ktloSheet.getRange("B27");
-  var jqlQuery = jqlCell.getDisplayValue().toString().trim();
-  if (!jqlQuery) jqlQuery = jqlCell.getValue().toString().trim();
-  if (!jqlQuery) { onHoldAlert_("Empty JQL", "Cell B27 of '" + ON_HOLD_SHEET_KTLO + "' is empty."); return; }
-
+  var sheet = ss.getSheetByName(ON_HOLD_SHEET);
+  if (!sheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
   var headers = onHoldAuthHeaders_();
   if (!headers) { onHoldAlert_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
+  if (!onHoldConfirm_("This rewrites columns A-J on '" + ON_HOLD_SHEET + "' from the customer-alias query, then moves rows whose column J is InActive to On Hold. Column L is not changed. Continue?")) return;
 
-  if (!onHoldConfirm_("This clears " + ON_HOLD_SHEET_ANALYSIS + " rows 2:1000, reloads the B27 JQL, and transitions those issues to " + ON_HOLD_STATUS + ". Continue?")) return;
-
+  var fieldIds;
   var searchResult;
-  try { searchResult = onHoldFetchIssues_(jqlQuery, ON_HOLD_FIELDS, headers); }
-  catch (err) { onHoldAlert_("Jira search failed", err.message); return; }
+  try {
+    fieldIds = onHoldResolveFields_(headers);
+    searchResult = onHoldFetchIssues_(onHoldJql_(), onHoldSearchFields_(fieldIds), headers);
+  } catch (err) { onHoldAlert_("Jira search failed", err.message); return; }
 
   var issues = searchResult.issues;
   var clearRows = Math.max(999, issues.length);
-  targetSheet.getRange(2, 1, clearRows, targetSheet.getMaxColumns()).clearContent();
+  sheet.getRange(1, 1, 1, ON_HOLD_COLUMN_COUNT).setValues([ON_HOLD_HEADERS]);
+  sheet.getRange(2, 1, clearRows, ON_HOLD_COLUMN_COUNT).clearContent();
   if (!issues.length) {
-    onHoldAlert_("No issues", "B27 JQL returned no issues. Rows 2:1000 were cleared.\n\n" + jqlQuery.substring(0, 500));
+    onHoldAlert_("No issues", "The customer-alias query returned no open issues.");
     return;
   }
 
-  targetSheet.getRange(2, 1, issues.length, 20).setValues(issues.map(onHoldIssueToRow_));
+  sheet.getRange(2, 1, issues.length, 9).setValues(issues.map(function (issue) {
+    return onHoldIssueToRow_(issue, fieldIds);
+  }));
+  onHoldWriteActiveStatusFormulas_(sheet, issues.length);
   SpreadsheetApp.flush();
-  var result = onHoldMoveIssues_(issues, headers);
-  onHoldWriteStatusColumn_(targetSheet, issues, result.transitioned);
+  onHoldWaitForActiveStatus_(sheet, issues.length);
+
+  var activeValues = sheet.getRange(2, 10, issues.length, 1).getDisplayValues();
+  var inactiveIssues = [];
+  issues.forEach(function (issue, index) {
+    if (onHoldIsInactive_(activeValues[index][0])) inactiveIssues.push(issue);
+  });
+  if (!inactiveIssues.length) {
+    onHoldAlert_("On Hold", "Loaded " + issues.length + " issues. Column J has no InActive rows, so nothing was moved. Put the inactive customer aliases in column L.");
+    return;
+  }
+
+  var result = onHoldMoveIssues_(inactiveIssues, headers);
+  result.skippedActive = issues.length - inactiveIssues.length;
+  onHoldWriteStatusColumn_(sheet, issues, result.transitioned);
   SpreadsheetApp.flush();
   onHoldReport_(ss, searchResult.truncated, issues.length, result);
 }
 
-/** Transition issues already listed in Overall-Analysis column A. Does not clear the sheet. */
+/** Move Tickets rows whose column J is InActive and whose column D is not already On Hold. */
 function moveLoadedTicketsToOnHold() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(ON_HOLD_SHEET_ANALYSIS);
-  if (!sheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET_ANALYSIS + "' was not found."); return; }
+  var sheet = ss.getSheetByName(ON_HOLD_SHEET);
+  if (!sheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
   var headers = onHoldAuthHeaders_();
   if (!headers) { onHoldAlert_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
 
+  SpreadsheetApp.flush();
   var loaded = onHoldReadLoadedTickets_(sheet);
-  if (!loaded.keys.length) { onHoldAlert_("No tickets", "No Jira keys were found in column A."); return; }
-  if (!onHoldConfirm_("Transition " + loaded.keys.length + " loaded tickets that are not already " + ON_HOLD_STATUS + "? Column C is updated after each success.")) return;
+  if (!loaded.keys.length) {
+    onHoldAlert_("No InActive tickets", "Column J has no InActive rows to move. Active rows stay as they are. Column L is the inactive customer alias list.");
+    return;
+  }
+  if (!onHoldConfirm_("Move " + loaded.keys.length + " InActive tickets to On Hold? Active rows are left unchanged.")) return;
 
   var issues = [];
   try {
@@ -153,6 +203,58 @@ function logOnHoldTransitionId() {
   onHoldAlert_(ON_HOLD_SAMPLE_KEY, summary);
 }
 
+function onHoldJql_() {
+  var parts = ON_HOLD_CUSTOMER_ALIASES.map(function (alias) {
+    return '"Customer Alias[Paragraph]" ~ "' + String(alias).replace(/"/g, '\\"') + '"';
+  });
+  return "(" + parts.join(" OR ") + ') and assignee IN membersOf("ops_dev_extraction") AND status = open';
+}
+
+function onHoldSearchFields_(fieldIds) {
+  return ["summary", "status", "assignee", "reporter", "created", fieldIds.catalyst, fieldIds.searchTemplate, fieldIds.customerAlias];
+}
+
+function onHoldResolveFields_(headers) {
+  var response = UrlFetchApp.fetch("https://" + ON_HOLD_JIRA_DOMAIN + "/rest/api/3/field", {
+    method: "get",
+    headers: headers,
+    muteHttpExceptions: true
+  });
+  var code = response.getResponseCode();
+  var body = response.getContentText();
+  if (code !== 200) throw new Error("Jira field lookup failed (" + code + "): " + body.substring(0, 300));
+  var fields;
+  try { fields = JSON.parse(body); }
+  catch (err) { throw new Error("Jira field lookup returned invalid JSON: " + body.substring(0, 300)); }
+  var ids = {
+    catalyst: onHoldMatchField_(fields, ["Catalyst (migrated)"]),
+    searchTemplate: onHoldMatchField_(fields, ["Search Template"]),
+    customerAlias: onHoldMatchField_(fields, ["Customer Alias"], "textarea")
+  };
+  var missing = [];
+  if (!ids.catalyst) missing.push("Catalyst (migrated)");
+  if (!ids.searchTemplate) missing.push("Search Template");
+  if (!ids.customerAlias) missing.push("Customer Alias");
+  if (missing.length) throw new Error("Could not find Jira fields: " + missing.join(", ") + ".");
+  return ids;
+}
+
+function onHoldMatchField_(fields, names, customHint) {
+  var wanted = {};
+  names.forEach(function (name) { wanted[String(name).trim().toLowerCase()] = true; });
+  var matches = (fields || []).filter(function (field) {
+    return field && wanted[String(field.name || "").trim().toLowerCase()];
+  });
+  if (customHint) {
+    var hinted = matches.filter(function (field) {
+      var custom = field.schema && field.schema.custom ? String(field.schema.custom) : "";
+      return custom.toLowerCase().indexOf(String(customHint).toLowerCase()) !== -1;
+    });
+    if (hinted.length) matches = hinted;
+  }
+  return matches.length ? matches[0].id : "";
+}
+
 function onHoldMoveIssues_(issues, headers) {
   var pending = [];
   var already = 0;
@@ -175,7 +277,7 @@ function onHoldMoveIssues_(issues, headers) {
       var parsed = onHoldReadTransitionList_(item, response);
       if (!parsed.ok) { failures.push(parsed.error); return; }
       if (!parsed.id) {
-        var missing = item.key + ": no \"" + ON_HOLD_STATUS + "\" transition from status \"" + item.status + "\".";
+        var missing = item.key + ': no "' + ON_HOLD_STATUS + '" transition from status "' + item.status + '".';
         Logger.log("Failed transition for " + missing);
         failures.push(missing);
         return;
@@ -218,9 +320,8 @@ function onHoldReadTransitionList_(item, response) {
   }
   try { return { ok: true, id: onHoldFindTransitionId_(JSON.parse(text)) }; }
   catch (err) {
-    var parseError = item.key + ": invalid transition JSON";
     Logger.log("Failed to parse transitions for " + item.key + ": " + err);
-    return { ok: false, error: parseError };
+    return { ok: false, error: item.key + ": invalid transition JSON" };
   }
 }
 
@@ -234,7 +335,7 @@ function onHoldRecordTransition_(item, response, isRetry, headers, transitioned,
     return false;
   }
   if (code >= 200 && code < 300) {
-    Logger.log("Transitioned " + item.key + " to \"" + ON_HOLD_STATUS + "\" with transition id " + item.transitionId + " (HTTP " + code + (isRetry ? ", retry" : "") + ").");
+    Logger.log('Transitioned ' + item.key + ' to "' + ON_HOLD_STATUS + '" with transition id ' + item.transitionId + " (HTTP " + code + (isRetry ? ", retry" : "") + ").");
     transitioned.push(item.key);
     return true;
   }
@@ -294,31 +395,46 @@ function onHoldFetchIssues_(jqlQuery, requestedFields, headers) {
   return { issues: issues, truncated: true };
 }
 
-function onHoldIssueToRow_(issue) {
+function onHoldIssueToRow_(issue, fieldIds) {
+  var ids = fieldIds || {};
   var key = issue.key;
   var fields = issue.fields || {};
   return [
-    "=HYPERLINK(\"https://" + ON_HOLD_JIRA_DOMAIN + "/browse/" + key + "\", \"" + key + "\")",
-    onHoldExtractFieldValue_(fields.reporter),
-    onHoldExtractFieldValue_(fields.status),
-    fields.created ? fields.created.substring(0, 10) : "",
-    fields.duedate || "",
-    onHoldExtractFieldValue_(fields.customfield_11168),
-    onHoldExtractFieldValue_(fields.customfield_15610),
-    onHoldExtractFieldValue_(fields.customfield_11271),
-    onHoldExtractFieldValue_(fields.customfield_11183),
-    onHoldExtractFieldValue_(fields.customfield_11772),
-    onHoldExtractFieldValue_(fields.customfield_11178),
-    onHoldExtractFieldValue_(fields.customfield_11171),
-    onHoldExtractFieldValue_(fields.assignee),
-    onHoldExtractFieldValue_(fields.customfield_12282),
-    onHoldExtractFieldValue_(fields.customfield_12284),
-    onHoldExtractFieldValue_(fields.labels),
-    onHoldExtractFieldValue_(fields.customfield_19783),
-    onHoldExtractFieldValue_(fields.customfield_19818),
-    onHoldExtractFieldValue_(fields.customfield_19782),
-    onHoldExtractFieldValue_(fields.customfield_19817)
+    '=HYPERLINK("https://' + ON_HOLD_JIRA_DOMAIN + '/browse/' + key + '", "' + key + '")',
+    onHoldSheetText_(fields.summary),
+    onHoldSheetText_(fields[ids.catalyst]),
+    onHoldSheetText_(fields.status),
+    onHoldSheetText_(fields.assignee),
+    onHoldSheetText_(fields[ids.searchTemplate]),
+    onHoldSheetText_(fields.reporter),
+    fields.created ? String(fields.created).substring(0, 10) : "",
+    onHoldSheetText_(fields[ids.customerAlias])
   ];
+}
+
+function onHoldActiveStatusFormula_(rowNumber) {
+  return '=IF(I' + rowNumber + ' = "", "", IF(ISNUMBER(MATCH(I' + rowNumber + ', L:L, 0)), "InActive", "Active"))';
+}
+
+function onHoldWriteActiveStatusFormulas_(sheet, rowCount) {
+  var formulas = [];
+  for (var i = 0; i < rowCount; i++) formulas.push([onHoldActiveStatusFormula_(i + 2)]);
+  if (formulas.length) sheet.getRange(2, 10, formulas.length, 1).setFormulas(formulas);
+}
+
+function onHoldWaitForActiveStatus_(sheet, rowCount) {
+  var deadline = Date.now() + 20000;
+  while (Date.now() < deadline) {
+    SpreadsheetApp.flush();
+    var values = sheet.getRange(2, 9, rowCount, 2).getDisplayValues();
+    var waiting = false;
+    for (var i = 0; i < values.length; i++) {
+      if (String(values[i][0]).trim() && !String(values[i][1]).trim()) waiting = true;
+    }
+    if (!waiting) return;
+    Utilities.sleep(1000);
+  }
+  Logger.log("Timed out waiting for column J formulas to calculate.");
 }
 
 function onHoldWriteStatusColumn_(sheet, issues, transitioned) {
@@ -328,7 +444,7 @@ function onHoldWriteStatusColumn_(sheet, issues, transitioned) {
     var key = onHoldIssueKey_(issue && issue.key);
     return [moved[key] ? ON_HOLD_STATUS : onHoldIssueStatus_(issue)];
   });
-  if (column.length) sheet.getRange(2, 3, column.length, 1).setValues(column);
+  if (column.length) sheet.getRange(2, 4, column.length, 1).setValues(column);
 }
 
 function onHoldReadLoadedTickets_(sheet) {
@@ -337,13 +453,15 @@ function onHoldReadLoadedTickets_(sheet) {
   var range = sheet.getRange(2, 1, height, 1);
   var displays = range.getDisplayValues();
   var formulas = range.getFormulas();
-  var statuses = sheet.getRange(2, 3, height, 1).getDisplayValues();
+  var statuses = sheet.getRange(2, 4, height, 1).getDisplayValues();
+  var active = sheet.getRange(2, 10, height, 1).getDisplayValues();
   var keys = [];
   var rowByKey = {};
   var seen = {};
   for (var i = 0; i < height; i++) {
     var key = onHoldIssueKey_(displays[i][0]) || onHoldIssueKey_(formulas[i][0]);
     if (!key || seen[key]) continue;
+    if (!onHoldIsInactive_(active[i][0])) continue;
     if (onHoldIsTargetStatus_(statuses[i][0])) continue;
     seen[key] = true;
     keys.push(key);
@@ -359,11 +477,11 @@ function onHoldWriteLoadedStatus_(sheet, rowByKey, transitioned) {
   transitioned.forEach(function (key) { moved[key] = true; });
   var minRow = keys.reduce(function (min, key) { return Math.min(min, rowByKey[key]); }, rowByKey[keys[0]]);
   var maxRow = keys.reduce(function (max, key) { return Math.max(max, rowByKey[key]); }, rowByKey[keys[0]]);
-  var column = sheet.getRange(minRow, 3, maxRow - minRow + 1, 1).getValues();
+  var column = sheet.getRange(minRow, 4, maxRow - minRow + 1, 1).getValues();
   keys.forEach(function (key) {
     if (moved[key]) column[rowByKey[key] - minRow][0] = ON_HOLD_STATUS;
   });
-  sheet.getRange(minRow, 3, column.length, 1).setValues(column);
+  sheet.getRange(minRow, 4, column.length, 1).setValues(column);
 }
 
 function onHoldAuthHeaders_() {
@@ -396,10 +514,17 @@ function onHoldExtractFieldValue_(val) {
     }
     return val.displayName || val.value || val.name || JSON.stringify(val);
   }
-  if (typeof val === "string" && val.trim().indexOf("{\"type\":\"doc\"") === 0) {
+  if (typeof val === "string" && val.trim().indexOf('{"type":"doc"') === 0) {
     try { return onHoldExtractFieldValue_(JSON.parse(val)); } catch (err) { return val; }
   }
   return val;
+}
+
+function onHoldSheetText_(value) {
+  var text = onHoldExtractFieldValue_(value);
+  if (typeof text !== "string") return text;
+  if (/^[=+\-@]/.test(text)) return "'" + text;
+  return text;
 }
 
 function onHoldIssueStatus_(issue) {
@@ -409,6 +534,10 @@ function onHoldIssueStatus_(issue) {
 
 function onHoldIsTargetStatus_(status) {
   return String(status || "").trim().toLowerCase() === ON_HOLD_STATUS.toLowerCase();
+}
+
+function onHoldIsInactive_(status) {
+  return String(status || "").trim().toLowerCase() === ON_HOLD_INACTIVE.toLowerCase();
 }
 
 function onHoldFindTransitionId_(payload) {
@@ -432,7 +561,7 @@ function onHoldDescribeTransitions_(payload) {
   if (!Array.isArray(transitions) || !transitions.length) return ["No transitions are available from the current status."];
   return transitions.map(function (item) {
     var toName = item && item.to && item.to.name ? item.to.name : "";
-    return "id=" + (item && item.id !== undefined ? item.id : "") + " name=\"" + (item && item.name ? item.name : "") + "\" to=\"" + toName + "\"";
+    return "id=" + (item && item.id !== undefined ? item.id : "") + ' name="' + (item && item.name ? item.name : "") + '" to="' + toName + '"';
   });
 }
 
@@ -468,10 +597,11 @@ function onHoldResponseCode_(response) {
 
 function onHoldReport_(ss, truncated, loadedCount, result) {
   var moved = result.transitioned.length;
-  var message = "Moved " + moved + " issues to " + ON_HOLD_STATUS + ".";
+  var message = "Moved " + moved + " InActive issues to " + ON_HOLD_STATUS + ".";
+  if (result.skippedActive) message += " " + result.skippedActive + " Active issues were left unchanged.";
   if (result.already) message += " " + result.already + " were already " + ON_HOLD_STATUS + ".";
   if (result.failures.length) message += " " + result.failures.length + " failed.\n\n" + result.failures.slice(0, 5).join("\n");
-  if (truncated) message += "\n\nLoaded the first " + loadedCount + " issues. The JQL has more pages than this run keeps.";
+  if (truncated) message += "\n\nLoaded the first " + loadedCount + " issues. The query has more pages than this run keeps.";
   result.transitioned.forEach(function (key) { Logger.log("Sheet status set to " + ON_HOLD_STATUS + " for " + key + "."); });
   if (result.failures.length || truncated) onHoldAlert_("On Hold", message);
   else ss.toast(message, "Jira", 8);
@@ -499,10 +629,15 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     onHoldFindTransitionId_: onHoldFindTransitionId_,
     onHoldIsTargetStatus_: onHoldIsTargetStatus_,
+    onHoldIsInactive_: onHoldIsInactive_,
     onHoldIssueStatus_: onHoldIssueStatus_,
     onHoldIssueKey_: onHoldIssueKey_,
     onHoldDescribeTransitions_: onHoldDescribeTransitions_,
     onHoldIssueToRow_: onHoldIssueToRow_,
-    ON_HOLD_STATUS: ON_HOLD_STATUS
+    onHoldJql_: onHoldJql_,
+    onHoldActiveStatusFormula_: onHoldActiveStatusFormula_,
+    onHoldMatchField_: onHoldMatchField_,
+    ON_HOLD_STATUS: ON_HOLD_STATUS,
+    ON_HOLD_HEADERS: ON_HOLD_HEADERS
   };
 }

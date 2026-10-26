@@ -1,32 +1,48 @@
-# Move B27 tickets to On Hold
+# Move InActive tickets to On Hold
 
-`MoveToOnHold.js` follows the same opening as `fetchJiraDataFromB27Query`: read the JQL in `KTLO_Daily_Data!B27`, write those issues onto `Overall-Analysis`, then transition each issue to **On Hold**.
+`MoveToOnHold.js` searches Jira with the customer-alias query, writes ten columns on the `Tickets` sheet, and transitions only the rows whose column J is `InActive`.
 
-It is a second script file in the existing Apps Script project. It does not replace the KTLO distribution script, and it does not need `appsscript.json`.
+The query is in the script. It is the open issues assigned to `ops_dev_extraction` whose Customer Alias contains one of the listed customers (7-Eleven, Albertson's, Verizon, and the rest).
+
+## Columns on Tickets
+
+| Column | Header | Source |
+| --- | --- | --- |
+| A | Key | Jira |
+| B | Summary | Jira |
+| C | Catalyst (migrated) | Jira |
+| D | Status | Jira, then `On Hold` after a successful transition |
+| E | Assignee | Jira |
+| F | Search Template | Jira |
+| G | Reporter | Jira |
+| H | Created | Jira |
+| I | Customer Alias | Jira |
+| J | Active Status | Formula |
+| L | Inactive aliases | You. The script does not clear this column |
+
+Column J for row 2:
+
+```text
+=IF(I2 = "", "", IF(ISNUMBER(MATCH(I2, L:L, 0)), "InActive", "Active"))
+```
+
+A row is moved only when column J is `InActive` and column D is not already `On Hold`. Active rows stay open.
 
 ## Install
 
 1. Open the spreadsheet. Choose **Extensions > Apps Script**.
-2. Add a script file and paste `MoveToOnHold.js` into it. Save. Leave the existing KTLO file in place.
-3. The API token is the Script Property already used by the KTLO script: `Jira_API_TOKEN_SK`. The account email in the file is `sowmiya.kirubakaran@arcadia.com`.
-4. Run `installOnHoldMenu` once and approve the permissions. Reloading the spreadsheet shows **KTLO On Hold**.
+2. Add a script file and paste `MoveToOnHold.js`. Save. No manifest file.
+3. Use the existing Script Property `Jira_API_TOKEN_SK`.
+4. Put the inactive customer aliases in `Tickets` column L.
+5. Run `installOnHoldMenu` once. The **On Hold** menu appears when the spreadsheet opens.
 
-Or add these items to the existing `onOpen` menu:
+## Menu
 
-```javascript
-.addItem('Fetch B27 tickets and move to On Hold', 'fetchJiraDataAndMoveToOnHold')
-.addItem('Move loaded tickets to On Hold', 'moveLoadedTicketsToOnHold')
-```
+**Fetch inactive tickets and move to On Hold** rewrites columns A–J, fills column J, waits for it to calculate, and transitions the InActive rows.
 
-## What the menu does
+**Move InActive tickets to On Hold** uses the rows already on the sheet. It does not clear the sheet.
 
-**Fetch B27 tickets and move to On Hold** asks before it runs. It clears `Overall-Analysis` rows 2:1000, writes the same 20 columns as the B27 fetch (status is column C), then posts the On Hold transition for every issue that is not already On Hold. Column C becomes `On Hold` only after Jira accepts the transition.
-
-**Move loaded tickets to On Hold** leaves the sheet contents in place. It reads issue keys from column A, skips rows whose column C is already On Hold, and transitions the rest.
-
-**Show On Hold transition id for FS-187174** lists the transitions available from that issue's current status and shows the id whose destination is On Hold. That id changes with the source status, so the move uses whatever id Jira offers for each ticket.
-
-Skill labels and ticket distribution stay in the existing KTLO script.
+**Show On Hold transition id for FS-187174** shows the transition id Jira offers from that issue's current status.
 
 ## Local checks
 
