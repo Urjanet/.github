@@ -37,15 +37,15 @@ A fetch clears the old notes in column K for the reloaded rows, then writes the 
 2. Add a script file and paste `MoveToOnHold.js`. Save. No manifest file.
 3. Use the existing Script Property `Jira_API_TOKEN_SK`.
 4. Put the inactive customer aliases in `Tickets` column L.
-5. Run `installOnHoldMenu` once. The **On Hold** menu appears when the spreadsheet opens.
+5. In Apps Script, open **Triggers** and add a time-driven trigger for `fetchJiraDataAndMoveToOnHold`. The script has no menu and no dialog, so the trigger runs without asking anyone to confirm.
 
-## Menu
+## Runs
 
-**Fetch inactive tickets and move to On Hold** rewrites columns A–J, clears old notes in column K, fills column J, waits for it to calculate, and transitions the InActive rows.
+`fetchJiraDataAndMoveToOnHold` rewrites columns A–J, clears old notes in column K, fills column J, waits for it to calculate, and transitions the InActive rows. This is the function to put on the trigger.
 
-**Move InActive tickets to On Hold** uses the rows already on the sheet. It does not clear the sheet.
+`moveLoadedTicketsToOnHold` uses the rows already on the sheet. It does not clear the sheet.
 
-**Show On Hold transition id for FS-187174** shows the transition id Jira offers from that issue's current status.
+`logOnHoldTransitionId` writes the transition id Jira offers from FS-187174's current status to the execution log.
 
 ## Local checks
 

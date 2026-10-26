@@ -19,11 +19,9 @@
  *
  * Paste this into the existing Apps Script project as a new script file.
  * Do not add a manifest. Auth is Script Property Jira_API_TOKEN_SK.
+ * There is no menu and no dialog. Point a time-driven trigger at
+ * fetchJiraDataAndMoveToOnHold. Results are written to the execution log.
  * Run logOnHoldTransitionId to see the On Hold transition id on FS-187174.
- *
- * Add these lines to the existing onOpen menu, or run installOnHoldMenu once:
- *   .addItem('Fetch inactive tickets and move to On Hold', 'fetchJiraDataAndMoveToOnHold')
- *   .addItem('Move InActive tickets to On Hold', 'moveLoadedTicketsToOnHold')
  */
 var ON_HOLD_SHEET = "Tickets";
 var ON_HOLD_JIRA_DOMAIN = "arcadiapower.atlassian.net";
@@ -72,41 +70,21 @@ var ON_HOLD_CUSTOMER_ALIASES = [
   "Westfield, LLC"
 ];
 
-function installOnHoldMenu() {
-  var ss = SpreadsheetApp.getActive();
-  ScriptApp.getProjectTriggers().forEach(function (trigger) {
-    if (trigger.getHandlerFunction() === "onOpenOnHoldMenu") ScriptApp.deleteTrigger(trigger);
-  });
-  ScriptApp.newTrigger("onOpenOnHoldMenu").forSpreadsheet(ss).onOpen().create();
-  onOpenOnHoldMenu();
-  onHoldAlert_("On Hold", "The On Hold menu is installed. It appears when this spreadsheet opens.");
-}
-
-function onOpenOnHoldMenu() {
-  SpreadsheetApp.getUi()
-    .createMenu("On Hold")
-    .addItem("Fetch inactive tickets and move to On Hold", "fetchJiraDataAndMoveToOnHold")
-    .addItem("Move InActive tickets to On Hold", "moveLoadedTicketsToOnHold")
-    .addSeparator()
-    .addItem("Show On Hold transition id for FS-187174", "logOnHoldTransitionId")
-    .addToUi();
-}
-
 /** Reload the customer-alias query onto Tickets, then transition column J = InActive. */
 function fetchJiraDataAndMoveToOnHold() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(ON_HOLD_SHEET);
-  if (!sheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
+  if (!sheet) { onHoldLog_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
   var headers = onHoldAuthHeaders_();
-  if (!headers) { onHoldAlert_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
-  if (!onHoldConfirm_("This rewrites columns A-J on '" + ON_HOLD_SHEET + "' from the customer-alias query, then moves rows whose column J is InActive to On Hold. Column K is filled only on the rows that move. Column L is not changed. Continue?")) return;
+  if (!headers) { onHoldLog_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
+  onHoldLog_("On Hold", "Rewriting columns A-J on '" + ON_HOLD_SHEET + "', then moving rows whose column J is InActive. Column L is not changed.");
 
   var fieldIds;
   var searchResult;
   try {
     fieldIds = onHoldResolveFields_(headers);
     searchResult = onHoldFetchIssues_(onHoldJql_(), onHoldSearchFields_(fieldIds), headers);
-  } catch (err) { onHoldAlert_("Jira search failed", err.message); return; }
+  } catch (err) { onHoldLog_("Jira search failed", err.message); return; }
 
   var issues = searchResult.issues;
   var clearRows = Math.max(999, issues.length);
@@ -115,7 +93,7 @@ function fetchJiraDataAndMoveToOnHold() {
   sheet.getRange(2, 1, clearRows, ON_HOLD_COLUMN_COUNT).clearContent();
   sheet.getRange(2, 11, clearRows, 1).clearContent();
   if (!issues.length) {
-    onHoldAlert_("No issues", "The customer-alias query returned no open issues.");
+    onHoldLog_("No issues", "The customer-alias query returned no open issues.");
     return;
   }
 
@@ -132,7 +110,7 @@ function fetchJiraDataAndMoveToOnHold() {
     if (onHoldIsInactive_(activeValues[index][0])) inactiveIssues.push(issue);
   });
   if (!inactiveIssues.length) {
-    onHoldAlert_("On Hold", "Loaded " + issues.length + " issues. Column J has no InActive rows, so nothing was moved. Put the inactive customer aliases in column L.");
+    onHoldLog_("On Hold", "Loaded " + issues.length + " issues. Column J has no InActive rows, so nothing was moved. Put the inactive customer aliases in column L.");
     return;
   }
 
@@ -140,24 +118,24 @@ function fetchJiraDataAndMoveToOnHold() {
   result.skippedActive = issues.length - inactiveIssues.length;
   onHoldMarkTransitioned_(sheet, onHoldRowByKey_(issues), result.transitioned);
   SpreadsheetApp.flush();
-  onHoldReport_(ss, searchResult.truncated, issues.length, result);
+  onHoldReport_(searchResult.truncated, issues.length, result);
 }
 
 /** Move Tickets rows whose column J is InActive and whose column D is not already On Hold. */
 function moveLoadedTicketsToOnHold() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(ON_HOLD_SHEET);
-  if (!sheet) { onHoldAlert_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
+  if (!sheet) { onHoldLog_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
   var headers = onHoldAuthHeaders_();
-  if (!headers) { onHoldAlert_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
+  if (!headers) { onHoldLog_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
 
   SpreadsheetApp.flush();
   var loaded = onHoldReadLoadedTickets_(sheet);
   if (!loaded.keys.length) {
-    onHoldAlert_("No InActive tickets", "Column J has no InActive rows to move. Active rows stay as they are. Column L is the inactive customer alias list.");
+    onHoldLog_("No InActive tickets", "Column J has no InActive rows to move. Active rows stay as they are. Column L is the inactive customer alias list.");
     return;
   }
-  if (!onHoldConfirm_("Move " + loaded.keys.length + " InActive tickets to On Hold? Active rows are left unchanged.")) return;
+  onHoldLog_("On Hold", "Moving " + loaded.keys.length + " InActive tickets to On Hold. Active rows are left unchanged.");
 
   var issues = [];
   try {
@@ -167,18 +145,18 @@ function moveLoadedTicketsToOnHold() {
         issues.push(issue);
       });
     }
-  } catch (err) { onHoldAlert_("Jira search failed", err.message); return; }
+  } catch (err) { onHoldLog_("Jira search failed", err.message); return; }
 
   var result = onHoldMoveIssues_(issues, headers);
   onHoldMarkTransitioned_(sheet, loaded.rowByKey, result.transitioned);
   SpreadsheetApp.flush();
-  onHoldReport_(ss, false, issues.length, result);
+  onHoldReport_(false, issues.length, result);
 }
 
 /** Log every transition on FS-187174 and highlight the On Hold id. */
 function logOnHoldTransitionId() {
   var headers = onHoldAuthHeaders_();
-  if (!headers) { onHoldAlert_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
+  if (!headers) { onHoldLog_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
   var response;
   try {
     response = UrlFetchApp.fetch(onHoldTransitionUrl_(ON_HOLD_SAMPLE_KEY), {
@@ -186,23 +164,23 @@ function logOnHoldTransitionId() {
       headers: headers,
       muteHttpExceptions: true
     });
-  } catch (err) { onHoldAlert_("Transition lookup failed", String(err)); return; }
+  } catch (err) { onHoldLog_("Transition lookup failed", String(err)); return; }
   var code = response.getResponseCode();
   var text = response.getContentText() || "";
   if (code < 200 || code >= 300) {
-    onHoldAlert_("Transition lookup failed", ON_HOLD_SAMPLE_KEY + " HTTP " + code + " " + text.substring(0, 500));
+    onHoldLog_("Transition lookup failed", ON_HOLD_SAMPLE_KEY + " HTTP " + code + " " + text.substring(0, 500));
     return;
   }
   var payload;
   try { payload = JSON.parse(text); }
-  catch (err) { onHoldAlert_("Transition lookup failed", "Invalid JSON: " + text.substring(0, 300)); return; }
+  catch (err) { onHoldLog_("Transition lookup failed", "Invalid JSON: " + text.substring(0, 300)); return; }
   var lines = onHoldDescribeTransitions_(payload);
   var onHoldId = onHoldFindTransitionId_(payload);
   lines.forEach(function (line) { Logger.log(line); });
   var summary = lines.join("\n");
   if (onHoldId) summary = "ON_HOLD_TRANSITION_ID for " + ON_HOLD_SAMPLE_KEY + " from its current status: " + onHoldId + "\n\n" + summary;
   else summary = "No " + ON_HOLD_STATUS + " transition is available from the current status of " + ON_HOLD_SAMPLE_KEY + ".\n\n" + summary;
-  onHoldAlert_(ON_HOLD_SAMPLE_KEY, summary);
+  onHoldLog_(ON_HOLD_SAMPLE_KEY, summary);
 }
 
 function onHoldJql_() {
@@ -616,7 +594,7 @@ function onHoldResponseCode_(response) {
   return response && typeof response.getResponseCode === "function" ? response.getResponseCode() : 0;
 }
 
-function onHoldReport_(ss, truncated, loadedCount, result) {
+function onHoldReport_(truncated, loadedCount, result) {
   var moved = result.transitioned.length;
   var message = "Moved " + moved + " InActive issues to " + ON_HOLD_STATUS + ".";
   if (result.skippedActive) message += " " + result.skippedActive + " Active issues were left unchanged.";
@@ -624,26 +602,11 @@ function onHoldReport_(ss, truncated, loadedCount, result) {
   if (result.failures.length) message += " " + result.failures.length + " failed.\n\n" + result.failures.slice(0, 5).join("\n");
   if (truncated) message += "\n\nLoaded the first " + loadedCount + " issues. The query has more pages than this run keeps.";
   result.transitioned.forEach(function (key) { Logger.log("Sheet status set to " + ON_HOLD_STATUS + " for " + key + "."); });
-  if (result.failures.length || truncated) onHoldAlert_("On Hold", message);
-  else ss.toast(message, "Jira", 8);
+  onHoldLog_("On Hold", message);
 }
 
-function onHoldConfirm_(message) {
-  try {
-    var ui = SpreadsheetApp.getUi();
-    return ui.alert("Move to On Hold", message, ui.ButtonSet.YES_NO) === ui.Button.YES;
-  } catch (err) {
-    Logger.log("No spreadsheet UI. Stopped before changing Jira. " + message);
-    return false;
-  }
-}
-
-function onHoldAlert_(title, message) {
-  try {
-    var ui = SpreadsheetApp.getUi();
-    if (message) ui.alert(title, message, ui.ButtonSet.OK);
-    else ui.alert(title);
-  } catch (err) { Logger.log(message ? title + "\n\n" + message : title); }
+function onHoldLog_(title, message) {
+  Logger.log(message ? title + "\n" + message : title);
 }
 
 if (typeof module !== "undefined" && module.exports) {
