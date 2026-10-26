@@ -2,7 +2,7 @@
 
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const TicketLogic = require('../apps-script/TicketLogic.js');
+const TicketLogic = require('../apps-script/Code.js');
 
 const FIELD_PATHS = {
   key: 'key',

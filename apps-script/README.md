@@ -2,7 +2,7 @@
 
 Google Apps Script that pulls issues from a Jira-style REST API into a Google Sheet, calculates whether each customer alias is inactive, and transitions those tickets to **On Hold**.
 
-The script is container-friendly: bind it to the spreadsheet with **Extensions > Apps Script**. `TicketLogic.js` holds the mapping, formula, and request logic. `Code.gs` talks to Sheets and `UrlFetchApp`.
+The script is one file, `Code.js`. Bind it to the spreadsheet with **Extensions > Apps Script** and paste that file over the default script. Apps Script saves it as `Code.gs`. No manifest and no second file.
 
 ## Sheet
 
@@ -33,15 +33,13 @@ The same formula is filled down for every ticket row on each sync. `MATCH` searc
 ## Install
 
 1. Open the spreadsheet. Choose **Extensions > Apps Script**.
-2. Add a script file named `Code` and paste `Code.gs`.
-3. Add a script file named `TicketLogic` and paste `TicketLogic.js`.
-4. Replace `appsscript.json` with the manifest in this folder (Project Settings > check **Show "appsscript.json" manifest file**). The manifest timezone is `Asia/Calcutta`.
-5. Edit `CONFIG` in `Code.gs`:
+2. Select everything in the default `Code.gs` file and paste `Code.js` over it. Save. Leave the editor file name as `Code.gs`. Do not add `appsscript.json` or another script file.
+3. Edit `CONFIG` in that file:
    - `API_BASE_URL`
    - `SEARCH.PARAMS.jql` (Jira Cloud rejects unbounded JQL; keep a project restriction)
    - `FIELDS` custom field ids (`customfield_10050`, not the `customfield_CATALYST` placeholder)
    - `SHEET_NAME` if the tab is not `Tickets`
-6. Save the API credential as a Script Property (**Project Settings > Script Properties**), not in the file:
+4. Save the API credential as a Script Property (**Project Settings > Script Properties**), not in the file:
 
    | Property | Used when |
    | --- | --- |
@@ -52,11 +50,9 @@ The same formula is filled down for every ticket row on each sync. `MATCH` searc
 
    A Script Property overrides the matching `CONFIG` placeholder. Values that still start with `YOUR_` are rejected before any request.
 
-7. Run `logTransitionsForIssue` from the editor with a real key, for example `logTransitionsForIssue('PROJ-123')`. Copy the id whose destination is `On Hold`.
-8. Run `main` once and accept the spreadsheet, external URL, and trigger permissions.
-9. Reload the spreadsheet. The **Ticket Sync** menu appears.
-
-`clasp` can push this folder. Both `.gs` and `.js` files upload into the same Apps Script project.
+5. Run `logTransitionsForIssue` from the editor with a real key, for example `logTransitionsForIssue('PROJ-123')`. Copy the id whose destination is `On Hold`.
+6. Run `main` once. Approve the spreadsheet, external URL, and trigger permissions when Apps Script asks. Those scopes are detected from the code, so a manifest file is unnecessary.
+7. Set the spreadsheet timezone with **File > Settings** if the hourly trigger should follow Asia/Calcutta. Reload the spreadsheet. The **Ticket Sync** menu appears.
 
 ## Jira Cloud defaults
 
@@ -83,7 +79,7 @@ The API user needs permission to browse the issues and to execute the transition
 - Install hourly trigger → time-driven trigger on `main`
 - Remove hourly trigger
 
-To install the trigger without the menu: Apps Script **Triggers** (alarm clock) > **Add Trigger** > function `main` > **Time-driven** > **Hour timer**. The schedule uses the script timezone, `Asia/Calcutta`.
+To install the trigger without the menu: Apps Script **Triggers** (alarm clock) > **Add Trigger** > function `main` > **Time-driven** > **Hour timer**. The schedule uses the spreadsheet timezone.
 
 Each entry point takes a script lock. A second run that starts while one is active logs `Skipped` and exits. Set `CONFIG.DRY_RUN` to `true` to log the keys that would move without calling the transition API or changing column D. The sync still writes the sheet.
 
@@ -97,15 +93,14 @@ Each entry point takes a script lock. A second run that starts while one is acti
 6. Post transitions in batches of `TRANSITION.BATCH_SIZE`. HTTP 429 and 5xx are retried once. Other failures are logged with the key and response snippet, and column D is left as it was.
 7. Write column D in one `setValues` for the successful keys only (unchanged cells in that column are written back with their current values).
 
-`Logger.log` records every transitioned key and every failed call. Executions show those lines. The manifest also sends uncaught exceptions to Cloud Logging.
+`Logger.log` records every transitioned key and every failed call. Executions show those lines.
 
 ## Local checks
 
 From the repository root:
 
 ```bash
-node --check apps-script/Code.gs
-node --check apps-script/TicketLogic.js
+node --check apps-script/Code.js
 node --test test/ticket-logic.test.js
 ```
 
