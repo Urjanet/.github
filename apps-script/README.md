@@ -11,7 +11,8 @@ The query is in the script. It is the open issues assigned to `ops_dev_extractio
 | A | Key | Jira |
 | B | Summary | Jira |
 | C | Catalyst (migrated) | Jira |
-| D | Status | Jira, then `On Hold` after a successful transition |
+| D | Status | Jira. Only a moved row is set to `On Hold` |
+| K | Change note | `status changed to - On Hold` on moved rows only |
 | E | Assignee | Jira |
 | F | Search Template | Jira |
 | G | Reporter | Jira |
@@ -26,7 +27,7 @@ Column J for row 2:
 =IF(I2 = "", "", IF(ISNUMBER(MATCH(I2, L:L, 0)), "InActive", "Active"))
 ```
 
-A row is moved only when column J is `InActive` and column D is not already `On Hold`. Active rows stay open.
+A row is moved only when column J is `InActive` and column D is not already `On Hold`. Active rows stay open. Column K is written only on the rows that Jira accepted. The other status cells are left as they were.
 
 ## Install
 

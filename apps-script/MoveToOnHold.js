@@ -136,7 +136,7 @@ function fetchJiraDataAndMoveToOnHold() {
 
   var result = onHoldMoveIssues_(inactiveIssues, headers);
   result.skippedActive = issues.length - inactiveIssues.length;
-  onHoldWriteStatusColumn_(sheet, issues, result.transitioned);
+  onHoldMarkTransitioned_(sheet, onHoldRowByKey_(issues), result.transitioned);
   SpreadsheetApp.flush();
   onHoldReport_(ss, searchResult.truncated, issues.length, result);
 }
@@ -168,7 +168,7 @@ function moveLoadedTicketsToOnHold() {
   } catch (err) { onHoldAlert_("Jira search failed", err.message); return; }
 
   var result = onHoldMoveIssues_(issues, headers);
-  onHoldWriteLoadedStatus_(sheet, loaded.rowByKey, result.transitioned);
+  onHoldMarkTransitioned_(sheet, loaded.rowByKey, result.transitioned);
   SpreadsheetApp.flush();
   onHoldReport_(ss, false, issues.length, result);
 }
@@ -207,7 +207,7 @@ function onHoldJql_() {
   var parts = ON_HOLD_CUSTOMER_ALIASES.map(function (alias) {
     return '"Customer Alias[Paragraph]" ~ "' + String(alias).replace(/"/g, '\\"') + '"';
   });
-  return "(" + parts.join(" OR ") + ') and assignee IN membersOf("ops_dev_extraction") AND status = open';
+  return "(" + parts.join(" OR ") + ') and assignee IN membersOf("ops_dev_extraction") AND status = open or key = FS-114249';
 }
 
 function onHoldSearchFields_(fieldIds) {
@@ -437,14 +437,47 @@ function onHoldWaitForActiveStatus_(sheet, rowCount) {
   Logger.log("Timed out waiting for column J formulas to calculate.");
 }
 
-function onHoldWriteStatusColumn_(sheet, issues, transitioned) {
-  var moved = {};
-  (transitioned || []).forEach(function (key) { moved[key] = true; });
-  var column = issues.map(function (issue) {
+function onHoldRowByKey_(issues) {
+  var rowByKey = {};
+  (issues || []).forEach(function (issue, index) {
     var key = onHoldIssueKey_(issue && issue.key);
-    return [moved[key] ? ON_HOLD_STATUS : onHoldIssueStatus_(issue)];
+    if (key) rowByKey[key] = index + 2;
   });
-  if (column.length) sheet.getRange(2, 4, column.length, 1).setValues(column);
+  return rowByKey;
+}
+
+function onHoldChangeNote_() {
+  return "status changed to - " + ON_HOLD_STATUS;
+}
+
+function onHoldMarkTransitioned_(sheet, rowByKey, transitioned) {
+  var rows = [];
+  (transitioned || []).forEach(function (key) {
+    if (rowByKey && rowByKey[key]) rows.push(rowByKey[key]);
+  });
+  rows.sort(function (a, b) { return a - b; });
+  var note = onHoldChangeNote_();
+  var start = null;
+  var count = 0;
+  function writeGroup() {
+    if (start === null) return;
+    var notes = [];
+    var statuses = [];
+    for (var i = 0; i < count; i++) {
+      statuses.push([ON_HOLD_STATUS]);
+      notes.push([note]);
+    }
+    sheet.getRange(start, 4, count, 1).setValues(statuses);
+    sheet.getRange(start, 11, count, 1).setValues(notes);
+  }
+  rows.forEach(function (row) {
+    if (start === null) { start = row; count = 1; return; }
+    if (row === start + count) { count++; return; }
+    writeGroup();
+    start = row;
+    count = 1;
+  });
+  writeGroup();
 }
 
 function onHoldReadLoadedTickets_(sheet) {
@@ -468,20 +501,6 @@ function onHoldReadLoadedTickets_(sheet) {
     rowByKey[key] = i + 2;
   }
   return { keys: keys, rowByKey: rowByKey };
-}
-
-function onHoldWriteLoadedStatus_(sheet, rowByKey, transitioned) {
-  var keys = Object.keys(rowByKey || {});
-  if (!keys.length || !(transitioned || []).length) return;
-  var moved = {};
-  transitioned.forEach(function (key) { moved[key] = true; });
-  var minRow = keys.reduce(function (min, key) { return Math.min(min, rowByKey[key]); }, rowByKey[keys[0]]);
-  var maxRow = keys.reduce(function (max, key) { return Math.max(max, rowByKey[key]); }, rowByKey[keys[0]]);
-  var column = sheet.getRange(minRow, 4, maxRow - minRow + 1, 1).getValues();
-  keys.forEach(function (key) {
-    if (moved[key]) column[rowByKey[key] - minRow][0] = ON_HOLD_STATUS;
-  });
-  sheet.getRange(minRow, 4, column.length, 1).setValues(column);
 }
 
 function onHoldAuthHeaders_() {
@@ -635,6 +654,7 @@ if (typeof module !== "undefined" && module.exports) {
     onHoldDescribeTransitions_: onHoldDescribeTransitions_,
     onHoldIssueToRow_: onHoldIssueToRow_,
     onHoldJql_: onHoldJql_,
+    onHoldChangeNote_: onHoldChangeNote_,
     onHoldActiveStatusFormula_: onHoldActiveStatusFormula_,
     onHoldMatchField_: onHoldMatchField_,
     ON_HOLD_STATUS: ON_HOLD_STATUS,

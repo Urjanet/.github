@@ -34,7 +34,7 @@ test('the customer alias query is the one sent to Jira', () => {
   assert.match(jql, /"Customer Alias\[Paragraph\]" ~ "Albertson's Companies, Inc\."/);
   assert.match(jql, /"Customer Alias\[Paragraph\]" ~ "Westfield, LLC"/);
   assert.match(jql, /assignee IN membersOf\("ops_dev_extraction"\)/);
-  assert.match(jql, /status = open$/);
+  assert.match(jql, /status = open or key = FS-114249$/);
   assert.equal((jql.match(/"Customer Alias\[Paragraph\]"/g) || []).length, 20);
 });
 
@@ -78,6 +78,10 @@ test('sheet rows are the ten requested columns and status is column D', () => {
     'Customer Alias',
     'Active Status'
   ]);
+});
+
+test('a moved ticket records the new status in the change note', () => {
+  assert.equal(onHold.onHoldChangeNote_(), 'status changed to - On Hold');
 });
 
 test('column J formula marks aliases that appear in column L as InActive', () => {
