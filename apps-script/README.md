@@ -2,7 +2,7 @@
 
 `MoveToOnHold.js` searches Jira with the customer-alias query, writes ten columns on the `Tickets` sheet, and transitions only the rows whose column J is `InActive`.
 
-The query is in the script. It is the open issues assigned to `ops_dev_extraction` whose Customer Alias contains one of the listed customers (7-Eleven, Albertson's, Verizon, and the rest).
+The Jira query is built from column L. Every non-blank cell there is one inactive customer alias. The script searches those aliases 20 at a time, because one query with 600 names is too long for Jira. If column L is empty, it uses the 20 names kept in the script.
 
 ## Columns on Tickets
 
@@ -19,7 +19,7 @@ The query is in the script. It is the open issues assigned to `ops_dev_extractio
 | H | Created | Jira |
 | I | Customer Alias | Jira |
 | J | Active Status | Formula |
-| L | Inactive aliases | You. The script does not clear this column |
+| L | Inactive aliases | You. These names become the Jira query. The script does not clear this column |
 
 Column J for row 2:
 

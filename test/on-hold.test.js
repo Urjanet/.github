@@ -38,6 +38,24 @@ test('the customer alias query is the one sent to Jira', () => {
   assert.equal((jql.match(/"Customer Alias\[Paragraph\]"/g) || []).length, 20);
 });
 
+test('column L aliases become batched Jira queries', () => {
+  const values = [' Verizon ', 'verizon', '', 'Quoted "Name"'];
+  for (let i = 0; i < 20; i++) values.push('Customer ' + i);
+  const aliases = onHold.onHoldNormalizeAliases_(values);
+  assert.deepEqual(aliases.slice(0, 2), ['Verizon', 'Quoted "Name"']);
+  assert.equal(aliases.length, 22);
+
+  const queries = onHold.onHoldQueriesForAliases_(aliases);
+  assert.equal(queries.length, 2);
+  assert.equal((queries[0].match(/"Customer Alias\[Paragraph\]"/g) || []).length, 20);
+  assert.match(queries[0], /status = open or key = FS-114249$/);
+  assert.match(queries[0], /~ "Verizon"/);
+  assert.match(queries[0], /~ "Quoted \\"Name\\""/);
+  assert.equal((queries[1].match(/"Customer Alias\[Paragraph\]"/g) || []).length, 2);
+  assert.doesNotMatch(queries[1], /FS-114249/);
+  assert.match(queries[1], /assignee IN membersOf\("ops_dev_extraction"\) AND status = open$/);
+});
+
 test('sheet rows are the ten requested columns and status is column D', () => {
   const row = onHold.onHoldIssueToRow_({
     key: 'FS-187174',

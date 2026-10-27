@@ -16,6 +16,8 @@
  *   J Active Status
  *       =IF(I2 = "", "", IF(ISNUMBER(MATCH(I2, L:L, 0)), "InActive", "Active"))
  * Column L is the inactive customer alias list. This script does not clear it.
+ * The Jira query is built from every non-blank alias in column L, 20 at a time.
+ * If column L is empty, the 20 aliases listed below are used instead.
  *
  * Paste this into the existing Apps Script project as a new script file.
  * Do not add a manifest. Auth is Script Property Jira_API_TOKEN_SK.
@@ -32,6 +34,7 @@ var ON_HOLD_STATUS = "On Hold";
 var ON_HOLD_INACTIVE = "InActive";
 var ON_HOLD_SAMPLE_KEY = "FS-187174";
 var ON_HOLD_BATCH_SIZE = 10;
+var ON_HOLD_ALIAS_BATCH = 20;
 var ON_HOLD_COLUMN_COUNT = 10;
 
 var ON_HOLD_HEADERS = [
@@ -77,13 +80,19 @@ function fetchJiraDataAndMoveToOnHold() {
   if (!sheet) { onHoldLog_("Missing sheet", "Sheet '" + ON_HOLD_SHEET + "' was not found."); return; }
   var headers = onHoldAuthHeaders_();
   if (!headers) { onHoldLog_("Missing token", "'Jira_API_TOKEN_SK' was not found in Script Properties."); return; }
-  onHoldLog_("On Hold", "Rewriting columns A-J on '" + ON_HOLD_SHEET + "', then moving rows whose column J is InActive. Column L is not changed.");
+  var aliases = onHoldReadAliases_(sheet);
+  if (aliases.length) {
+    onHoldLog_("On Hold", "Building the Jira query from " + aliases.length + " aliases in column L. Column L is not changed.");
+  } else {
+    aliases = ON_HOLD_CUSTOMER_ALIASES.slice();
+    onHoldLog_("On Hold", "Column L is empty. Using the " + aliases.length + " aliases in the script.");
+  }
 
   var fieldIds;
   var searchResult;
   try {
     fieldIds = onHoldResolveFields_(headers);
-    searchResult = onHoldFetchIssues_(onHoldJql_(), onHoldSearchFields_(fieldIds), headers);
+    searchResult = onHoldFetchByAliases_(aliases, onHoldSearchFields_(fieldIds), headers);
   } catch (err) { onHoldLog_("Jira search failed", err.message); return; }
 
   var issues = searchResult.issues;
@@ -183,11 +192,67 @@ function logOnHoldTransitionId() {
   onHoldLog_(ON_HOLD_SAMPLE_KEY, summary);
 }
 
-function onHoldJql_() {
-  var parts = ON_HOLD_CUSTOMER_ALIASES.map(function (alias) {
-    return '"Customer Alias[Paragraph]" ~ "' + String(alias).replace(/"/g, '\\"') + '"';
+function onHoldReadAliases_(sheet) {
+  var lastRow = Math.max(sheet.getLastRow(), 1);
+  var values = sheet.getRange(1, 12, lastRow, 1).getDisplayValues();
+  return onHoldNormalizeAliases_(values.map(function (row) { return row[0]; }));
+}
+
+function onHoldNormalizeAliases_(values) {
+  var seen = {};
+  var aliases = [];
+  (values || []).forEach(function (value) {
+    var alias = String(value === undefined || value === null ? "" : value).trim();
+    if (!alias) return;
+    var key = alias.toLowerCase();
+    if (seen[key]) return;
+    seen[key] = true;
+    aliases.push(alias);
   });
-  return "(" + parts.join(" OR ") + ') and assignee IN membersOf("ops_dev_extraction") AND status = open or key = FS-114249';
+  return aliases;
+}
+
+function onHoldAliasClause_(alias) {
+  var text = String(alias).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return '"Customer Alias[Paragraph]" ~ "' + text + '"';
+}
+
+function onHoldJqlForAliases_(aliases) {
+  var parts = (aliases || []).map(onHoldAliasClause_);
+  return "(" + parts.join(" OR ") + ') and assignee IN membersOf("ops_dev_extraction") AND status = open';
+}
+
+function onHoldJql_(aliases) {
+  var list = aliases && aliases.length ? aliases : ON_HOLD_CUSTOMER_ALIASES;
+  return onHoldJqlForAliases_(list) + " or key = FS-114249";
+}
+
+function onHoldQueriesForAliases_(aliases) {
+  var list = aliases && aliases.length ? aliases : ON_HOLD_CUSTOMER_ALIASES;
+  return onHoldChunk_(list, ON_HOLD_ALIAS_BATCH).map(function (batch, index) {
+    var jql = onHoldJqlForAliases_(batch);
+    if (index === 0) jql += " or key = FS-114249";
+    return jql;
+  });
+}
+
+function onHoldFetchByAliases_(aliases, requestedFields, headers) {
+  var queries = onHoldQueriesForAliases_(aliases);
+  var issues = [];
+  var seenKeys = {};
+  var truncated = false;
+  queries.forEach(function (jql, index) {
+    onHoldLog_("On Hold", "Searching alias batch " + (index + 1) + " of " + queries.length + ".");
+    var result = onHoldFetchIssues_(jql, requestedFields, headers);
+    if (result.truncated) truncated = true;
+    (result.issues || []).forEach(function (issue) {
+      var key = issue && issue.key;
+      if (!key || seenKeys[key]) return;
+      seenKeys[key] = true;
+      issues.push(issue);
+    });
+  });
+  return { issues: issues, truncated: truncated };
 }
 
 function onHoldSearchFields_(fieldIds) {
@@ -619,6 +684,9 @@ if (typeof module !== "undefined" && module.exports) {
     onHoldDescribeTransitions_: onHoldDescribeTransitions_,
     onHoldIssueToRow_: onHoldIssueToRow_,
     onHoldJql_: onHoldJql_,
+    onHoldJqlForAliases_: onHoldJqlForAliases_,
+    onHoldQueriesForAliases_: onHoldQueriesForAliases_,
+    onHoldNormalizeAliases_: onHoldNormalizeAliases_,
     onHoldChangeNote_: onHoldChangeNote_,
     onHoldActiveStatusFormula_: onHoldActiveStatusFormula_,
     onHoldMatchField_: onHoldMatchField_,
