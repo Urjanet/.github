@@ -16,7 +16,9 @@ Each member has 7 available hours.
 
 from __future__ import annotations
 
+import csv
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 IST = timezone(timedelta(hours=5, minutes=30))
 AVAILABLE_HOURS = 7
@@ -112,6 +114,104 @@ def canon_status(value: str | None) -> str:
     }.get(key, "")
 
 
+# Hours for one worked ticket. Columns are Non Top, Top 1000, Top 300.
+# Top 300 and Top 1000 are the catalyst expected. Every other band uses Non Top,
+# the generalised expected.
+CATALYST_EXPECTED = [
+    ("Bill_Change", 1, 1.5, 2),
+    ("Bill_Change_History", 1, 1.5, 2),
+    ("Bill_Change_Major", 4, 4, 6),
+    ("Initial_Bill_Change", 1, 1.5, 2),
+    ("Initial_Bill_Change_History", 2, 1.5, 2),
+    ("Migration", 3, 3, 3),
+    ("Zendesk", 2, 2, 3),
+    ("NAVIGATION_EVENT_TRACKING", 1, 1, 1),
+    ("Product_Enhancements", 1, 1, 2),
+    ("Website_Change_History", 2, 2, 2),
+    ("Website_Change", 1.5, 1.5, 1.5),
+    ("Provider Addition", 0.16, 0.16, 0.16),
+    ("ITD_History", 12.5, 12.5, 12.5),
+    ("Initial Build", 8, 8, 8),
+    ("Source Cleaner", 3, 3, 3),
+    ("Initial_Website_Change_History", 3.5, 3.5, 3.5),
+    ("Feature_Implement", 10.5, 10.5, 10.5),
+    ("Initial_New_Url_Mapping", 2.5, 2.5, 2.5),
+    ("NEW_URL_MAPPING", 2.5, 2.5, 2.5),
+    ("DeliveryTesting", 1, 1, 1),
+    ("Special_OPS", 1, 1.5, 3),
+    ("Change_Request", 3, 3, 3),
+]
+WITHIN = "Within expected"
+OVER = "Over expected"
+NO_EXPECTED = "No expected"
+CATALYST_BASIS = "Catalyst expected"
+GENERAL_BASIS = "Generalised expected"
+BAND_FILE = Path(__file__).resolve().parent.parent / "data" / "pib-2026-band.csv"
+_BANDS: dict[str, str] | None = None
+
+
+def name_key(value: str | None) -> str:
+    return " ".join((value or "").replace("_", " ").replace("-", " ").split()).lower()
+
+
+EXPECTED_BY_CATALYST = {
+    name_key(name): {"non top": non_top, "top 1000": top_1000, "top 300": top_300}
+    for name, non_top, top_1000, top_300 in CATALYST_EXPECTED
+}
+
+
+def load_bands() -> dict[str, str]:
+    global _BANDS
+    if _BANDS is not None:
+        return _BANDS
+    bands: dict[str, str] = {}
+    with BAND_FILE.open(newline="", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            name = (row.get("templateName") or "").strip()
+            if name and name not in bands:
+                bands[name] = (row.get("Band") or "").strip()
+    _BANDS = bands
+    return bands
+
+
+def option_value(value) -> str:
+    if isinstance(value, dict):
+        return str(value.get("value") or value.get("name") or "").strip()
+    return str(value or "").strip()
+
+
+def band_column(template: str, bands: dict[str, str]) -> tuple[str, str]:
+    if not template:
+        return "No template", "non top"
+    band = bands.get(template)
+    if band is None:
+        return "Not in PIB 2026", "non top"
+    key = name_key(band)
+    if key == "top 300":
+        return band, "top 300"
+    if key == "top 1000":
+        return band, "top 1000"
+    return band or "Non Top", "non top"
+
+
+def expectation(catalyst: str, column: str) -> tuple[float | None, str]:
+    row = EXPECTED_BY_CATALYST.get(name_key(catalyst))
+    if row is None:
+        return None, NO_EXPECTED
+    if column in {"top 300", "top 1000"}:
+        return row[column], CATALYST_BASIS
+    return row["non top"], GENERAL_BASIS
+
+
+def judge(actual: float, expected: float | None) -> tuple[str, float | str]:
+    if expected is None:
+        return NO_EXPECTED, ""
+    actual_hours = round(actual + 1e-9, 2)
+    expected_hours = round(float(expected) + 1e-9, 2)
+    status = WITHIN if actual_hours <= expected_hours else OVER
+    return status, round(actual_hours - expected_hours + 1e-9, 2)
+
+
 def classify(whiteboard: str | None) -> str:
     text = " ".join((whiteboard or "").split())
     key = text.lower()
@@ -151,7 +251,8 @@ def in_window(when: datetime | None, start: datetime, end: datetime) -> bool:
     return when is not None and start <= when < end
 
 
-def collect(issues: list[dict], day: datetime) -> dict[str, dict]:
+def collect(issues: list[dict], day: datetime, bands: dict[str, str] | None = None) -> dict[str, dict]:
+    bands = load_bands() if bands is None else bands
     start, end = day_window(day)
     blank = {label: empty_bucket() for label in (person["label"] for person in ROSTER)}
     for issue in issues:
@@ -205,13 +306,20 @@ def collect(issues: list[dict], day: datetime) -> dict[str, dict]:
         for label, action in per_member.items():
             addressed = action["resolved"] or action["transitioned"]
             record = blank[label]
-            record["tickets"].append(ticket_row(issue, fields, whiteboard, kind, minutes, action, addressed))
+            ticket = ticket_row(issue, fields, whiteboard, kind, minutes, action, addressed, bands)
+            record["tickets"].append(ticket)
             record["tracked_seconds"] += action["seconds"]
             if kind == "Skill":
                 record["skill_worklog_seconds"] += action["seconds"]
             if not addressed:
                 continue
             record["worked"] += 1
+            if ticket["validation"] == WITHIN:
+                record["within"] += 1
+            elif ticket["validation"] == OVER:
+                record["over"] += 1
+            elif ticket["validation"] == NO_EXPECTED:
+                record["no_expected"] += 1
             record["resolved"] += int(action["resolved"])
             record["transitioned"] += int(action["transitioned"])
             if kind == "Skill":
@@ -233,6 +341,7 @@ def collect(issues: list[dict], day: datetime) -> dict[str, dict]:
             if action["transitioned"]:
                 record["transition_effort"] += effort
                 record["transition_seconds"] += action["seconds"]
+            record["expected_hours"] += ticket["expected_hours"]
     return blank
 
 
@@ -256,11 +365,15 @@ def empty_bucket() -> dict:
         "skill_worklog_seconds": 0,
         "resolution_seconds": 0,
         "transition_seconds": 0,
+        "within": 0,
+        "over": 0,
+        "no_expected": 0,
+        "expected_hours": 0.0,
         "tickets": [],
     }
 
 
-def ticket_row(issue, fields, whiteboard, kind, minutes, action, addressed) -> dict:
+def ticket_row(issue, fields, whiteboard, kind, minutes, action, addressed, bands: dict[str, str]) -> dict:
     if action["resolved"] and action["transitioned"]:
         activity = "Resolved and transitioned"
     elif action["resolved"]:
@@ -271,6 +384,18 @@ def ticket_row(issue, fields, whiteboard, kind, minutes, action, addressed) -> d
         activity = "Time logged"
     project = fields.get("project") or {}
     project_key = project.get("key") if isinstance(project, dict) else ""
+    catalyst = option_value(fields.get("customfield_11171"))
+    template = option_value(fields.get("customfield_12282"))
+    effort = hours_of(sum(minutes.values())) if addressed else 0.0
+    band_label, column = band_column(template, bands)
+    expected, basis = expectation(catalyst, column)
+    status, variance = judge(effort, expected) if addressed else ("", "")
+    if not addressed:
+        basis = ""
+        expected_cell: float | str = ""
+        variance = ""
+    else:
+        expected_cell = "" if expected is None else plain_number(float(expected))
     return {
         "key": issue.get("key") or "",
         "summary": fields.get("summary") or "",
@@ -287,7 +412,15 @@ def ticket_row(issue, fields, whiteboard, kind, minutes, action, addressed) -> d
         "unit": hours_of(minutes["unit"]) if addressed else 0.0,
         "review": hours_of(minutes["review"]) if addressed else 0.0,
         "tracked": action["seconds"] / 3600,
-        "effort": hours_of(sum(minutes.values())) if addressed else 0.0,
+        "effort": effort,
+        "catalyst": catalyst,
+        "template": template,
+        "band": band_label,
+        "basis": basis if addressed else "",
+        "expected": expected_cell,
+        "expected_hours": float(expected) if addressed and expected is not None else 0.0,
+        "variance": plain_number(variance) if isinstance(variance, float) else variance,
+        "validation": status,
     }
 
 
@@ -317,6 +450,10 @@ def member_view(record: dict) -> dict:
         "overall_resolution": hours_of(record["resolution_effort"]) + record["resolution_seconds"] / 3600,
         "overall_transition": hours_of(record["transition_effort"]) + record["transition_seconds"] / 3600,
         "skill_time": skill_time,
+        "within": record["within"],
+        "over": record["over"],
+        "no_expected": record["no_expected"],
+        "expected_hours": record["expected_hours"],
     }
 
 
@@ -326,8 +463,9 @@ def percent(part: float, whole: float) -> str:
     return f"{part / whole * 100:.1f}%"
 
 
-def ratio(hours: float, available: float) -> str:
-    return f"{plain_number(hours)} / {plain_number(available)}"
+def per_day(hours: float) -> int | float:
+    """Overall hours divided by the 7 available hours."""
+    return plain_number(hours / AVAILABLE_HOURS)
 
 
 def member_header() -> list[str]:
@@ -353,6 +491,9 @@ def member_header() -> list[str]:
         "Overall Time spent on Transition",
         "Time Spent / day",
         "Skill Utilisation percentage against overall",
+        "Within expected",
+        "Over expected",
+        "No expected",
     ]
 
 
@@ -377,8 +518,31 @@ def member_line(label: str, view: dict) -> list:
         plain_number(view["overall"]),
         plain_number(view["overall_resolution"]),
         plain_number(view["overall_transition"]),
-        ratio(view["overall"], AVAILABLE_HOURS),
+        per_day(view["overall"]),
         percent(view["skill_time"], view["overall"]),
+        view["within"],
+        view["over"],
+        view["no_expected"],
+    ]
+
+
+def planned_header() -> list[str]:
+    return [
+        "Team member",
+        "Efforts hours from ticket",
+        "Expected hours to planned as per catalyst",
+    ]
+
+
+def planned_line(label: str, view: dict) -> list:
+    return [label, plain_number(view["effort"]), plain_number(view["expected_hours"])]
+
+
+def planned_total(views: list[tuple[str, dict]]) -> list:
+    return [
+        "Total",
+        plain_number(sum(view["effort"] for _label, view in views)),
+        plain_number(sum(view["expected_hours"] for _label, view in views)),
     ]
 
 
@@ -400,6 +564,13 @@ def ticket_header() -> list[str]:
         "Review Efforts",
         "Time Tracking",
         "Efforts",
+        "Catalyst",
+        "Template",
+        "Band",
+        "Expected basis",
+        "Expected hours",
+        "Variance",
+        "Validation",
     ]
 
 
@@ -424,11 +595,23 @@ def ticket_line(label: str, ticket: dict) -> list:
         plain_number(ticket["review"]) if show_effort else "",
         plain_number(ticket["tracked"]),
         plain_number(ticket["effort"]) if show_effort else "",
+        ticket["catalyst"],
+        ticket["template"],
+        ticket["band"],
+        ticket["basis"],
+        ticket["expected"],
+        ticket["variance"],
+        ticket["validation"],
     ]
 
 
-def build_sheet(day: datetime, issues: list[dict], generated: datetime) -> list[list]:
-    grouped = collect(issues, day)
+def build_sheet(
+    day: datetime,
+    issues: list[dict],
+    generated: datetime,
+    bands: dict[str, str] | None = None,
+) -> list[list]:
+    grouped = collect(issues, day, bands)
     views = [(person["label"], member_view(grouped[person["label"]])) for person in ROSTER]
     title = f"Olympus EOD — {day.day} {day.strftime('%b')} {day.year}"
     stamp = generated.astimezone(IST).strftime("%Y-%m-%d %H:%M IST")
@@ -441,8 +624,12 @@ def build_sheet(day: datetime, issues: list[dict], generated: datetime) -> list[
         "Time Tracking is the member's Jira worklog hours started that day. "
         "Total Efforts Spend is the effort on tickets they resolved or transitioned. "
         "Overall time Spent adds Time Tracking to that effort. "
-        "Each member has 7 available hours. Time Spent / day is overall hours / 7. "
-        "Skill utilisation is skill effort plus skill-ticket worklogs, divided by overall time."
+        "Each member has 7 available hours. Time Spent / day is overall hours divided by 7. "
+        "Skill utilisation is skill effort plus skill-ticket worklogs, divided by overall time. "
+        "Worked tickets are validated on effort hours against PIB 2026. "
+        "Top 300 and Top 1000 use the catalyst expected for that band. "
+        "Every other band, a missing template, or #N/A uses the Non Top hours, the generalised expected. "
+        "Within expected means the effort is at or under that number."
     )
     rows: list[list] = [
         [title],
@@ -456,12 +643,26 @@ def build_sheet(day: datetime, issues: list[dict], generated: datetime) -> list[
         rows.append(member_line(label, view))
     rows.append(total_line(views))
     rows.append([])
+    rows.append(["Catalyst planned hours"])
+    rows.append(
+        [
+            "Efforts hours from ticket are Analysis + Dev + Unit testing + Review on tickets the member resolved or transitioned. "
+            "Expected hours are the catalyst standard: Top 300 and Top 1000 use that band's hours, and every other PIB 2026 band uses the Non Top hours."
+        ]
+    )
+    rows.append(planned_header())
+    for label, view in views:
+        rows.append(planned_line(label, view))
+    rows.append(planned_total(views))
+    rows.append([])
     rows.append(["Member Contribution in Tickets"])
     rows.append(
         [
             "One row per ticket a member resolved, transitioned, or logged time on. "
             "Effort cells are filled only when the member resolved or transitioned the ticket. "
-            "Time logged is worklog time with no qualifying status change."
+            "Time logged is worklog time with no qualifying status change. "
+            "Validation compares effort hours with the catalyst expected for Top 300 and Top 1000, "
+            "or the generalised Non Top expected for every other band."
         ]
     )
     rows.append(ticket_header())
@@ -497,12 +698,14 @@ def total_line(views: list[tuple[str, dict]]) -> list:
     ]
     totals = {key: sum(view[key] for _label, view in views) for key in keys}
     skill_time = sum(view["skill_time"] for _label, view in views)
-    people = len(views) or 1
     return [
         "Total",
         *[plain_number(totals[key]) for key in keys],
-        ratio(totals["overall"], AVAILABLE_HOURS * people),
+        per_day(totals["overall"]),
         percent(skill_time, totals["overall"]),
+        sum(view["within"] for _label, view in views),
+        sum(view["over"] for _label, view in views),
+        sum(view["no_expected"] for _label, view in views),
     ]
 
 
@@ -592,8 +795,45 @@ def self_test() -> None:
     assert sheet[5][1] == "Total Ticket Worked"
     assert sheet[6][0] == "Sriya Nayak"
     assert sheet[6][1] == 3
-    assert sheet[6][19] == "4.5 / 7"
+    assert sheet[6][19] == plain_number(4.5 / 7)
     assert sheet[6][20] == "55.6%"
+    planned = next(i for i, row in enumerate(sheet) if row and row[0] == "Catalyst planned hours")
+    assert sheet[planned + 2] == planned_header()
+    assert sheet[planned + 3][0] == "Sriya Nayak"
+    assert sheet[planned + 3][1] == 3
+    assert sheet[planned + 3][2] == 0
+    bands = {
+        "AlphaTemplateProvider": "Top 300",
+        "BetaTemplateProvider": "Top 1000",
+        "GammaTemplateProvider": "10-70 Accts",
+    }
+    planned_issues = [
+        issue("P1", "CA-Feasible", analysis=60, histories=[history(sriya, inside, "Resolved")]),
+        issue("P2", "CA-Feasible", analysis=180, histories=[history(sriya, inside, "Resolved")]),
+        issue("P3", None, analysis=30, histories=[history(sriya, inside, "Under Reporter")]),
+        issue("P4", None, analysis=60, histories=[history(sriya, inside, "Resolved")]),
+    ]
+    planned_issues[0]["fields"]["customfield_11171"] = {"value": "Bill_Change"}
+    planned_issues[0]["fields"]["customfield_12282"] = {"value": "AlphaTemplateProvider"}
+    planned_issues[1]["fields"]["customfield_11171"] = {"value": "Bill_Change"}
+    planned_issues[1]["fields"]["customfield_12282"] = {"value": "BetaTemplateProvider"}
+    planned_issues[2]["fields"]["customfield_11171"] = {"value": "Zendesk"}
+    planned_issues[2]["fields"]["customfield_12282"] = {"value": "GammaTemplateProvider"}
+    planned_issues[3]["fields"]["customfield_11171"] = {"value": "Not a catalyst"}
+    planned_issues[3]["fields"]["customfield_12282"] = {"value": "AlphaTemplateProvider"}
+    planned_grouped = collect(planned_issues, day, bands)
+    planned_view = member_view(planned_grouped["Sriya Nayak"])
+    assert planned_view["expected_hours"] == 5.5, planned_view
+    assert planned_view["effort"] == 5.5, planned_view
+    assert planned_view["within"] == 2, planned_view
+    assert planned_view["over"] == 1, planned_view
+    assert planned_view["no_expected"] == 1, planned_view
+    first = planned_grouped["Sriya Nayak"]["tickets"]
+    by_key = {item["key"]: item for item in first}
+    assert by_key["P1"]["basis"] == CATALYST_BASIS and by_key["P1"]["expected"] == 2
+    assert by_key["P2"]["basis"] == CATALYST_BASIS and by_key["P2"]["validation"] == OVER
+    assert by_key["P3"]["basis"] == GENERAL_BASIS and by_key["P3"]["expected"] == 2
+    assert by_key["P4"]["validation"] == NO_EXPECTED
     assert sheet[14][0] == "Total"
     assert any(row and row[0] == "Member Contribution in Tickets" for row in sheet)
     keys = [row[1] for row in sheet if len(row) > 1 and isinstance(row[1], str) and row[1].startswith("=HYPERLINK")]

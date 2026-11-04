@@ -45,6 +45,8 @@ FIELDS = ",".join(
         "customfield_11185",
         "customfield_11186",
         "customfield_11187",
+        "customfield_11171",
+        "customfield_12282",
         "worklog",
     ]
 )
@@ -447,7 +449,7 @@ def paint_report(token: str, sheet_id: int, rows: list[list]) -> None:
         )
     for index, row in enumerate(rows):
         text = str(row[0]).strip() if row else ""
-        if text in {"Member contribution", "Member Contribution in Tickets"}:
+        if text in {"Member contribution", "Catalyst planned hours", "Member Contribution in Tickets"}:
             requests.append(
                 repeat_format(
                     sheet_id,

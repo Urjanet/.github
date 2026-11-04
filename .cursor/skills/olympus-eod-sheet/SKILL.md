@@ -54,13 +54,16 @@ The day is Asia/Kolkata, from midnight until the next midnight.
 - Time Tracking is that member's worklogs started on the report day.
 - Total Efforts Spend is the effort on tickets they resolved or transitioned.
 - Overall time Spent is that effort plus Time Tracking.
-- Each person has 7 available hours. Time Spent / day is overall hours / 7.
+- Each person has 7 available hours. Time Spent / day is overall hours divided by 7.
 - Skill utilisation is skill effort plus worklogs on skill tickets, divided by overall time.
+- Worked tickets are checked against PIB 2026 (`data/pib-2026-band.csv`). Top 300 and Top 1000 use that band's catalyst hours. Every other band uses the Non Top hours.
+- Catalyst planned hours lists, for each member, the effort hours on those tickets and the sum of the catalyst expected hours.
 
 ## Sections
 
 1. Member contribution
-2. Member Contribution in Tickets
+2. Catalyst planned hours
+3. Member Contribution in Tickets
 
 ## How to run
 
