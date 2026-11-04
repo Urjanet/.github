@@ -65,6 +65,8 @@ var BROWN = '#8c510c';
 var LIGHT = '#edf4f9';
 var CREAM = '#fff2d1';
 var WHITE = '#ffffff';
+var HIGHLIGHT = '#c6efce';
+var SKILL_COMPLETED_ABOVE = 6;
 var SECTION_PREFIXES = [
   'Skillable EOD',
   'labels IN',
@@ -121,7 +123,18 @@ function runForDay(year, month, day) {
   var jql = 'labels IN (' + label + ') AND status != "On Hold (migrated)"';
   var issues = fetchIssues(jql);
   issues.forEach(enrichIssue);
-  var rows = buildSheet(year, month, day, issues, jql);
+  var bounds = dayBounds(year, month, day);
+  var names = reportNames(issues, bounds);
+  var found = fetchIssues(overallJql(year, month, day, names));
+  var seen = {};
+  var overall = issues.slice();
+  issues.forEach(function (issue) { seen[issue.key] = true; });
+  found.forEach(function (issue) {
+    if (seen[issue.key]) return;
+    enrichIssue(issue);
+    overall.push(issue);
+  });
+  var rows = buildSheet(year, month, day, issues, jql, overall);
   writeReport(tabName(month, day), rows);
 }
 
@@ -197,7 +210,7 @@ function enrichIssue(issue) {
   issue._worklogs = entries;
 }
 
-function buildSheet(year, month, day, issues, jql) {
+function buildSheet(year, month, day, issues, jql, overallIssues) {
   var bounds = dayBounds(year, month, day);
   var teams = {};
   ROSTER.forEach(function (pair) { teams[pair[1]] = pair[0]; });
@@ -247,8 +260,9 @@ function buildSheet(year, month, day, issues, jql) {
   Object.keys(byMember).filter(function (name) { return !teams[name]; }).sort().forEach(function (name) {
     members.push([OPS_TEAM, name]);
   });
+  var totals = dayTotals(overallIssues || issues, bounds);
   var memberRows = members.map(function (pair) {
-    return memberRecord(pair[0], pair[1], byMember[pair[1]] || []);
+    return memberRecord(pair[0], pair[1], byMember[pair[1]] || [], totals[pair[1]]);
   });
   var enabled = memberRows.filter(function (row) { return row.team !== OPS_TEAM; });
   var others = memberRows.filter(function (row) { return row.team === OPS_TEAM; });
@@ -291,6 +305,7 @@ function buildSheet(year, month, day, issues, jql) {
     cohortRow('Not skill enabled', others),
     [],
     ['Member contribution'],
+    ['Rows in green completed more than 6 skill tickets. Skill addressed is greater than 6. Overall tickets worked and overall effort cover the whole report day, including tickets outside this label.'],
     memberHeader()
   ];
   memberRows.forEach(function (row) { rows.push(memberLine(row)); });
@@ -338,7 +353,7 @@ function buildSheet(year, month, day, issues, jql) {
   });
   rows.push([]);
   rows.push(['Skill member effort calculation']);
-  rows.push(['Total hours = Manual hours + Skill hours + Non-skill hours. Skill hours = (Analysis minutes + Unit testing minutes + Development minutes) / 60 on CA-Feasible tickets. Non-skill hours use the same effort fields on every other ticket. Manual hours are the Jira worklogs that member logged on the report day.']);
+  rows.push(['Total hours = Manual hours + Skill hours + Non-skill hours. Skill hours = (Analysis minutes + Unit testing minutes + Development minutes) / 60 on CA-Feasible tickets. Non-skill hours use the same effort fields on every other ticket. Manual hours are the Jira worklogs that member logged on the report day. Overall effort (hours) adds that same effort for every ticket the member resolved, transitioned, or logged time on during the report day.']);
   rows.push(['Team', 'Member', 'Ticket', 'ITD Whiteboard', 'Class', 'Action', 'Analysis minutes', 'Unit testing minutes', 'Development minutes']);
   members.forEach(function (pair) {
     var owned = (byMember[pair[1]] || []).slice().sort(function (a, b) {
@@ -423,6 +438,28 @@ function paint(sheet, rows, width) {
     }
   });
   flush(rows.length);
+  highlightMembers(sheet, rows);
+}
+
+function highlightMembers(sheet, rows) {
+  var memberTable = false;
+  var skillIndex = -1;
+  rows.forEach(function (row, index) {
+    var text = row.length ? String(row[0]).trim() : '';
+    if (text === 'Team' && row.length > 1 && row[1] === 'Member' && row.indexOf('Skill addressed') !== -1) {
+      memberTable = true;
+      skillIndex = row.indexOf('Skill addressed');
+      return;
+    }
+    if (!memberTable) return;
+    if (!text) {
+      memberTable = false;
+      return;
+    }
+    var skillAddressed = Number(row[skillIndex]);
+    if (!(skillAddressed > SKILL_COMPLETED_ABOVE)) return;
+    sheet.getRange(index + 1, 1, 1, row.length).setBackground(HIGHLIGHT).setFontWeight('bold');
+  });
 }
 
 function dayBounds(year, month, day) {
@@ -486,7 +523,71 @@ function manualSeconds(issue, member, bounds) {
   return total;
 }
 
-function memberRecord(team, name, owned) {
+function overallJql(year, month, day, names) {
+  var begin = new Date(Date.UTC(year, month - 1, day) - 24 * 60 * 60 * 1000);
+  var finish = new Date(Date.UTC(year, month - 1, day) + 2 * 24 * 60 * 60 * 1000);
+  var quoted = names.map(function (name) {
+    return '"' + String(name).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+  }).join(', ');
+  var startText = Utilities.formatDate(begin, 'UTC', 'yyyy-MM-dd');
+  var endText = Utilities.formatDate(finish, 'UTC', 'yyyy-MM-dd');
+  return '(status changed BY (' + quoted + ') AFTER "' + startText + '" BEFORE "' + endText + '" OR worklogAuthor in (' + quoted + ') AND worklogDate >= "' + startText + '" AND worklogDate <= "' + endText + '") AND status != "On Hold (migrated)"';
+}
+
+function dayTotals(issues, bounds) {
+  var tickets = {};
+  var seconds = {};
+  var minutes = {};
+  issues.forEach(function (issue) {
+    var fields = issue.fields || {};
+    var effort = effortMinutes(fields).reduce(function (sum, value) { return sum + value; }, 0);
+    var qualified = {};
+    (issue._histories || []).forEach(function (history) {
+      var when = parseJiraTime(history.created);
+      if (when === null || when < bounds.start || when >= bounds.end) return;
+      var author = canonicalName((history.author || {}).displayName);
+      if (!author) return;
+      (history.items || []).forEach(function (item) {
+        if (item.field !== 'status') return;
+        var target = item.toString || '';
+        if (target !== RESOLVED_STATUS && !TRANSITION_STATUSES[target]) return;
+        qualified[author] = true;
+        if (!tickets[author]) tickets[author] = {};
+        tickets[author][issue.key] = true;
+      });
+    });
+    Object.keys(qualified).forEach(function (author) {
+      minutes[author] = (minutes[author] || 0) + effort;
+    });
+    (issue._worklogs || []).forEach(function (entry) {
+      var author = canonicalName((entry.author || {}).displayName);
+      if (!author) return;
+      var when = parseJiraTime(entry.started);
+      if (when === null || when < bounds.start || when >= bounds.end) return;
+      if (!tickets[author]) tickets[author] = {};
+      tickets[author][issue.key] = true;
+      seconds[author] = (seconds[author] || 0) + Number(entry.timeSpentSeconds || 0);
+    });
+  });
+  var totals = {};
+  Object.keys(tickets).concat(Object.keys(seconds), Object.keys(minutes)).forEach(function (name) {
+    if (totals[name]) return;
+    totals[name] = {
+      tickets: Object.keys(tickets[name] || {}).length,
+      hours: (seconds[name] || 0) / 3600 + (minutes[name] || 0) / 60
+    };
+  });
+  return totals;
+}
+
+function reportNames(issues, bounds) {
+  var names = {};
+  ROSTER.forEach(function (pair) { names[pair[1]] = true; });
+  Object.keys(dayTotals(issues, bounds)).forEach(function (name) { names[name] = true; });
+  return Object.keys(names).sort();
+}
+
+function memberRecord(team, name, owned, overall) {
   var skillResolved = count(owned, function (action) { return action.skill && action.kind === 'Resolved'; });
   var skillTransitioned = count(owned, function (action) { return action.skill && action.kind === 'Transitioned'; });
   var otherResolved = count(owned, function (action) { return !action.skill && action.kind === 'Resolved'; });
@@ -514,12 +615,14 @@ function memberRecord(team, name, owned) {
     totalHours: manual / 3600 + skillMinutes / 60 + otherMinutes / 60,
     manualHours: manual / 3600,
     skillHours: skillMinutes / 60,
-    otherHours: otherMinutes / 60
+    otherHours: otherMinutes / 60,
+    overallTickets: overall ? overall.tickets : 0,
+    overallHours: overall ? overall.hours : 0
   };
 }
 
 function memberHeader() {
-  return ['Team', 'Member', 'Available hours', 'Worked', 'Resolved', 'Transitioned', 'Skill resolved', 'Skill transitioned', 'Skill addressed', 'Non-skill resolved', 'Non-skill transitioned', 'Total hours', 'Manual hours', 'Skill hours', 'Non-skill hours', 'Skill leverage', 'Skill performance'];
+  return ['Team', 'Member', 'Available hours', 'Worked', 'Resolved', 'Transitioned', 'Skill resolved', 'Skill transitioned', 'Skill addressed', 'Non-skill resolved', 'Non-skill transitioned', 'Total hours', 'Manual hours', 'Skill hours', 'Non-skill hours', 'Skill leverage', 'Skill performance', 'Overall tickets worked', 'Overall effort (hours)'];
 }
 
 function memberLine(row) {
@@ -527,7 +630,8 @@ function memberLine(row) {
     row.team, row.name, AVAILABLE_HOURS, row.worked, row.resolved, row.transitioned,
     row.skillResolved, row.skillTransitioned, row.skillAddressed, row.otherResolved, row.otherTransitioned,
     plainNumber(row.totalHours), plainNumber(row.manualHours), plainNumber(row.skillHours), plainNumber(row.otherHours),
-    leverage(row.skillAddressed, row.worked), performance(row.skillHours + row.otherHours)
+    leverage(row.skillAddressed, row.worked), performance(row.skillHours + row.otherHours),
+    row.overallTickets, plainNumber(row.overallHours)
   ];
 }
 

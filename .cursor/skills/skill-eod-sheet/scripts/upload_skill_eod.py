@@ -729,6 +729,7 @@ BROWN = {"red": 0.54901963, "green": 0.31764707, "blue": 0.047058824}
 LIGHT = {"red": 0.92941177, "green": 0.95686275, "blue": 0.9764706}
 CREAM = {"red": 1, "green": 0.9490196, "blue": 0.81960785}
 WHITE = {"red": 1, "green": 1, "blue": 1}
+HIGHLIGHT = {"red": 0.7764706, "green": 0.9372549, "blue": 0.80784315}
 SECTION_PREFIXES = (
     "Skillable EOD",
     "labels IN",
@@ -856,12 +857,52 @@ def paint_report(token: str, sheet_id: int, rows: list[list]) -> None:
             )
             continue
     flush(len(rows))
+    requests.extend(highlight_requests(sheet_id, rows))
     request_json(
         f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}:batchUpdate",
         {"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         method="POST",
         body={"requests": requests},
     )
+
+
+def highlight_requests(sheet_id: int, rows: list[list]) -> list[dict]:
+    requests = []
+    member_table = False
+    skill_index = None
+    for index, row in enumerate(rows):
+        text = str(row[0]).strip() if row else ""
+        if text == "Team" and len(row) > 1 and str(row[1]) == "Member" and "Skill addressed" in row:
+            member_table = True
+            skill_index = list(row).index("Skill addressed")
+            continue
+        if not member_table:
+            continue
+        if not row or not text:
+            member_table = False
+            continue
+        try:
+            skill_addressed = float(row[skill_index])
+        except (TypeError, ValueError, IndexError):
+            continue
+        import eod_report
+
+        if skill_addressed <= eod_report.SKILL_COMPLETED_ABOVE:
+            continue
+        requests.append(
+            repeat_format(
+                sheet_id,
+                index,
+                index + 1,
+                len(row),
+                {
+                    "backgroundColor": HIGHLIGHT,
+                    "textFormat": {"bold": True},
+                },
+                "userEnteredFormat.backgroundColor,userEnteredFormat.textFormat",
+            )
+        )
+    return requests
 
 
 def write_grid(token: str, title: str, rows: list[list]) -> None:
@@ -931,6 +972,50 @@ def build_rows(issues: list[dict], headers: list[str], email: str, token: str) -
     return table, shared_notes
 
 
+def highlighted_members(rows: list[list]) -> list[str]:
+    import eod_report
+
+    member_table = False
+    skill_index = None
+    names = []
+    for row in rows:
+        text = str(row[0]).strip() if row else ""
+        if text == "Team" and len(row) > 1 and str(row[1]) == "Member" and "Skill addressed" in row:
+            member_table = True
+            skill_index = list(row).index("Skill addressed")
+            continue
+        if not member_table:
+            continue
+        if not row or not text:
+            break
+        try:
+            skill_addressed = float(row[skill_index])
+        except (TypeError, ValueError, IndexError):
+            continue
+        if skill_addressed > eod_report.SKILL_COMPLETED_ABOVE:
+            names.append(str(row[1]))
+    return names
+
+
+def overall_issues(day: datetime, label_issues: list[dict], email: str, token: str) -> list[dict]:
+    import eod_report
+
+    start, end = eod_report.day_window(day)
+    names = eod_report.report_names(label_issues, start, end)
+    found = fetch_issues(eod_report.overall_jql(day, names), email, token, expand="changelog")
+    by_key = {issue["key"]: issue for issue in label_issues}
+    added = 0
+    for issue in found:
+        if issue["key"] in by_key:
+            continue
+        enrich_issue(issue, email, token)
+        by_key[issue["key"]] = issue
+        added += 1
+    print(f"Overall tickets considered: {len(by_key)}")
+    print(f"Tickets outside the label: {added}")
+    return list(by_key.values())
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Upload SKILL EOD tickets to the Google Sheet.")
     parser.add_argument("--date", required=True, help="Date, such as 2026-11-04 or 04-Nov.")
@@ -959,7 +1044,18 @@ def main() -> None:
         enrich_issue(issue, email, token)
     import eod_report
 
-    grid = eod_report.build_sheet(day, issues, jql, datetime.now(eod_report.IST))
+    overall = overall_issues(day, issues, email, token)
+    grid = eod_report.build_sheet(
+        day,
+        issues,
+        jql,
+        datetime.now(eod_report.IST),
+        overall_issues=overall,
+    )
+    print(
+        "Highlighted for more than 6 skill tickets: "
+        + (", ".join(highlighted_members(grid)) or "none")
+    )
     access = google_token()
     title = tab_name(day)
     sheet_id = ensure_date_tab(access, title)

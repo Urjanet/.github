@@ -12,6 +12,8 @@ The numbers follow the 3 Nov 2026 tab:
 - Total hours = manual + skill + non-skill.
 - Skill leverage = skill addressed / worked.
 - Skill performance = (skill hours + non-skill hours) shown against 7 available hours.
+- A member row is highlighted when Skill addressed is greater than 6.
+- Overall tickets worked and overall effort cover the whole report day, not only the label.
 """
 
 from __future__ import annotations
@@ -24,6 +26,7 @@ AVAILABLE_HOURS = 7
 RESOLVED_STATUS = "Resolved"
 TRANSITION_STATUSES = {"Pending Audits", "Under Reporter", "Under OCR"}
 FEASIBLE = "CA-Feasible"
+SKILL_COMPLETED_ABOVE = 6
 
 ROSTER = [
     ("Nexus", "Tharun Vijayakumar"),
@@ -140,7 +143,83 @@ def member_order() -> list[tuple[str, str]]:
     return list(ROSTER)
 
 
-def build_sheet(day: datetime, issues: list[dict], jql: str, generated: datetime) -> list[list]:
+def jql_quote(name: str) -> str:
+    return '"' + name.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def overall_jql(day: datetime, names: list[str]) -> str:
+    """Wide query around the report day. The caller still filters timestamps to Asia/Kolkata."""
+    begin = (day - timedelta(days=1)).strftime("%Y-%m-%d")
+    finish = (day + timedelta(days=2)).strftime("%Y-%m-%d")
+    quoted = ", ".join(jql_quote(name) for name in names)
+    return (
+        f'(status changed BY ({quoted}) AFTER "{begin}" BEFORE "{finish}" '
+        f'OR worklogAuthor in ({quoted}) AND worklogDate >= "{begin}" AND worklogDate <= "{finish}") '
+        f'AND status != "On Hold (migrated)"'
+    )
+
+
+def day_totals(issues: list[dict], start: datetime, end: datetime) -> dict[str, dict]:
+    """Tickets and effort for each person on the report day.
+
+    A ticket counts when that person resolved it, transitioned it, or logged time on it.
+    Effort is that person's worklogs plus analysis, unit testing, and development
+    on the tickets they resolved or transitioned.
+    """
+    tickets: dict[str, set[str]] = defaultdict(set)
+    seconds: dict[str, int] = defaultdict(int)
+    minutes: dict[str, float] = defaultdict(float)
+    for issue in issues:
+        fields = issue.get("fields") or {}
+        key = issue["key"]
+        effort = sum(effort_minutes(fields))
+        qualified: set[str] = set()
+        for history in issue.get("_histories") or []:
+            when = parse_jira_time(history.get("created") or "")
+            if when is None or not (start <= when < end):
+                continue
+            author = canonical_name((history.get("author") or {}).get("displayName"))
+            if not author:
+                continue
+            for item in history.get("items") or []:
+                if item.get("field") != "status":
+                    continue
+                target = item.get("toString") or ""
+                if target != RESOLVED_STATUS and target not in TRANSITION_STATUSES:
+                    continue
+                qualified.add(author)
+                tickets[author].add(key)
+        for author in qualified:
+            minutes[author] += effort
+        for entry in issue.get("_worklogs") or []:
+            author = canonical_name((entry.get("author") or {}).get("displayName"))
+            if not author:
+                continue
+            when = parse_jira_time(entry.get("started") or "")
+            if when is None or not (start <= when < end):
+                continue
+            tickets[author].add(key)
+            seconds[author] += int(entry.get("timeSpentSeconds") or 0)
+    names = set(tickets) | set(seconds) | set(minutes)
+    return {
+        name: {"tickets": len(tickets[name]), "hours": seconds[name] / 3600 + minutes[name] / 60}
+        for name in names
+    }
+
+
+def report_names(issues: list[dict], start: datetime, end: datetime) -> list[str]:
+    names = {name for _, name in ROSTER}
+    names.update(day_totals(issues, start, end))
+    return sorted(names)
+
+
+def build_sheet(
+    day: datetime,
+    issues: list[dict],
+    jql: str,
+    generated: datetime,
+    overall_issues: list[dict] | None = None,
+) -> list[list]:
     start, end = day_window(day)
     teams = {name: team for team, name in ROSTER}
     actions = []
@@ -191,8 +270,12 @@ def build_sheet(day: datetime, issues: list[dict], jql: str, generated: datetime
     extras = sorted(name for name in by_member if name not in teams)
     members = [(teams[name], name) for name in roster_names]
     members.extend((OPS_TEAM, name) for name in extras)
+    totals = day_totals(issues if overall_issues is None else overall_issues, start, end)
 
-    member_rows = [member_record(team, name, by_member.get(name, [])) for team, name in members]
+    member_rows = [
+        member_record(team, name, by_member.get(name, []), totals.get(name))
+        for team, name in members
+    ]
     enabled = [row for row in member_rows if row["team"] != OPS_TEAM]
     others = [row for row in member_rows if row["team"] == OPS_TEAM]
 
@@ -233,6 +316,11 @@ def build_sheet(day: datetime, issues: list[dict], jql: str, generated: datetime
         cohort_row("Not skill enabled", others),
         [],
         ["Member contribution"],
+        [
+            "Rows in green completed more than 6 skill tickets. "
+            "Skill addressed is greater than 6. "
+            "Overall tickets worked and overall effort cover the whole report day, including tickets outside this label."
+        ],
         member_header(),
     ]
     rows.extend(member_line(row) for row in member_rows)
@@ -300,7 +388,9 @@ def build_sheet(day: datetime, issues: list[dict], jql: str, generated: datetime
             "Total hours = Manual hours + Skill hours + Non-skill hours. "
             "Skill hours = (Analysis minutes + Unit testing minutes + Development minutes) / 60 on CA-Feasible tickets. "
             "Non-skill hours use the same effort fields on every other ticket. "
-            "Manual hours are the Jira worklogs that member logged on the report day."
+            "Manual hours are the Jira worklogs that member logged on the report day. "
+            "Overall effort (hours) adds that same effort for every ticket the member resolved, "
+            "transitioned, or logged time on during the report day."
         ]
     )
     rows.append(["Team", "Member", "Ticket", "ITD Whiteboard", "Class", "Action", "Analysis minutes", "Unit testing minutes", "Development minutes"])
@@ -339,7 +429,7 @@ def manual_seconds(issue: dict, member: str, start: datetime, end: datetime) -> 
     return total
 
 
-def member_record(team: str, name: str, owned: list[dict]) -> dict:
+def member_record(team: str, name: str, owned: list[dict], overall: dict | None = None) -> dict:
     skill_resolved = sum(1 for action in owned if action["skill"] and action["kind"] == "Resolved")
     skill_transitioned = sum(1 for action in owned if action["skill"] and action["kind"] == "Transitioned")
     other_resolved = sum(1 for action in owned if not action["skill"] and action["kind"] == "Resolved")
@@ -357,6 +447,7 @@ def member_record(team: str, name: str, owned: list[dict]) -> dict:
     skill_hours = skill_minutes / 60
     other_hours = other_minutes / 60
     manual_hours = manual / 3600
+    overall = overall or {}
     return {
         "team": team,
         "name": name,
@@ -372,6 +463,9 @@ def member_record(team: str, name: str, owned: list[dict]) -> dict:
         "manual_hours": manual_hours,
         "skill_hours": skill_hours,
         "other_hours": other_hours,
+        "overall_tickets": int(overall.get("tickets", 0)),
+        "overall_hours": float(overall.get("hours", 0)),
+        "highlight": skill_resolved + skill_transitioned > SKILL_COMPLETED_ABOVE,
     }
 
 
@@ -394,6 +488,8 @@ def member_header() -> list[str]:
         "Non-skill hours",
         "Skill leverage",
         "Skill performance",
+        "Overall tickets worked",
+        "Overall effort (hours)",
     ]
 
 
@@ -417,6 +513,8 @@ def member_line(row: dict) -> list:
         plain_number(row["other_hours"]),
         leverage(row["skill_addressed"], worked),
         performance(row["skill_hours"] + row["other_hours"]),
+        row["overall_tickets"],
+        plain_number(row["overall_hours"]),
     ]
 
 
