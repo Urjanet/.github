@@ -35,9 +35,11 @@ Do not run the PMU MTD job for this. MTD writes the monthly workbook `1aFvxbR76O
 - Link: https://docs.google.com/spreadsheets/d/1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno/edit
 - Date tab name: `Nov 04` for 4 Nov, matching the existing `Nov 03` tab. The form is `<Mon> <dd>`.
 
-Create that tab when it does not exist, then write the day's tickets there. On a later run for the same date, replace that tab's body and keep its header. Do not write the tab whose gid is `1231097422`. That gid is the existing `Nov 03` report.
+Create that tab when it does not exist, then write the day's member-contribution report there. On a later run for the same date, replace that tab. Do not write the tab whose gid is `1231097422`. That gid is the existing `Nov 03` report.
 
-If the date tab is new or row 1 is empty, write the default header in `scripts/upload_skill_eod.py`. If row 1 is a title rather than column names, stop and leave every tab unchanged.
+The report matches the 3 Nov tab. Row 1 is the title `Skillable EOD — 4 Nov 2026`. The member table columns are Team, Member, Available hours, Worked, Resolved, Transitioned, Skill resolved, Skill transitioned, Skill addressed, Non-skill resolved, Non-skill transitioned, Total hours, Manual hours, Skill hours, Non-skill hours, Skill leverage, and Skill performance.
+
+Count a ticket for a person when that person moved it, on the report day in Asia/Kolkata, to Resolved, Pending Audits, Under Reporter, or Under OCR. Resolved is the move to Resolved. The other three are Transitioned. CA-Feasible is Skill. Every other ITD Whiteboard value is Non-skill. Skill and non-skill hours are analysis + unit testing + development minutes, divided by 60. Analysis is `customfield_11184` when that field is set. Manual hours are that member's Jira worklogs on the report day. Available hours are 7. The skill roster is listed even when the counts are zero. Anyone else who moved a label ticket is listed under `ops_Dev_extraction`.
 
 ## Query
 

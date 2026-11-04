@@ -133,6 +133,9 @@ FIELDS = ",".join(
         "customfield_11184",
         "customfield_15845",
         "customfield_11185",
+        "customfield_11239",
+        "customfield_12282",
+        "worklog",
     ]
 )
 
@@ -301,7 +304,13 @@ def basic_auth(email: str, token: str) -> str:
     return base64.b64encode(f"{email}:{token}".encode()).decode()
 
 
-def fetch_issues(jql: str, email: str, token: str, fields: str = FIELDS) -> list[dict]:
+def fetch_issues(
+    jql: str,
+    email: str,
+    token: str,
+    fields: str = FIELDS,
+    expand: str | None = None,
+) -> list[dict]:
     headers = {
         "Authorization": f"Basic {basic_auth(email, token)}",
         "Accept": "application/json",
@@ -310,6 +319,8 @@ def fetch_issues(jql: str, email: str, token: str, fields: str = FIELDS) -> list
     page = None
     while True:
         query = {"jql": jql, "maxResults": "100", "fields": fields}
+        if expand:
+            query["expand"] = expand
         if page:
             query["nextPageToken"] = page
         url = f"{JIRA_BASE}/rest/api/3/search/jql?{urllib.parse.urlencode(query)}"
@@ -320,6 +331,45 @@ def fetch_issues(jql: str, email: str, token: str, fields: str = FIELDS) -> list
             break
         page = data["nextPageToken"]
     return issues
+
+
+def enrich_issue(issue: dict, email: str, token: str) -> None:
+    headers = {
+        "Authorization": f"Basic {basic_auth(email, token)}",
+        "Accept": "application/json",
+    }
+    changelog = issue.get("changelog") or {}
+    histories = list(changelog.get("histories") or [])
+    total = changelog.get("total", len(histories))
+    start = len(histories)
+    while start < total:
+        data = request_json(
+            f"{JIRA_BASE}/rest/api/3/issue/{issue['key']}/changelog?maxResults=100&startAt={start}",
+            headers,
+        )
+        page = data.get("values") or []
+        histories.extend(page)
+        if not page:
+            break
+        start += len(page)
+        total = data.get("total", total)
+    issue["_histories"] = histories
+    worklog = (issue.get("fields") or {}).get("worklog") or {}
+    entries = list(worklog.get("worklogs") or [])
+    total_entries = worklog.get("total", len(entries))
+    start = len(entries)
+    while start < total_entries:
+        data = request_json(
+            f"{JIRA_BASE}/rest/api/3/issue/{issue['key']}/worklog?maxResults=100&startAt={start}",
+            headers,
+        )
+        page = data.get("worklogs") or []
+        entries.extend(page)
+        if not page:
+            break
+        start += len(page)
+        total_entries = data.get("total", total_entries)
+    issue["_worklogs"] = entries
 
 
 def walk_urls(node, found: list[str]) -> None:
@@ -674,6 +724,27 @@ def read_headers(token: str, title: str) -> list[str]:
     return [str(cell) for cell in values[0]]
 
 
+def write_grid(token: str, title: str, rows: list[list]) -> None:
+    clear_range = urllib.parse.quote(f"'{title}'!A1:ZZ")
+    request_json(
+        f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}/values/{clear_range}:clear",
+        {"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        method="POST",
+        body={},
+    )
+    target = urllib.parse.quote(f"'{title}'!A1")
+    url = (
+        f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}/values/{target}"
+        "?valueInputOption=USER_ENTERED"
+    )
+    request_json(
+        url,
+        {"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        method="PUT",
+        body={"range": f"'{title}'!A1", "majorDimension": "ROWS", "values": rows},
+    )
+
+
 def write_body(token: str, title: str, headers: list[str], rows: list[list[str]]) -> None:
     clear_range = urllib.parse.quote(f"'{title}'!A2:ZZ")
     request_json(
@@ -730,7 +801,7 @@ def main() -> None:
     jql = f'labels IN ({label}) AND status != "On Hold (migrated)"'
     email = jira_email()
     token = jira_token()
-    issues = fetch_issues(jql, email, token)
+    issues = fetch_issues(jql, email, token, expand="changelog")
     held = fetch_issues(
         f'labels IN ({label}) AND status = "On Hold (migrated)"',
         email,
@@ -744,22 +815,16 @@ def main() -> None:
     if args.dry_run:
         print("Dry run. The sheet was not updated.")
         return
+    for issue in issues:
+        enrich_issue(issue, email, token)
+    import eod_report
+
+    grid = eod_report.build_sheet(day, issues, jql, datetime.now(eod_report.IST))
     access = google_token()
     title = tab_name(day)
     sheet_id = ensure_date_tab(access, title)
-    headers = read_headers(access, title)
-    if headers and not recognized_headers(headers):
-        die(
-            f"Sheet was not updated. Row 1 of tab {title!r} is {headers[0]!r}, "
-            "which is not a column header. The tab was left unchanged.",
-            code=2,
-        )
-    headers = headers or list(DEFAULT_HEADERS)
-    rows, shared = build_rows(issues, headers, email, token)
-    write_body(access, title, headers, rows)
-    print(f"Wrote {len(rows)} rows to tab {title!r} (gid {sheet_id}).")
-    if shared:
-        print("Shared audit commits: " + "; ".join(shared))
+    write_grid(access, title, grid)
+    print(f"Wrote the member contribution report to tab {title!r} (gid {sheet_id}).")
 
 
 if __name__ == "__main__":
