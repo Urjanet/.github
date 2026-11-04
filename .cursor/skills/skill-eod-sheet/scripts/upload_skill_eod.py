@@ -766,7 +766,7 @@ def paint_report(token: str, sheet_id: int, rows: list[list]) -> None:
             0,
             len(rows) + 2,
             width,
-            {"backgroundColor": {}, "textFormat": {}},
+            {"backgroundColor": WHITE, "textFormat": {}},
             "userEnteredFormat.backgroundColor,userEnteredFormat.textFormat",
         )
     ]
@@ -830,9 +830,12 @@ def paint_report(token: str, sheet_id: int, rows: list[list]) -> None:
                     sheet_id,
                     index,
                     index + 1,
-                    1,
-                    {"textFormat": {"bold": True, "fontSize": 12, "foregroundColor": BROWN}},
-                    "userEnteredFormat.textFormat",
+                    width,
+                    {
+                        "backgroundColor": WHITE,
+                        "textFormat": {"bold": True, "fontSize": 12, "foregroundColor": BROWN},
+                    },
+                    "userEnteredFormat.backgroundColor,userEnteredFormat.textFormat",
                 )
             )
             continue
@@ -843,9 +846,12 @@ def paint_report(token: str, sheet_id: int, rows: list[list]) -> None:
                     sheet_id,
                     index,
                     index + 1,
-                    1,
-                    {"textFormat": {"bold": True, "fontSize": 12, "foregroundColor": BLUE}},
-                    "userEnteredFormat.textFormat",
+                    width,
+                    {
+                        "backgroundColor": WHITE,
+                        "textFormat": {"bold": True, "fontSize": 12, "foregroundColor": BLUE},
+                    },
+                    "userEnteredFormat.backgroundColor,userEnteredFormat.textFormat",
                 )
             )
             continue
