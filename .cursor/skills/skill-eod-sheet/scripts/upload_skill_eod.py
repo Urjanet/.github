@@ -505,6 +505,10 @@ def header_key(header: str) -> str | None:
     return None
 
 
+def recognized_headers(headers: list[str]) -> bool:
+    return any(header_key(header) for header in headers)
+
+
 def needs_artifacts(headers: list[str]) -> bool:
     keys = {header_key(header) for header in headers}
     return bool(keys & {"template prs", "template added by", "audits", "audit added by", "update type"})
@@ -716,7 +720,14 @@ def main() -> None:
         return
     access = google_token()
     title = sheet_title(access)
-    headers = read_headers(access, title) or list(DEFAULT_HEADERS)
+    headers = read_headers(access, title)
+    if headers and not recognized_headers(headers):
+        die(
+            f"Sheet was not updated. Row 1 of tab {title!r} is {headers[0]!r}, "
+            "which is not a column header. The tab was left unchanged.",
+            code=2,
+        )
+    headers = headers or list(DEFAULT_HEADERS)
     rows, shared = build_rows(issues, headers, email, token)
     write_body(access, title, headers, rows)
     print(f"Wrote {len(rows)} rows to tab {title!r} (gid {SHEET_GID}).")

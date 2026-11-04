@@ -35,7 +35,7 @@ Do not run the PMU MTD job for this. MTD writes the monthly workbook `1aFvxbR76O
 - Tab gid: `1231097422`
 - Link: https://docs.google.com/spreadsheets/d/1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno/edit?gid=1231097422#gid=1231097422
 
-Keep the header row. Replace the body with the tickets for the requested date. Read the existing header and map columns onto it. If the tab has no header, write the default header in `scripts/upload_skill_eod.py`.
+Keep the header row. Replace the body with the tickets for the requested date. Read the existing header and map columns onto it. If the tab has no header, write the default header in `scripts/upload_skill_eod.py`. If row 1 is a title rather than column names, stop and leave the tab unchanged.
 
 ## Query
 
