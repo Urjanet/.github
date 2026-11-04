@@ -3,7 +3,7 @@ name: olympus-eod-sheet
 description: >-
   Build the Olympus team EOD and write it to The Olympus Google Sheet.
   Use when the user asks for the Olympus EOD, member contribution for
-  ops-developers-olympus, or a date tab such as 04-Nov-2026.
+  ops-developers-olympus, or a date tab such as Nov 04.
 ---
 
 # Olympus EOD sheet
@@ -28,7 +28,7 @@ If the Google file is missing, the run prints the table and exits 2. The sheet i
 
 - Spreadsheet: `1dPNzBUKZF4Xp-QPpY5ZMkRN_-a_6NPj4BAAMWfMRcLE`
 - Link: https://docs.google.com/spreadsheets/d/1dPNzBUKZF4Xp-QPpY5ZMkRN_-a_6NPj4BAAMWfMRcLE/edit
-- Tab name: the report date, `04-Nov-2026` for 4 Nov 2026
+- Tab name: the report date, `Nov 04` for 4 Nov 2026
 - Do not replace the tab whose gid is `377349833`
 
 A later run for the same date replaces that date tab.

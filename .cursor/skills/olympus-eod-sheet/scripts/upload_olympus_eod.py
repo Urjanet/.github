@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write one day's Olympus EOD into The Olympus workbook.
 
-Two sections on a tab named for the report date, for example 04-Nov-2026:
+Two sections on a tab named for the report date, for example Nov 04:
 Member contribution, then Member Contribution in Tickets.
 Jira and Google credentials are the same files the SKILL EOD upload uses.
 """
@@ -229,7 +229,7 @@ def parse_date(text: str | None) -> datetime:
         if parsed.year == 1900:
             parsed = parsed.replace(year=datetime.now(IST).year)
         return parsed
-    die(f"Could not read a date from {text!r}. Use 2026-11-04 or 04-Nov-2026.")
+    die(f"Could not read a date from {text!r}. Use 2026-11-04 or Nov 04.")
 
 
 def access_token_from_files() -> str:

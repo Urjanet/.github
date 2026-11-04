@@ -80,7 +80,7 @@ def plain_number(value: float) -> int | float:
 
 
 def tab_name(day: datetime) -> str:
-    return day.strftime("%d-%b-%Y")
+    return day.strftime("%b %d")
 
 
 def jql_quote(value: str) -> str:
@@ -600,7 +600,7 @@ def self_test() -> None:
     assert any('/browse/A"' in item for item in keys)
     assert any('/browse/D"' in item for item in keys)
     assert all('/browse/F"' not in item and '/browse/G"' not in item and '/browse/E"' not in item for item in keys)
-    assert tab_name(day) == "04-Nov-2026"
+    assert tab_name(day) == "Nov 04"
     assert classify("") == "Non Skill"
     assert classify("CA-Not Feasible") == "Non Skill"
     assert classify("ET-Transition") == "Non Skill"
