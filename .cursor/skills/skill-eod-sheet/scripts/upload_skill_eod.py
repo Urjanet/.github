@@ -724,6 +724,140 @@ def read_headers(token: str, title: str) -> list[str]:
     return [str(cell) for cell in values[0]]
 
 
+BLUE = {"red": 0.15686275, "green": 0.31764707, "blue": 0.49803922}
+BROWN = {"red": 0.54901963, "green": 0.31764707, "blue": 0.047058824}
+LIGHT = {"red": 0.92941177, "green": 0.95686275, "blue": 0.9764706}
+CREAM = {"red": 1, "green": 0.9490196, "blue": 0.81960785}
+WHITE = {"red": 1, "green": 1, "blue": 1}
+SECTION_PREFIXES = (
+    "Skillable EOD",
+    "labels IN",
+    "Skill resolved and",
+    "Member contribution",
+    "CA-Feasible tickets",
+    "Tickets resolved",
+    "Skill member effort",
+    "Total hours =",
+    "Resolver moved",
+)
+
+
+def repeat_format(sheet_id: int, start: int, end: int, columns: int, cell: dict, fields: str) -> dict:
+    return {
+        "repeatCell": {
+            "range": {
+                "sheetId": sheet_id,
+                "startRowIndex": start,
+                "endRowIndex": end,
+                "startColumnIndex": 0,
+                "endColumnIndex": columns,
+            },
+            "cell": {"userEnteredFormat": cell},
+            "fields": fields,
+        }
+    }
+
+
+def paint_report(token: str, sheet_id: int, rows: list[list]) -> None:
+    width = max((len(row) for row in rows), default=1)
+    requests = [
+        repeat_format(
+            sheet_id,
+            0,
+            len(rows) + 2,
+            width,
+            {"backgroundColor": {}, "textFormat": {}},
+            "userEnteredFormat.backgroundColor,userEnteredFormat.textFormat",
+        )
+    ]
+    cream = False
+    body_start = None
+    body_width = width
+    body_color = LIGHT
+
+    def flush(end: int) -> None:
+        nonlocal body_start
+        if body_start is not None and end > body_start:
+            requests.append(
+                repeat_format(
+                    sheet_id,
+                    body_start,
+                    end,
+                    body_width,
+                    {"backgroundColor": body_color},
+                    "userEnteredFormat.backgroundColor",
+                )
+            )
+        body_start = None
+
+    for index, row in enumerate(rows):
+        text = str(row[0]).strip() if row else ""
+        blank = not row or not any(str(cell).strip() for cell in row)
+        header = (
+            text in {"Cohort", "Team", "Ticket"}
+            and len(row) > 1
+            and str(row[1]) in {"People", "Member", "Template", "Status"}
+        )
+        if blank:
+            flush(index)
+            cream = False
+            continue
+        if header:
+            flush(index)
+            color = BROWN if cream else BLUE
+            requests.append(
+                repeat_format(
+                    sheet_id,
+                    index,
+                    index + 1,
+                    len(row),
+                    {
+                        "backgroundColor": color,
+                        "textFormat": {"bold": True, "fontSize": 10, "foregroundColor": WHITE},
+                    },
+                    "userEnteredFormat.backgroundColor,userEnteredFormat.textFormat",
+                )
+            )
+            body_start = index + 1
+            body_width = len(row)
+            body_color = CREAM if cream else LIGHT
+            continue
+        if text.startswith("Resolver tickets"):
+            flush(index)
+            cream = True
+            requests.append(
+                repeat_format(
+                    sheet_id,
+                    index,
+                    index + 1,
+                    1,
+                    {"textFormat": {"bold": True, "fontSize": 12, "foregroundColor": BROWN}},
+                    "userEnteredFormat.textFormat",
+                )
+            )
+            continue
+        if text.startswith(SECTION_PREFIXES):
+            flush(index)
+            requests.append(
+                repeat_format(
+                    sheet_id,
+                    index,
+                    index + 1,
+                    1,
+                    {"textFormat": {"bold": True, "fontSize": 12, "foregroundColor": BLUE}},
+                    "userEnteredFormat.textFormat",
+                )
+            )
+            continue
+    flush(len(rows))
+    request_json(
+        f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}:batchUpdate",
+        {"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        method="POST",
+        body={"requests": requests},
+    )
+
+
 def write_grid(token: str, title: str, rows: list[list]) -> None:
     clear_range = urllib.parse.quote(f"'{title}'!A1:ZZ")
     request_json(
@@ -824,6 +958,7 @@ def main() -> None:
     title = tab_name(day)
     sheet_id = ensure_date_tab(access, title)
     write_grid(access, title, grid)
+    paint_report(access, sheet_id, grid)
     print(f"Wrote the member contribution report to tab {title!r} (gid {sheet_id}).")
 
 
