@@ -32,10 +32,12 @@ Do not run the PMU MTD job for this. MTD writes the monthly workbook `1aFvxbR76O
 ## Sheet
 
 - Spreadsheet: `1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno`
-- Tab gid: `1231097422`
-- Link: https://docs.google.com/spreadsheets/d/1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno/edit?gid=1231097422#gid=1231097422
+- Link: https://docs.google.com/spreadsheets/d/1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno/edit
+- Date tab name: `Nov 04` for 4 Nov, matching the existing `Nov 03` tab. The form is `<Mon> <dd>`.
 
-Keep the header row. Replace the body with the tickets for the requested date. Read the existing header and map columns onto it. If the tab has no header, write the default header in `scripts/upload_skill_eod.py`. If row 1 is a title rather than column names, stop and leave the tab unchanged.
+Create that tab when it does not exist, then write the day's tickets there. On a later run for the same date, replace that tab's body and keep its header. Do not write the tab whose gid is `1231097422`. That gid is the existing `Nov 03` report.
+
+If the date tab is new or row 1 is empty, write the default header in `scripts/upload_skill_eod.py`. If row 1 is a title rather than column names, stop and leave every tab unchanged.
 
 ## Query
 

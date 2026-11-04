@@ -625,16 +625,41 @@ def google_token() -> str:
     return token
 
 
-def sheet_title(token: str) -> str:
+def tab_name(day: datetime) -> str:
+    return f"{MONTHS[day.month]} {day.day:02d}"
+
+
+def sheet_properties(token: str) -> list[dict]:
     data = request_json(
         f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}?fields=sheets.properties",
         {"Authorization": f"Bearer {token}"},
     )
-    for sheet in data.get("sheets") or []:
-        props = sheet.get("properties") or {}
+    return [(sheet.get("properties") or {}) for sheet in data.get("sheets") or []]
+
+
+def ensure_date_tab(token: str, title: str) -> int:
+    for props in sheet_properties(token):
+        if props.get("title") != title:
+            continue
         if props.get("sheetId") == SHEET_GID:
-            return props["title"]
-    die(f"Tab gid {SHEET_GID} was not found. The sheet was not updated.", code=2)
+            die(
+                f"Refusing to replace tab {title!r} (gid {SHEET_GID}). "
+                "Create a new date tab instead.",
+                code=2,
+            )
+        return props["sheetId"]
+    created = request_json(
+        f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}:batchUpdate",
+        {"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        method="POST",
+        body={"requests": [{"addSheet": {"properties": {"title": title}}}]},
+    )
+    replies = created.get("replies") or []
+    props = ((replies[0].get("addSheet") or {}).get("properties") if replies else {}) or {}
+    sheet_id = props.get("sheetId")
+    if sheet_id is None:
+        die(f"Could not create tab {title!r}. The workbook was not changed.", code=2)
+    return sheet_id
 
 
 def read_headers(token: str, title: str) -> list[str]:
@@ -715,11 +740,13 @@ def main() -> None:
     print(f"JQL: {jql}")
     print(f"Tickets: {len(issues)}")
     print(f"On Hold (migrated) excluded: {len(held)}")
+    print(f"Tab: {tab_name(day)}")
     if args.dry_run:
         print("Dry run. The sheet was not updated.")
         return
     access = google_token()
-    title = sheet_title(access)
+    title = tab_name(day)
+    sheet_id = ensure_date_tab(access, title)
     headers = read_headers(access, title)
     if headers and not recognized_headers(headers):
         die(
@@ -730,7 +757,7 @@ def main() -> None:
     headers = headers or list(DEFAULT_HEADERS)
     rows, shared = build_rows(issues, headers, email, token)
     write_body(access, title, headers, rows)
-    print(f"Wrote {len(rows)} rows to tab {title!r} (gid {SHEET_GID}).")
+    print(f"Wrote {len(rows)} rows to tab {title!r} (gid {sheet_id}).")
     if shared:
         print("Shared audit commits: " + "; ".join(shared))
 
