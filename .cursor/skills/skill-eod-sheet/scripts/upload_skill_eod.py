@@ -20,7 +20,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 JIRA_BASE = "https://arcadiapower.atlassian.net"
@@ -314,22 +314,28 @@ def fetch_issues(
     headers = {
         "Authorization": f"Basic {basic_auth(email, token)}",
         "Accept": "application/json",
+        "Content-Type": "application/json",
     }
+    field_list = [item for item in fields.split(",") if item]
     issues: list[dict] = []
     page = None
     while True:
-        query = {"jql": jql, "maxResults": "100", "fields": fields}
+        body: dict = {"jql": jql, "maxResults": 100, "fields": field_list}
         if expand:
-            query["expand"] = expand
+            body["expand"] = expand
         if page:
-            query["nextPageToken"] = page
-        url = f"{JIRA_BASE}/rest/api/3/search/jql?{urllib.parse.urlencode(query)}"
-        data = request_json(url, headers)
+            body["nextPageToken"] = page
+        data = request_json(
+            f"{JIRA_BASE}/rest/api/3/search/jql",
+            headers,
+            method="POST",
+            body=body,
+        )
         batch = data.get("issues") or []
         issues.extend(batch)
-        if data.get("isLast") or not data.get("nextPageToken") or not batch:
+        page = data.get("nextPageToken")
+        if data.get("isLast") or not page or not batch:
             break
-        page = data["nextPageToken"]
     return issues
 
 
@@ -997,20 +1003,76 @@ def highlighted_members(rows: list[list]) -> list[str]:
     return names
 
 
+def approximate_count(jql: str, email: str, token: str) -> int | None:
+    try:
+        data = request_json(
+            f"{JIRA_BASE}/rest/api/3/search/approximate-count",
+            {
+                "Authorization": f"Basic {basic_auth(email, token)}",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+            body={"jql": jql},
+        )
+    except SystemExit:
+        return None
+    count = data.get("count")
+    return int(count) if isinstance(count, int) else None
+
+
+def fetch_person_issues(
+    day: datetime,
+    name: str,
+    email: str,
+    token: str,
+    begin: str | None = None,
+    finish: str | None = None,
+    depth: int = 0,
+) -> list[dict]:
+    import eod_report
+
+    jql = eod_report.overall_jql(day, [name], begin, finish)
+    found = fetch_issues(jql, email, token, expand="changelog")
+    expected = approximate_count(jql, email, token)
+    if expected is None or expected <= len(found) + 25 or depth >= 3:
+        return found
+    start_text = begin or (day - timedelta(days=1)).strftime("%Y-%m-%d")
+    end_text = finish or (day + timedelta(days=2)).strftime("%Y-%m-%d")
+    if start_text >= end_text:
+        return found
+    start_day = datetime.strptime(start_text, "%Y-%m-%d")
+    end_day = datetime.strptime(end_text, "%Y-%m-%d")
+    midpoint = (start_day + (end_day - start_day) / 2).strftime("%Y-%m-%d")
+    if midpoint in (start_text, end_text):
+        return found
+    merged = {
+        issue["key"]: issue
+        for issue in fetch_person_issues(day, name, email, token, start_text, midpoint, depth + 1)
+    }
+    merged.update(
+        {
+            issue["key"]: issue
+            for issue in fetch_person_issues(day, name, email, token, midpoint, end_text, depth + 1)
+        }
+    )
+    return list(merged.values())
+
+
 def overall_issues(day: datetime, label_issues: list[dict], email: str, token: str) -> list[dict]:
     import eod_report
 
     start, end = eod_report.day_window(day)
     names = eod_report.report_names(label_issues, start, end)
-    found = fetch_issues(eod_report.overall_jql(day, names), email, token, expand="changelog")
     by_key = {issue["key"]: issue for issue in label_issues}
     added = 0
-    for issue in found:
-        if issue["key"] in by_key:
-            continue
-        enrich_issue(issue, email, token)
-        by_key[issue["key"]] = issue
-        added += 1
+    for name in names:
+        for issue in fetch_person_issues(day, name, email, token):
+            if issue["key"] in by_key:
+                continue
+            enrich_issue(issue, email, token)
+            by_key[issue["key"]] = issue
+            added += 1
     print(f"Overall tickets considered: {len(by_key)}")
     print(f"Tickets outside the label: {added}")
     return list(by_key.values())

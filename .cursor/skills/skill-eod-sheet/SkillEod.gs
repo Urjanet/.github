@@ -125,14 +125,16 @@ function runForDay(year, month, day) {
   issues.forEach(enrichIssue);
   var bounds = dayBounds(year, month, day);
   var names = reportNames(issues, bounds);
-  var found = fetchIssues(overallJql(year, month, day, names));
   var seen = {};
   var overall = issues.slice();
   issues.forEach(function (issue) { seen[issue.key] = true; });
-  found.forEach(function (issue) {
-    if (seen[issue.key]) return;
-    enrichIssue(issue);
-    overall.push(issue);
+  names.forEach(function (name) {
+    fetchPersonIssues(year, month, day, name).forEach(function (issue) {
+      if (seen[issue.key]) return;
+      seen[issue.key] = true;
+      enrichIssue(issue);
+      overall.push(issue);
+    });
   });
   var rows = buildSheet(year, month, day, issues, jql, overall);
   writeReport(tabName(month, day), rows);
@@ -169,16 +171,42 @@ function fetchIssues(jql) {
   var issues = [];
   var page = '';
   while (true) {
-    var path = '/rest/api/3/search/jql?jql=' + encodeURIComponent(jql) +
-      '&maxResults=100&fields=' + encodeURIComponent(FIELDS) + '&expand=changelog';
-    if (page) path += '&nextPageToken=' + encodeURIComponent(page);
-    var data = jiraFetch(path);
+    var payload = {
+      jql: jql,
+      maxResults: 100,
+      fields: FIELDS.split(','),
+      expand: 'changelog'
+    };
+    if (page) payload.nextPageToken = page;
+    var data = jiraPost('/rest/api/3/search/jql', payload);
     var batch = data.issues || [];
     issues = issues.concat(batch);
     if (data.isLast || !data.nextPageToken || !batch.length) break;
     page = data.nextPageToken;
   }
   return issues;
+}
+
+function jiraPost(path, payload) {
+  var props = PropertiesService.getScriptProperties();
+  var email = props.getProperty('JIRA_EMAIL') || 'sowmiya.kirubakaran@arcadia.com';
+  var token = props.getProperty('JIRA_API_TOKEN');
+  if (!token || token.indexOf('REPLACE') !== -1) {
+    throw new Error('Set script property JIRA_API_TOKEN. The token is not written to the sheet.');
+  }
+  var response = UrlFetchApp.fetch(JIRA_BASE + path, {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload),
+    headers: {
+      Authorization: 'Basic ' + Utilities.base64Encode(email + ':' + token),
+      Accept: 'application/json'
+    },
+    muteHttpExceptions: true
+  });
+  var code = response.getResponseCode();
+  if (code >= 300) throw new Error('Jira HTTP ' + code + ' for ' + path.split('?')[0]);
+  return JSON.parse(response.getContentText() || '{}');
 }
 
 function enrichIssue(issue) {
@@ -523,14 +551,51 @@ function manualSeconds(issue, member, bounds) {
   return total;
 }
 
-function overallJql(year, month, day, names) {
-  var begin = new Date(Date.UTC(year, month - 1, day) - 24 * 60 * 60 * 1000);
-  var finish = new Date(Date.UTC(year, month - 1, day) + 2 * 24 * 60 * 60 * 1000);
+function fetchPersonIssues(year, month, day, name, begin, finish, depth) {
+  var jql = overallJql(year, month, day, [name], begin, finish);
+  var found = fetchIssues(jql);
+  var expected = approximateCount(jql);
+  if (expected === null || expected <= found.length + 25 || (depth || 0) >= 3) return found;
+  var startText = begin || shiftDate(year, month, day, -1);
+  var endText = finish || shiftDate(year, month, day, 2);
+  if (startText >= endText) return found;
+  var midpoint = midDate(startText, endText);
+  if (midpoint === startText || midpoint === endText) return found;
+  var merged = {};
+  fetchPersonIssues(year, month, day, name, startText, midpoint, (depth || 0) + 1).forEach(function (issue) {
+    merged[issue.key] = issue;
+  });
+  fetchPersonIssues(year, month, day, name, midpoint, endText, (depth || 0) + 1).forEach(function (issue) {
+    merged[issue.key] = issue;
+  });
+  return Object.keys(merged).map(function (key) { return merged[key]; });
+}
+
+function approximateCount(jql) {
+  try {
+    var data = jiraPost('/rest/api/3/search/approximate-count', { jql: jql });
+    return typeof data.count === 'number' ? data.count : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function shiftDate(year, month, day, delta) {
+  return Utilities.formatDate(new Date(Date.UTC(year, month - 1, day) + delta * 24 * 60 * 60 * 1000), 'UTC', 'yyyy-MM-dd');
+}
+
+function midDate(begin, finish) {
+  var start = new Date(begin + 'T00:00:00Z').getTime();
+  var end = new Date(finish + 'T00:00:00Z').getTime();
+  return Utilities.formatDate(new Date(start + (end - start) / 2), 'UTC', 'yyyy-MM-dd');
+}
+
+function overallJql(year, month, day, names, begin, finish) {
+  var startText = begin || shiftDate(year, month, day, -1);
+  var endText = finish || shiftDate(year, month, day, 2);
   var quoted = names.map(function (name) {
     return '"' + String(name).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
   }).join(', ');
-  var startText = Utilities.formatDate(begin, 'UTC', 'yyyy-MM-dd');
-  var endText = Utilities.formatDate(finish, 'UTC', 'yyyy-MM-dd');
   return '(status changed BY (' + quoted + ') AFTER "' + startText + '" BEFORE "' + endText + '" OR worklogAuthor in (' + quoted + ') AND worklogDate >= "' + startText + '" AND worklogDate <= "' + endText + '") AND status != "On Hold (migrated)"';
 }
 
@@ -622,16 +687,16 @@ function memberRecord(team, name, owned, overall) {
 }
 
 function memberHeader() {
-  return ['Team', 'Member', 'Available hours', 'Worked', 'Resolved', 'Transitioned', 'Skill resolved', 'Skill transitioned', 'Skill addressed', 'Non-skill resolved', 'Non-skill transitioned', 'Total hours', 'Manual hours', 'Skill hours', 'Non-skill hours', 'Skill leverage', 'Skill performance', 'Overall tickets worked', 'Overall effort (hours)'];
+  return ['Team', 'Member', 'Available hours', 'Overall tickets worked', 'Worked', 'Resolved', 'Transitioned', 'Skill resolved', 'Skill transitioned', 'Skill addressed', 'Non-skill resolved', 'Non-skill transitioned', 'Total hours', 'Manual hours', 'Skill hours', 'Non-skill hours', 'Skill leverage', 'Skill performance', 'Overall effort (hours)'];
 }
 
 function memberLine(row) {
   return [
-    row.team, row.name, AVAILABLE_HOURS, row.worked, row.resolved, row.transitioned,
+    row.team, row.name, AVAILABLE_HOURS, row.overallTickets, row.worked, row.resolved, row.transitioned,
     row.skillResolved, row.skillTransitioned, row.skillAddressed, row.otherResolved, row.otherTransitioned,
     plainNumber(row.totalHours), plainNumber(row.manualHours), plainNumber(row.skillHours), plainNumber(row.otherHours),
     leverage(row.skillAddressed, row.worked), performance(row.skillHours + row.otherHours),
-    row.overallTickets, plainNumber(row.overallHours)
+    plainNumber(row.overallHours)
   ];
 }
 

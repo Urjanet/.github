@@ -37,7 +37,7 @@ Do not run the PMU MTD job for this. MTD writes the monthly workbook `1aFvxbR76O
 
 Create that tab when it does not exist, then write the day's member-contribution report there. On a later run for the same date, replace that tab. Do not write the tab whose gid is `1231097422`. That gid is the existing `Nov 03` report.
 
-The report matches the 3 Nov tab. Row 1 is the title `Skillable EOD — 4 Nov 2026`. The member table columns are Team, Member, Available hours, Worked, Resolved, Transitioned, Skill resolved, Skill transitioned, Skill addressed, Non-skill resolved, Non-skill transitioned, Total hours, Manual hours, Skill hours, Non-skill hours, Skill leverage, Skill performance, Overall tickets worked, and Overall effort (hours).
+The report matches the 3 Nov tab. Row 1 is the title `Skillable EOD — 4 Nov 2026`. The member table columns are Team, Member, Available hours, Overall tickets worked, Worked, Resolved, Transitioned, Skill resolved, Skill transitioned, Skill addressed, Non-skill resolved, Non-skill transitioned, Total hours, Manual hours, Skill hours, Non-skill hours, Skill leverage, Skill performance, and Overall effort (hours).
 
 Highlight a member row in green when Skill addressed is greater than 6. That is the count of CA-Feasible tickets that member resolved or transitioned on the report day inside this label. Overall tickets worked counts every ticket that member resolved, transitioned, or logged time on during the report day, including tickets outside the label. Overall effort (hours) is that member's worklogs for the day plus analysis, unit testing, and development minutes on the tickets they resolved or transitioned that day.
 

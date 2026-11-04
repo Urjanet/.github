@@ -147,10 +147,15 @@ def jql_quote(name: str) -> str:
     return '"' + name.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
-def overall_jql(day: datetime, names: list[str]) -> str:
+def overall_jql(
+    day: datetime,
+    names: list[str],
+    begin: str | None = None,
+    finish: str | None = None,
+) -> str:
     """Wide query around the report day. The caller still filters timestamps to Asia/Kolkata."""
-    begin = (day - timedelta(days=1)).strftime("%Y-%m-%d")
-    finish = (day + timedelta(days=2)).strftime("%Y-%m-%d")
+    begin = begin or (day - timedelta(days=1)).strftime("%Y-%m-%d")
+    finish = finish or (day + timedelta(days=2)).strftime("%Y-%m-%d")
     quoted = ", ".join(jql_quote(name) for name in names)
     return (
         f'(status changed BY ({quoted}) AFTER "{begin}" BEFORE "{finish}" '
@@ -474,6 +479,7 @@ def member_header() -> list[str]:
         "Team",
         "Member",
         "Available hours",
+        "Overall tickets worked",
         "Worked",
         "Resolved",
         "Transitioned",
@@ -488,7 +494,6 @@ def member_header() -> list[str]:
         "Non-skill hours",
         "Skill leverage",
         "Skill performance",
-        "Overall tickets worked",
         "Overall effort (hours)",
     ]
 
@@ -499,6 +504,7 @@ def member_line(row: dict) -> list:
         row["team"],
         row["name"],
         AVAILABLE_HOURS,
+        row["overall_tickets"],
         worked,
         row["resolved"],
         row["transitioned"],
@@ -513,7 +519,6 @@ def member_line(row: dict) -> list:
         plain_number(row["other_hours"]),
         leverage(row["skill_addressed"], worked),
         performance(row["skill_hours"] + row["other_hours"]),
-        row["overall_tickets"],
         plain_number(row["overall_hours"]),
     ]
 
