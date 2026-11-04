@@ -9,7 +9,19 @@ description: >-
 
 # SKILL EOD sheet upload
 
-This is the sheet-upload job for SKILL EOD. It follows the same shape as the PMU MTD job: one Jira query, one row per ticket, written into a known Google Sheet. It does not post to Slack and it does not commit tokens.
+This is a project skill. It lives at `.cursor/skills/skill-eod-sheet/` in the repository, so Cursor loads it for this project, including Cloud Agents. It is not a personal skill under the home directory.
+
+This is the sheet-upload job for SKILL EOD. It follows the same shape as the PMU MTD job: one Jira query, one row per ticket, written into a known Google Sheet. It does not post to Slack and it does not print tokens.
+
+## Credentials
+
+Read credentials from `credentials/` in this skill. Do not print the file contents.
+
+- `credentials/jira.env` or `credentials/jira.env.example` holds `JIRA_EMAIL` and `JIRA_API_TOKEN`.
+- `credentials/google-service-account.json` or `credentials/google-service-account.json.example` holds the Google service-account JSON.
+- `credentials/google-access-token.txt` or `credentials/google-access-token.txt.example` holds one access token when a service account is not used.
+
+The copy without `.example` is gitignored and wins when it exists. A value that still contains `REPLACE_WITH_` or `REPLACE_ME` is empty. If the Google files are still placeholders, stop and say the sheet was not updated. Tell the user which file to fill in.
 
 ## When to run
 
@@ -37,16 +49,13 @@ Substitute the date. Include every status except `On Hold (migrated)`, including
 
 ## How to upload
 
-From the repo root:
+Fill in the credential files first. Then, from the repo root:
 
 ```bash
-export JIRA_EMAIL="sowmiya.kirubakaran@arcadia.com"
-export JIRA_API_TOKEN_FILE="/path/to/token"   # or JIRA_API_TOKEN
-export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
-# or export GOOGLE_ACCESS_TOKEN="ya29..."
-
 python3 .cursor/skills/skill-eod-sheet/scripts/upload_skill_eod.py --date 2026-11-04
 ```
+
+Environment variables still override the files: `JIRA_EMAIL`, `JIRA_API_TOKEN`, `JIRA_API_TOKEN_FILE`, `GOOGLE_APPLICATION_CREDENTIALS`, `GOOGLE_ACCESS_TOKEN`, `GOOGLE_ACCESS_TOKEN_FILE`.
 
 `--dry-run` fetches Jira and prints the row count and the On Hold exclusion count without calling Google. It exits 0 and does not change the sheet. A real run exits 0 only after the sheet body is replaced. Exit 2 means Google credentials are missing or were rejected, and the sheet was not changed.
 

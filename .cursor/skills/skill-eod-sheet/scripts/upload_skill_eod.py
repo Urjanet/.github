@@ -21,11 +21,14 @@ import urllib.parse
 import urllib.request
 from collections import defaultdict
 from datetime import datetime
+from pathlib import Path
 
 JIRA_BASE = "https://arcadiapower.atlassian.net"
 SPREADSHEET_ID = "1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno"
 SHEET_GID = 1231097422
 SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets"
+SKILL_ROOT = Path(__file__).resolve().parent.parent
+CREDENTIALS = SKILL_ROOT / "credentials"
 
 MONTHS = {
     1: "Jan",
@@ -145,21 +148,71 @@ def die(message: str, code: int = 1) -> None:
     raise SystemExit(code)
 
 
+def is_placeholder(value: str | None) -> bool:
+    text = (value or "").strip()
+    if not text:
+        return True
+    upper = text.upper()
+    return "REPLACE_WITH" in upper or "REPLACE_ME" in upper or upper.startswith("PASTE_")
+
+
+def read_env_file(path: Path) -> dict[str, str]:
+    if not path.is_file():
+        return {}
+    values: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        key, value = stripped.split("=", 1)
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+            value = value[1:-1]
+        values[key.strip()] = value
+    return values
+
+
+def credential_file(*names: str) -> Path | None:
+    for name in names:
+        path = CREDENTIALS / name
+        if path.is_file():
+            return path
+    return None
+
+
+def jira_settings() -> dict[str, str]:
+    settings: dict[str, str] = {}
+    for name in ("jira.env.example", "jira.env"):
+        settings.update(read_env_file(CREDENTIALS / name))
+    return settings
+
+
 def jira_token() -> str:
     path = os.environ.get("JIRA_API_TOKEN_FILE")
     if path:
         with open(path, encoding="utf-8") as handle:
-            return handle.read().strip()
+            token = handle.read().strip()
+            if not is_placeholder(token):
+                return token
     token = os.environ.get("JIRA_API_TOKEN", "").strip()
-    if not token:
-        die("Set JIRA_API_TOKEN or JIRA_API_TOKEN_FILE. The token is not printed.")
-    return token
+    if not is_placeholder(token):
+        return token
+    file_token = jira_settings().get("JIRA_API_TOKEN", "")
+    if not is_placeholder(file_token):
+        return file_token
+    die(
+        "Jira token is still a placeholder. Put the Atlassian API token in "
+        f"{CREDENTIALS / 'jira.env'} or {CREDENTIALS / 'jira.env.example'}. "
+        "The token is not printed."
+    )
 
 
 def jira_email() -> str:
-    email = os.environ.get("JIRA_EMAIL", "sowmiya.kirubakaran@arcadia.com").strip()
-    if not email:
-        die("Set JIRA_EMAIL.")
+    email = os.environ.get("JIRA_EMAIL", "").strip()
+    if is_placeholder(email):
+        email = jira_settings().get("JIRA_EMAIL", "").strip()
+    if is_placeholder(email):
+        email = "sowmiya.kirubakaran@arcadia.com"
     return email
 
 
@@ -457,14 +510,58 @@ def needs_artifacts(headers: list[str]) -> bool:
     return bool(keys & {"template prs", "template added by", "audits", "audit added by", "update type"})
 
 
+def access_token_from_files() -> str:
+    names = []
+    override = os.environ.get("GOOGLE_ACCESS_TOKEN_FILE", "").strip()
+    if override:
+        names.append(override)
+    for path in [Path(name) for name in names] + [
+        CREDENTIALS / "google-access-token.txt",
+        CREDENTIALS / "google-access-token.txt.example",
+    ]:
+        if not path.is_file():
+            continue
+        token = path.read_text(encoding="utf-8").strip()
+        if not is_placeholder(token):
+            return token
+    return ""
+
+
+def service_account_path() -> Path | None:
+    override = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "").strip()
+    candidates = [Path(override)] if override else []
+    candidates.extend(
+        [
+            CREDENTIALS / "google-service-account.json",
+            CREDENTIALS / "google-service-account.json.example",
+        ]
+    )
+    for path in candidates:
+        if not path.is_file():
+            continue
+        with open(path, encoding="utf-8") as handle:
+            service_account = json.load(handle)
+        if is_placeholder(str(service_account.get("private_key", ""))) or is_placeholder(
+            str(service_account.get("client_email", ""))
+        ):
+            continue
+        return path
+    return None
+
+
 def google_token() -> str:
     access = os.environ.get("GOOGLE_ACCESS_TOKEN", "").strip()
+    if is_placeholder(access):
+        access = access_token_from_files()
     if access:
         return access
-    path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "").strip()
-    if not path:
+    path = service_account_path()
+    if path is None:
         die(
-            "Sheet was not updated. Set GOOGLE_APPLICATION_CREDENTIALS or GOOGLE_ACCESS_TOKEN. "
+            "Sheet was not updated. Fill in "
+            f"{CREDENTIALS / 'google-service-account.json'} "
+            f"or {CREDENTIALS / 'google-access-token.txt'}. "
+            "The example files next to them can be edited instead. "
             "The identity needs edit access on the SKILL EOD spreadsheet.",
             code=2,
         )
