@@ -1,0 +1,70 @@
+---
+name: skill-eod-sheet
+description: >-
+  Upload the SKILL EOD ticket list into the Google Sheet, the same kind of
+  job as the PMU MTD sheet upload. Use when the user says run SKILL EOD,
+  upload the skillable sheet, or run for a date such as Nov 04. JQL is
+  labels IN (CASkillable-dd-Mon) AND status != "On Hold (migrated)".
+---
+
+# SKILL EOD sheet upload
+
+This is the sheet-upload job for SKILL EOD. It follows the same shape as the PMU MTD job: one Jira query, one row per ticket, written into a known Google Sheet. It does not post to Slack and it does not commit tokens.
+
+## When to run
+
+Run this skill when the user asks to upload SKILL EOD, fill the skillable sheet, or "run for" a calendar date. A date with no other instruction still means this upload.
+
+Do not run the PMU MTD job for this. MTD writes the monthly workbook `1aFvxbR76OJd6jNCUxwxCkdNqsfAhAM3imAwhgQWOpZ0` from the MTD filter. SKILL EOD writes a different sheet from the label query below.
+
+## Sheet
+
+- Spreadsheet: `1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno`
+- Tab gid: `1231097422`
+- Link: https://docs.google.com/spreadsheets/d/1w3uc-rSxWuHBmGjh6IRpjBt1kWhDiQG3QLXalDvKtno/edit?gid=1231097422#gid=1231097422
+
+Keep the header row. Replace the body with the tickets for the requested date. Read the existing header and map columns onto it. If the tab has no header, write the default header in `scripts/upload_skill_eod.py`.
+
+## Query
+
+Label form is `CASkillable-<dd>-<Mon>` with a zero-padded day and a three-letter month: `CASkillable-04-Nov`, `CASkillable-26-Oct`.
+
+```
+labels IN (CASkillable-04-Nov) AND status != "On Hold (migrated)"
+```
+
+Substitute the date. Include every status except `On Hold (migrated)`, including open tickets and tickets that also carry an ET label. Jira is `https://arcadiapower.atlassian.net`. Search with `GET /rest/api/3/search/jql` and follow `nextPageToken` until `isLast`.
+
+## How to upload
+
+From the repo root:
+
+```bash
+export JIRA_EMAIL="sowmiya.kirubakaran@arcadia.com"
+export JIRA_API_TOKEN_FILE="/path/to/token"   # or JIRA_API_TOKEN
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
+# or export GOOGLE_ACCESS_TOKEN="ya29..."
+
+python3 .cursor/skills/skill-eod-sheet/scripts/upload_skill_eod.py --date 2026-11-04
+```
+
+`--dry-run` fetches Jira and prints the row count and the On Hold exclusion count without calling Google. It exits 0 and does not change the sheet. A real run exits 0 only after the sheet body is replaced. Exit 2 means Google credentials are missing or were rejected, and the sheet was not changed.
+
+The Google identity must already have edit access on that spreadsheet, the same way the PMU MTD run uses a credential that can edit the MTD workbook. Do not print the Jira token, the Google token, or the service-account private key. Do not commit them.
+
+## Column rules
+
+Match the header that is already on the tab. Fill only columns the script recognizes; leave the others blank rather than inventing a layout.
+
+When those columns exist, score them as follows.
+
+- Resolver is custom field `customfield_11178`. When it is empty on a Closed or Resolved ticket, use the person who last moved the ticket to Closed or Resolved. The template PR author is not the resolver.
+- Skill group is Skill, Non Skill, or Other Team. The roster is in the script. `B Saipriyadarsini Saipriyadarsini` is Saipriyadarsini Balaji.
+- Update type comes from artifacts, not from the AI fields. A template PR and an audit commit is Connector Upgrade+Override. A template PR only is Connector Upgrade. An audit only is Override. Neither is Non-resolved.
+- A template PR is a `templates3` pull request from the Jira development panel or from a comment. An audit is an `auditoverrides5` commit URL in a comment. Template added-by is the Bitbucket author when the panel has it, otherwise the comment author. Audit added-by is the Jira comment author.
+- A dash or a blank AI result is empty. Do not treat a dash as a Code Adapt result.
+- One audit commit pasted on several tickets still counts on each ticket. Say so in the run summary when a commit is shared.
+
+## After the run
+
+Report the date, the JQL, how many tickets were written, how many On Hold tickets were excluded, and the sheet link. If Google credentials are missing, say the sheet was not updated and give the dry-run count. Do not substitute a canvas for the sheet write.
