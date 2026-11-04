@@ -51,6 +51,14 @@ labels IN (CASkillable-04-Nov) AND status != "On Hold (migrated)"
 
 Substitute the date. Include every status except `On Hold (migrated)`, including open tickets and tickets that also carry an ET label. Jira is `https://arcadiapower.atlassian.net`. Search with `GET /rest/api/3/search/jql` and follow `nextPageToken` until `isLast`.
 
+## Apps Script
+
+The scheduled run is `SkillEod.gs` in this skill folder. It is Google Apps Script, not Python. Paste that file into the spreadsheet with Extensions → Apps Script, and set the project timezone to Asia/Kolkata.
+
+Script properties: `JIRA_API_TOKEN` is required. `JIRA_EMAIL` defaults to sowmiya.kirubakaran@arcadia.com. `REPORT_DATE` is an optional `yyyy-MM-dd`; leave it empty so the trigger uses today.
+
+Run `installDailyTrigger` once. It calls `runSkillEod` every day at 20:30. `runSkillEod` creates or replaces the tab for that date and does not write the Nov 03 tab.
+
 ## How to upload
 
 Fill in the credential files first. Then, from the repo root:
