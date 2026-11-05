@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import http.client
 import json
 import os
 import re
@@ -227,16 +228,32 @@ def request_json(
     ok_errors: tuple[int, ...] = (),
 ):
     data = None if body is None else json.dumps(body).encode()
-    req = urllib.request.Request(url, data=data, headers=headers, method=method)
-    try:
-        with urllib.request.urlopen(req, timeout=60) as response:
-            raw = response.read().decode()
-            return json.loads(raw) if raw else {}
-    except urllib.error.HTTPError as exc:
-        if exc.code in ok_errors:
-            return {}
-        detail = exc.read().decode("utf-8", errors="replace")[:300]
-        die(f"HTTP {exc.code} for {urllib.parse.urlparse(url).path}: {detail}")
+    path = urllib.parse.urlparse(url).path
+    last_error = "request failed"
+    for attempt in range(4):
+        req = urllib.request.Request(url, data=data, headers=headers, method=method)
+        try:
+            with urllib.request.urlopen(req, timeout=120) as response:
+                raw = response.read().decode()
+                return json.loads(raw) if raw else {}
+        except urllib.error.HTTPError as exc:
+            if exc.code in ok_errors:
+                return {}
+            detail = exc.read().decode("utf-8", errors="replace")[:300]
+            last_error = f"HTTP {exc.code} for {path}: {detail}"
+            if exc.code not in (429, 500, 502, 503, 504) or attempt == 3:
+                die(last_error)
+        except (
+            http.client.IncompleteRead,
+            urllib.error.URLError,
+            TimeoutError,
+            ConnectionError,
+        ) as exc:
+            last_error = f"{path}: {exc}"
+            if attempt == 3:
+                die(f"Jira request failed after retries. {last_error}")
+        time.sleep(2 * (attempt + 1))
+    die(f"Jira request failed after retries. {last_error}")
 
 
 def label_for(day: datetime) -> str:
