@@ -32,4 +32,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Filled-in SKILL EOD credentials. The *.example files are the templates.
+.cursor/skills/skill-eod-sheet/credentials/jira.env
+.cursor/skills/skill-eod-sheet/credentials/google-service-account.json
+.cursor/skills/skill-eod-sheet/credentials/google-access-token.txt
 #
