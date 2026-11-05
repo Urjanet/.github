@@ -463,9 +463,9 @@ def percent(part: float, whole: float) -> str:
     return f"{part / whole * 100:.1f}%"
 
 
-def per_day(hours: float) -> int | float:
-    """Overall hours divided by the 7 available hours."""
-    return plain_number(hours / AVAILABLE_HOURS)
+def per_day(hours: float) -> str:
+    """Overall hours as a percentage of the 7 available hours."""
+    return percent(hours, AVAILABLE_HOURS)
 
 
 def member_header() -> list[str]:
@@ -624,7 +624,7 @@ def build_sheet(
         "Time Tracking is the member's Jira worklog hours started that day. "
         "Total Efforts Spend is the effort on tickets they resolved or transitioned. "
         "Overall time Spent adds Time Tracking to that effort. "
-        "Each member has 7 available hours. Time Spent / day is overall hours divided by 7. "
+        "Each member has 7 available hours. Time Spent / day is overall hours divided by 7, shown as a percentage of that day. "
         "Skill utilisation is skill effort plus skill-ticket worklogs, divided by overall time. "
         "Worked tickets are validated on effort hours against PIB 2026. "
         "Top 300 and Top 1000 use the catalyst expected for that band. "
@@ -795,7 +795,7 @@ def self_test() -> None:
     assert sheet[5][1] == "Total Ticket Worked"
     assert sheet[6][0] == "Sriya Nayak"
     assert sheet[6][1] == 3
-    assert sheet[6][19] == plain_number(4.5 / 7)
+    assert sheet[6][19] == "64.3%"
     assert sheet[6][20] == "55.6%"
     planned = next(i for i, row in enumerate(sheet) if row and row[0] == "Catalyst planned hours")
     assert sheet[planned + 2] == planned_header()
